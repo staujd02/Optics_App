@@ -1,6 +1,7 @@
 package opticallearning.learnoptics;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -28,7 +29,7 @@ public class MainActivity extends Activity {
             @Override
             //Pick the Medium
             public void onClick(View v) {
-
+              startActivity(new Intent(MainActivity.this, Medium.class));
             }
         });
 
@@ -36,7 +37,7 @@ public class MainActivity extends Activity {
             @Override
             //Spectrum Matcher
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, SpectrumMatcher.class));
             }
         });
 
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
             @Override
             //LensCraft
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, LensCraft.class));
             }
         });
 
@@ -52,7 +53,7 @@ public class MainActivity extends Activity {
             @Override
             //BrightSource
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, BrightSource.class));
             }
         });
 
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
             @Override
             //Credits
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, Credits.class));
             }
         });
 
@@ -68,7 +69,7 @@ public class MainActivity extends Activity {
             @Override
             //Portal (extended reading)
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, Portal.class));
             }
         });
 

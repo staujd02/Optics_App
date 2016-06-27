@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LensCraft"
-                  android:screenOrientation="portrait"/>
+            android:screenOrientation="landscape"/>
         <activity android:name=".BrightSource"/>
         <activity android:name=".Medium"/>
         <activity android:name=".SpectrumMatcher"/>
