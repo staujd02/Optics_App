@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="andriodbootcamp.learnoptics.MainActivity">
+    tools:context="opticallearning.learnoptics.MainActivity">
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -39,7 +39,8 @@
             android:src="@drawable/icon"
             android:id="@+id/btnBrightSource"
             android:contentDescription="@string/btnBrightSource"
-            android:layout_margin="15sp" />
+            android:layout_margin="15sp"
+            android:clickable="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -49,7 +50,8 @@
             android:layout_column="1"
             android:src="@drawable/icon"
             android:contentDescription="@string/btnLens"
-            android:layout_margin="15sp" />
+            android:layout_margin="15sp"
+            android:clickable="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -59,7 +61,8 @@
             android:layout_column="1"
             android:src="@drawable/icon"
             android:contentDescription="@string/btnMedium"
-            android:layout_margin="15sp" />
+            android:layout_margin="15sp"
+            android:clickable="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -69,7 +72,8 @@
             android:layout_column="0"
             android:src="@drawable/icon"
             android:contentDescription="@string/btnSpec"
-            android:layout_margin="15sp" />
+            android:layout_margin="15sp"
+            android:clickable="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -78,7 +82,7 @@
             android:layout_row="2"
             android:layout_column="0"
             android:src="@drawable/icon"
-            android:clickable="false"
+            android:clickable="true"
             android:contentDescription="@string/btnCredits"
             android:layout_margin="15sp" />
 
@@ -90,7 +94,8 @@
             android:layout_column="1"
             android:src="@drawable/icon"
             android:contentDescription="@string/btnExtend"
-            android:layout_margin="15sp" />
+            android:layout_margin="15sp"
+            android:clickable="true" />
     </GridLayout>
 
 </RelativeLayout>
