@@ -15,7 +15,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="opticallearning.learnoptics.BrightSource"></activity>
+        <activity android:name=".LensCraft"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".BrightSource"/>
+        <activity android:name=".Medium"/>
+        <activity android:name=".SpectrumMatcher"/>
+        <activity android:name=".Credits"/>
+        <activity android:name=".Portal"/>
     </application>
 
 </manifest>
