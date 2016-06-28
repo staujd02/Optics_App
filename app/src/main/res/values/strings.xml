@@ -7,4 +7,10 @@
     <string name="btnCredits">Credits</string>
     <string name="btnExtend">External Links</string>
     <string name="specSubject">Spectrophotometer Specimen</string>
+    <string name="spectrum">Spectrum</string>
+    <string name="specDescip">Specimen</string>
+    <string name="chrtOne">Chart 1</string>
+    <string name="chrtTwo">Chart 2</string>
+    <string name="chrtThree">Chart 3</string>
+    <string name="chrtFour">Chart 4</string>
 </resources>
