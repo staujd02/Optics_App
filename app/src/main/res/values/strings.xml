@@ -6,4 +6,5 @@
     <string name="btnMedium">Pick the Medium</string>
     <string name="btnCredits">Credits</string>
     <string name="btnExtend">External Links</string>
+    <string name="specSubject">Spectrophotometer Specimen</string>
 </resources>
