@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
-    android:scrollIndicators="right"
     android:weightSum="1">
 
     <GridLayout
@@ -62,42 +61,45 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:scrollIndicators="right"
             android:weightSum="1">
-
-        <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:id="@+id/imageButton"
-        android:src="@drawable/diorite"
-        android:layout_weight="1"
-        android:scaleType="fitXY" />
-
-        <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:id="@+id/imageButton2"
-        android:src="@drawable/diorite"
-        android:scaleType="fitXY"
-        android:layout_weight="1" />
-
-     <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:id="@+id/imageButton3"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/diorite"
-              android:scaleType="fitXY"
-                android:layout_weight="1" />
 
             <ImageButton
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
-                android:id="@+id/imageButton4"
+                android:id="@+id/chrtOne"
+                android:src="@drawable/diorite"
+                android:layout_weight="1"
+                android:scaleType="fitXY"
+                android:contentDescription="@string/chrtOne" />
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:id="@+id/chrtTwo"
+                android:src="@drawable/diorite"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:contentDescription="@string/chrtTwo" />
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:id="@+id/chrtThree"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/diorite"
                 android:scaleType="fitXY"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:contentDescription="@string/chrtThree" />
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="256dp"
+                android:id="@+id/chrtFour"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/diorite"
+                android:scaleType="fitXY"
+                android:layout_weight="1"
+                android:contentDescription="@string/chrtFour" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
