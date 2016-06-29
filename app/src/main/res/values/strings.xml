@@ -13,4 +13,10 @@
     <string name="chrtTwo">Chart 2</string>
     <string name="chrtThree">Chart 3</string>
     <string name="chrtFour">Chart 4</string>
+    <string name="btnCheck">Check Answer</string>
+    <string name="materialOne">Material One</string>
+    <string name="materialTwo">Material Two</string>
+    <string name="materialThree">Material Three</string>
+    <string name="materialFour">Material Four</string>
+    <string name="directions">Fastest to Slowest</string>
 </resources>
