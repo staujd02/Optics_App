@@ -19,4 +19,7 @@
     <string name="materialThree">Material Three</string>
     <string name="materialFour">Material Four</string>
     <string name="directions">Fastest to Slowest</string>
+    <string name="ruler">Ruler</string>
+    <string name="laser">Laser Source</string>
+    <string name="detector">Photodetector</string>
 </resources>

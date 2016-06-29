@@ -2,4 +2,97 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ruler"
+        android:src="@drawable/ruler"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:contentDescription="@string/ruler" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgLaser"
+        android:src="@drawable/laser"
+        android:scaleType="fitXY"
+        android:layout_marginRight="420dp"
+        android:layout_marginEnd="420dp"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/ruler"
+        android:layout_alignEnd="@+id/ruler"
+        android:contentDescription="@string/laser" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="30sp"
+        android:layout_height="100sp"
+        android:id="@+id/view2"
+        android:background="@drawable/border"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="63dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/view3"
+        android:layout_toStartOf="@+id/view3" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectOne"
+        android:src="@drawable/detector"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/detector" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectTwo"
+        android:src="@drawable/detector"
+        android:layout_above="@+id/view2"
+        android:layout_alignLeft="@+id/dectOne"
+        android:layout_alignStart="@+id/dectOne"
+        android:contentDescription="@string/detector" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectThree"
+        android:src="@drawable/detector"
+        android:layout_below="@+id/view2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/detector" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="30sp"
+        android:layout_height="100sp"
+        android:id="@+id/view3"
+        android:background="@drawable/border"
+        android:layout_above="@+id/dectThree"
+        android:layout_centerHorizontal="true" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="30sp"
+        android:layout_height="100sp"
+        android:id="@+id/view4"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="57dp"
+        android:background="@drawable/border"
+        android:layout_above="@+id/dectThree"
+        android:layout_toRightOf="@+id/view3"
+        android:layout_toEndOf="@+id/view3" />
+
 </RelativeLayout>
