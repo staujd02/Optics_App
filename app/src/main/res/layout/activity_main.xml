@@ -29,70 +29,76 @@
             android:columnOrderPreserved="true">
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:layout_row="0"
                 android:layout_column="0"
-                android:src="@drawable/icon"
+                android:src="@drawable/lightbulb"
                 android:id="@+id/btnBrightSource"
                 android:contentDescription="@string/btnBrightSource"
                 android:layout_margin="15sp"
-                android:clickable="true" />
+                android:clickable="true"
+                android:scaleType="fitCenter" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:id="@+id/btnLensCraft"
                 android:layout_row="0"
                 android:layout_column="1"
-                android:src="@drawable/icon"
+                android:src="@drawable/lens_icon"
                 android:contentDescription="@string/btnLens"
                 android:layout_margin="15sp"
-                android:clickable="true" />
+                android:clickable="true"
+                android:scaleType="fitCenter" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:id="@+id/btnMedium"
                 android:layout_row="1"
                 android:layout_column="1"
-                android:src="@drawable/icon"
+                android:src="@drawable/diamond"
                 android:contentDescription="@string/btnMedium"
                 android:layout_margin="15sp"
-                android:clickable="true" />
+                android:clickable="true"
+                android:scaleType="fitCenter" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:id="@+id/btnSpectrum"
                 android:layout_row="1"
                 android:layout_column="0"
-                android:src="@drawable/icon"
                 android:contentDescription="@string/btnSpec"
                 android:layout_margin="15sp"
-                android:clickable="true" />
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/spiral" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:id="@+id/btnCredits"
                 android:layout_row="2"
                 android:layout_column="0"
-                android:src="@drawable/icon"
+                android:src="@drawable/credits"
                 android:clickable="true"
                 android:contentDescription="@string/btnCredits"
-                android:layout_margin="15sp" />
+                android:layout_margin="15sp"
+                android:scaleType="fitCenter" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:id="@+id/btnPortal"
                 android:layout_row="2"
                 android:layout_column="1"
-                android:src="@drawable/icon"
+                android:src="@drawable/portal"
                 android:contentDescription="@string/btnExtend"
                 android:layout_margin="15sp"
-                android:clickable="true" />
+                android:clickable="true"
+                android:scaleType="fitCenter" />
         </GridLayout>
     </ScrollView>
 
