@@ -24,6 +24,7 @@
         <activity android:name=".SpectrumMatcher"/>
         <activity android:name=".Credits"/>
         <activity android:name=".Portal"/>
+
     </application>
 
 </manifest>

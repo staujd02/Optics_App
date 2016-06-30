@@ -1,36 +1,48 @@
 package opticallearning.learnoptics;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.util.AttributeSet;
-import android.view.View;
-import android.content.Context;
+import android.graphics.*;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * Created by Joel on 6/29/2016.
  */
-public class DrawingView extends View {
+public class DrawingView extends View implements View.OnTouchListener{
 
-    Paint paint;
+    Paint paint = new Paint();
 
     Boolean lens;
 
+
+    public DrawingView(Context context)
+    {
+        super(context);
+        init();
+    }
+    public DrawingView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+        init();
+    }
     public DrawingView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
+    }
+
+
+    public void init(){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         setWillNotDraw(false);
 
-        paint = new Paint();
+        this.setOnTouchListener(this);
+
+        paint.setAntiAlias(true);
     }
 
      protected void onDraw(Canvas canvas) {
@@ -42,10 +54,16 @@ public class DrawingView extends View {
          //canvas.drawLine(0.0f, 0.0f, 15f, 15f, paint);
      }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        return false;
+    }
+
     //public void drawLasers(Laser[] lasers){
 
 
-    //Refresh Canvas
+    //invalidate();
     //}
 
     //public void drawLens(Lens lens){
