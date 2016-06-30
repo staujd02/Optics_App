@@ -3,12 +3,46 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+        <ImageView
+            android:layout_width="107dp"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView2"
+            android:src="@drawable/nsf_icon"
+            android:layout_weight="1"
+            android:contentDescription="@string/nsf" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/njit_logo"
+            android:layout_weight="3"
+            android:contentDescription="@string/njit" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Credits"
+        android:text="@string/credits_title"
         android:id="@+id/textView2"
         android:textSize="25sp"
         android:paddingLeft="5sp"
-        android:paddingTop="5sp" />
+        android:paddingTop="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/credits_main"
+        android:id="@+id/textView7"
+        android:layout_marginLeft="10sp"
+        android:textStyle="normal"
+        android:typeface="sans"
+        android:textColor="#000000" />
+
 </LinearLayout>
