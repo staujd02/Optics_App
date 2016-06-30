@@ -17,7 +17,8 @@
         </activity>
         <activity android:name=".LensCraft"
             android:screenOrientation="landscape"/>
-        <activity android:name=".BrightSource"/>
+        <activity android:name=".BrightSource"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Medium"
             android:screenOrientation="portrait"/>
         <activity android:name=".SpectrumMatcher"/>

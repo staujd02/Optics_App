@@ -22,4 +22,9 @@
     <string name="ruler">Ruler</string>
     <string name="laser">Laser Source</string>
     <string name="detector">Photodetector</string>
+    <string name="desMoney">Total Savings</string>
+    <string name="desLightSource">Light Source</string>
+    <string name="lightSource">Light Source Picture</string>
+    <string name="incWatt">Increase Wattage</string>
+    <string name="decWatt">Decrease Wattage</string>
 </resources>
