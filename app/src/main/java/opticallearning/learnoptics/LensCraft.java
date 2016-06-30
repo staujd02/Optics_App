@@ -16,6 +16,7 @@ public class LensCraft extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lenscraft);
+        setTitle("Lens Crafter");
         init();
     }
 

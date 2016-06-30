@@ -11,5 +11,6 @@ public class SpectrumMatcher extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spectrummatcher);
+        setTitle("Spectrum Matcher");
     }
 }

@@ -19,6 +19,7 @@ public class Portal extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.portal);
+        setTitle("Extra Info Portal");
 
         String[] links = {"OSA News","Optics and Photonics Journal","Business: Optics.org","The Basics","Advanced"};
 

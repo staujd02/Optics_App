@@ -11,5 +11,6 @@ public class BrightSource extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.brightsource);
+        setTitle("Bright Source");
     }
 }

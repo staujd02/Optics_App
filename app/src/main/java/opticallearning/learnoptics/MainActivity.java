@@ -15,6 +15,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Learn Optics");
 
         ImageButton[] buttons = {
                 (ImageButton) findViewById(R.id.btnMedium),         //0

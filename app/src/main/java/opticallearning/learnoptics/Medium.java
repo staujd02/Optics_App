@@ -15,6 +15,7 @@ public class Medium extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.medium);
+        setTitle("Rank the Medium");
 
         ImageView[] tiles = new ImageView[4];
 
