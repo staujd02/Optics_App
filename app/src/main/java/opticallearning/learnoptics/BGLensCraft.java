@@ -24,7 +24,7 @@ public class BGLensCraft extends Activity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BGLensCraft.this, LensCraft.class));
+                startActivity(new Intent(BGLensCraft.this, LensCraftMenu.class));
             }
         });
     }

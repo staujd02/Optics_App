@@ -36,4 +36,36 @@
     <string name="bg_medium">This is basic content where the user is introduced to the subject.</string>
     <string name="bg_spec">This is basic content where the user is introduced to the subject.</string>
     <string name="btContinue">Continue</string>
+    <string-array name="lensTypes">
+        <item>Concave</item>
+        <item>Convex</item>
+    </string-array>
+    <string-array name="materials">
+        <item>Acetone Low N</item>
+        <item>Crown Glass Med N</item>
+        <item>Flint Glass High N</item>
+    </string-array>
+    <string-array name="beam_choice">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="distances">
+        <item>Short</item>
+        <item>Medium</item>
+        <item>Long</item>
+    </string-array>
+    <string-array name="lens_widths">
+        <item>Thin</item>
+        <item>Normal</item>
+        <item>Thick</item>
+    </string-array>
+    <string-array name="lens_Nums">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

@@ -11,7 +11,6 @@
         <activity android:name="opticallearning.learnoptics.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,6 +27,18 @@
         <activity android:name=".BGLensCraft"/>
         <activity android:name=".BGMedium"/>
         <activity android:name=".BGSpectrumMatcher"/>
+        <activity android:name=".BeamCount"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".concaveconvex"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".Distances"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".NIndex"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".NumberOfLens"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".LensWidth"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".LensCraftMenu"/>
     </application>
-
 </manifest>

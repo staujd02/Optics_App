@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ruler"
+        android:src="@drawable/ruler"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:contentDescription="@string/ruler" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgLaser"
+        android:src="@drawable/laser_front"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/laser"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectOne"
+        android:src="@drawable/detector"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/detector" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectTwo"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignBottom="@+id/imgLaser"
+        android:layout_alignLeft="@+id/dectOne"
+        android:layout_alignStart="@+id/dectOne" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectThree"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignTop="@+id/imgLaser"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="30sp"
+        android:layout_height="100sp"
+        android:id="@+id/view3"
+        android:background="@drawable/border"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinBeamCount"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
