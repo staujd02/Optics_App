@@ -25,6 +25,11 @@ public class Medium extends Activity {
         tiles[2] = (ImageView) findViewById(R.id.tileThree);
         tiles[3] = (ImageView) findViewById(R.id.tileFour);
 
+        //https://github.com/askerov/DynamicGrid
+        //https://github.com/h6ah4i/android-advancedrecyclerview
+        //https://github.com/koduribalaji/AndroidCoolDragAndDropGridView
+
+
         for(int i = 0; i < tiles.length; i++){
 
             tiles[i].setOnTouchListener(new View.OnTouchListener() {
