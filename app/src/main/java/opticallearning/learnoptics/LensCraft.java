@@ -1,6 +1,7 @@
 package opticallearning.learnoptics;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.*;
 import android.os.Bundle;
@@ -20,7 +21,11 @@ public class LensCraft extends Activity {
         init();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //your code when back button pressed
+        startActivity(new Intent(LensCraft.this, MainActivity.class));
+    }
 
     private void init() {
         //Create laser objects

@@ -1,6 +1,7 @@
 package opticallearning.learnoptics;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -62,5 +63,11 @@ public class Medium extends Activity {
 
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        //your code when back button pressed
+        startActivity(new Intent(Medium.this, MainActivity.class));
     }
 }

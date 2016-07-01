@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
             @Override
             //Pick the Medium
             public void onClick(View v) {
-              startActivity(new Intent(MainActivity.this, Medium.class));
+              startActivity(new Intent(MainActivity.this, BGMedium.class));
             }
         });
 
@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
             @Override
             //Spectrum Matcher
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SpectrumMatcher.class));
+                startActivity(new Intent(MainActivity.this, BGSpectrumMatcher.class));
             }
         });
 
@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
             @Override
             //LensCraft
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LensCraft.class));
+                startActivity(new Intent(MainActivity.this, BGLensCraft.class));
             }
         });
 
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
             @Override
             //BrightSource
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, BrightSource.class));
+                startActivity(new Intent(MainActivity.this, BGBrightSource.class));
             }
         });
 

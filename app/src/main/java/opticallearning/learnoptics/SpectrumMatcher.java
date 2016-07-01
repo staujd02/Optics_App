@@ -1,6 +1,7 @@
 package opticallearning.learnoptics;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -12,5 +13,11 @@ public class SpectrumMatcher extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spectrummatcher);
         setTitle("Spectrum Matcher");
+    }
+
+    @Override
+    public void onBackPressed() {
+        //your code when back button pressed
+        startActivity(new Intent(SpectrumMatcher.this, MainActivity.class));
     }
 }

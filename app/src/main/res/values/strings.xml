@@ -31,4 +31,9 @@
     <string name="credits_main">\tThis project was made possible by the National Science Foundation grant \"REU Site: Optics and photonics: Technologies, Systems, and Devices.\"\nGrant ID: 1560131.\n\n\tThis application was developed by Joel Stauffer under the direction of Professors Dr. Abdallah Khreishah and Dr. John Carpinelli.</string>
     <string name="njit">NJIT Logo</string>
     <string name="nsf">NSF Logo</string>
+    <string name="bg_bright">This is basic content where the user is introduced to the subject.</string>
+    <string name="bg_lens">This is basic content where the user is introduced to the subject.</string>
+    <string name="bg_medium">This is basic content where the user is introduced to the subject.</string>
+    <string name="bg_spec">This is basic content where the user is introduced to the subject.</string>
+    <string name="btContinue">Continue</string>
 </resources>
