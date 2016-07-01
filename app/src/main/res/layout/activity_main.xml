@@ -78,7 +78,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:id="@+id/btnMedium"
-                android:src="@drawable/diamond"
+                android:src="@drawable/newer_diamond"
                 android:contentDescription="@string/btnMedium"
                 android:clickable="true"
                 android:scaleType="fitCenter"

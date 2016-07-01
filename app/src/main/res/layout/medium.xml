@@ -23,7 +23,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:id="@+id/tileOne"
                     android:src="@drawable/tile"
                     android:layout_gravity="left"
@@ -34,7 +34,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:id="@+id/tileTwo"
                     android:src="@drawable/tile"
                     android:layout_gravity="left"
@@ -44,7 +44,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:id="@+id/tileThree"
                     android:layout_gravity="left"
                     android:layout_marginLeft="15sp"
@@ -54,7 +54,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:id="@+id/tileFour"
                     android:layout_gravity="left"
                     android:layout_marginLeft="15sp"
