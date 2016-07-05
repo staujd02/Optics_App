@@ -9,6 +9,12 @@ import android.widget.ListView;
 
 /**
  * Created by Joel on 7/1/2016.
+ *
+ * This menu functions much like the LensCraft Menu, providing a
+ * portal to sub modules for the user to complete
+ *
+ * Currently this module references only dummy classes
+ *
  */
 public class SpectrumMenu extends ListActivity{
 
@@ -23,9 +29,11 @@ public class SpectrumMenu extends ListActivity{
         //This array needs to be generated dynamically based on user data
         String[] pages = {"Background","Reflectance","Compound Reflectance","Absorbance","Compound Absorbance","Opacity"};
 
+        //sets the listAdapter to read the array pages[] into the listView
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,pages));
     }
 
+    //Sends the user back to the main menu rather than background xml
     public void onBackPressed() {
         startActivity(new Intent(SpectrumMenu.this, MainActivity.class));
     }
@@ -36,6 +44,7 @@ public class SpectrumMenu extends ListActivity{
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
+        //todo references dummy classes at the moment
         switch (position){
             case 0:
                 startActivity(new Intent(SpectrumMenu.this, BGSpectrumMatcher.class));

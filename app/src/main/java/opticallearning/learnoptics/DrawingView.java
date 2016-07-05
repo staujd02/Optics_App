@@ -11,42 +11,76 @@ import android.view.View;
 
 /**
  * Created by Joel on 6/29/2016.
+ *
+ * Construction class for custom view DrawingView
+ *
+ * This view is intended for drawing the lenses bitmaps and the behaviour
+ * of lasers interacting with them.
  */
 public class DrawingView extends View implements View.OnTouchListener{
 
+    //Create paint object for drawing graphics
     Paint paint = new Paint();
 
+    //This view is a lens or a laser backdrop
     Boolean lens;
 
-
+    /**
+     * First constructor and simplest constructor
+     * that can be called
+     *
+     * @param context
+     */
     public DrawingView(Context context)
     {
         super(context);
         init();
     }
+
+    /**
+     * Second constructor, usually the one called by
+     * the android system
+     *
+     * @param context
+     * @param attrs
+     */
     public DrawingView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
+
+    /**
+     * Most specific constructor
+     *
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public DrawingView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
-
+    /**
+     * All constructors are directed here to ensure
+     * all objects are loaded and all tasks are completed
+     */
     public void init(){
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        setWillNotDraw(false);
+        setFocusable(true);             //Must be true for user interaction
+        setFocusableInTouchMode(true);  //Must be true for user interaction
+        setWillNotDraw(false);          //Must be false to drawn on view
 
+        //Assign the onTouchListener, defined below, to the object's own defined onTouchListener
         this.setOnTouchListener(this);
 
+        //Creates a fuzzier, more attractive draw --> edges not as clean/clear
         paint.setAntiAlias(true);
     }
 
+    @Override
      protected void onDraw(Canvas canvas) {
-         super.onDraw(canvas);
+         super.onDraw(canvas); //Draws everything defined in the .xml parameters
 
          //Use this for drawing lasers
          paint.setColor(Color.RED);
@@ -56,19 +90,20 @@ public class DrawingView extends View implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
+        //Might use this method...
         return false;
     }
 
     //public void drawLasers(Laser[] lasers){
 
 
-    //invalidate();
+    //invalidate(); //Forces refresh of the drawing
     //}
 
     //public void drawLens(Lens lens){
 
 
     //Refresh Canvas
+    //invalidate(); //Forces refresh of the drawing
     //}
 }

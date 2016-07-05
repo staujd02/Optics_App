@@ -10,25 +10,35 @@ import android.widget.ImageView;
 
 /**
  * Created by Joel on 6/27/2016.
+ *
+ * This module is designed for the user to rank objects by their N index
+ *
+ * This module is active but not going to be implemented this way upon release
+ *
  */
 public class Medium extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.medium);
-        setTitle("Rank the Medium");
+        super.onCreate(savedInstanceState); //calls super constructor
+        setContentView(R.layout.medium);    //sets the view
+        setTitle("Rank the Medium");    //assigns descriptive title
 
+        //Creates array of image tiles
         ImageView[] tiles = new ImageView[4];
 
+        //assigns reference values to each of the indices to their respective tiles
         tiles[0] = (ImageView) findViewById(R.id.tileOne);
         tiles[1] = (ImageView) findViewById(R.id.tileTwo);
         tiles[2] = (ImageView) findViewById(R.id.tileThree);
         tiles[3] = (ImageView) findViewById(R.id.tileFour);
 
+
+        //Possible sources of implementing drag/drop behaviour
+        //----------------------------------------------------
         //https://github.com/askerov/DynamicGrid
         //https://github.com/h6ah4i/android-advancedrecyclerview
         //https://github.com/koduribalaji/AndroidCoolDragAndDropGridView
-
+        //----------------------------------------------------
 
         for(int i = 0; i < tiles.length; i++){
 

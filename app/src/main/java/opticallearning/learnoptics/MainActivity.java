@@ -6,17 +6,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+/**
+ * This is the first activity called by the Android OS
+ *
+ * This loads the main menu, databases, and user info
+ *
+ */
 public class MainActivity extends Activity {
 
-    //TODO
-
+    // TODO: Load user information
+    // TODO: Load databases (.json)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        setTitle("Learn Optics");
+        super.onCreate(savedInstanceState); //calls the super constructor
+        setContentView(R.layout.activity_main); //sets the layout
+        setTitle("Learn Optics");   //Assigns a descriptive title to the title bar
 
+        //Create image buttons
         ImageButton[] buttons = {
                 (ImageButton) findViewById(R.id.btnMedium),         //0
                 (ImageButton) findViewById(R.id.btnSpectrum),       //1
@@ -26,6 +33,8 @@ public class MainActivity extends Activity {
                 (ImageButton) findViewById(R.id.btnPortal)          //5
         };
 
+        //Assign onClickListeners to each button
+        //--> Takes the user to the depicted module
         buttons[0].setOnClickListener(new View.OnClickListener() {
             @Override
             //Pick the Medium

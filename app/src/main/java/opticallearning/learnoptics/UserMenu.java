@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class UserMenu extends Activity {
 
     //Todo append user information to the list items
+    //Todo allow user to turn hints/background on and off
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class UserMenu extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
         ListView lv = (ListView)findViewById(android.R.id.list);
         lv.setAdapter(adapter);
+
+
 
     }
 

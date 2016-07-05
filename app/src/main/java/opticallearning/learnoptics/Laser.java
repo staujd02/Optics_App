@@ -4,6 +4,11 @@ import android.graphics.Point;
 
 /**
  * Created by Joel on 6/29/2016.
+ *
+ * Laser object that handles the tracking of the laser's direction
+ * and sub components
+ *
+ * Used by the custom view implemented in the sub modules of Lens Crafter
  */
 public class Laser {
 

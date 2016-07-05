@@ -10,6 +10,25 @@ import org.w3c.dom.Text;
 
 /**
  * Created by Joel on 6/27/2016.
+ *
+ * --THIS CLASS IS NO LONGER IN USE--
+ *
+ * No references exist to this class or its associated activity lenscraft.xml
+ *
+ * This class remains solely as a template for other classes linked through
+ * the LensCraft Menu
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  */
 
 public class LensCraft extends Activity {
@@ -27,6 +46,9 @@ public class LensCraft extends Activity {
         startActivity(new Intent(LensCraft.this, MainActivity.class));
     }
 
+    /**
+     *
+     */
     private void init() {
         //Create laser objects
         // - put into array
