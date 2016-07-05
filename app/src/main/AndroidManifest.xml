@@ -39,5 +39,6 @@
         <activity android:name=".LensWidth"
             android:screenOrientation="landscape"/>
         <activity android:name=".LensCraftMenu"/>
+        <activity android:name=".SpectrumMenu"/>
     </application>
 </manifest>

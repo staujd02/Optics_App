@@ -14,10 +14,4 @@ public class SpectrumMatcher extends Activity {
         setContentView(R.layout.spectrummatcher);
         setTitle("Spectrum Matcher");
     }
-
-    @Override
-    public void onBackPressed() {
-        //your code when back button pressed
-        startActivity(new Intent(SpectrumMatcher.this, MainActivity.class));
-    }
 }

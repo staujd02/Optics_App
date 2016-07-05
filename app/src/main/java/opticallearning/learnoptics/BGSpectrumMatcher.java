@@ -24,7 +24,7 @@ public class BGSpectrumMatcher extends Activity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BGSpectrumMatcher.this, SpectrumMatcher.class));
+                startActivity(new Intent(BGSpectrumMatcher.this, SpectrumMenu.class));
             }
         });
     }
