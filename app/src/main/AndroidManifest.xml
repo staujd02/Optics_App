@@ -27,7 +27,7 @@
         <activity android:name=".BGLensCraft"/>
         <activity android:name=".BGMedium"/>
         <activity android:name=".BGSpectrumMatcher"/>
-        <activity android:name=".BeamCount"
+        <activity android:name=".Shew"
             android:screenOrientation="landscape"/>
         <activity android:name=".ConcaveConvex"
             android:screenOrientation="landscape"/>

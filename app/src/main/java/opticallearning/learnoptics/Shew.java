@@ -10,21 +10,21 @@ import android.widget.Spinner;
 /**
  * Created by Joel on 7/1/2016.
  */
-public class BeamCount extends Activity {
+public class Shew extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.beam_count);
+        setContentView(R.layout.skew);
         setTitle("Number of Beams");
 
         Spinner spinner = (Spinner) findViewById(R.id.spinBeamCount);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.beam_choice, android.R.layout.simple_spinner_item);
+                R.array.skew, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        new AlertDialog.Builder(BeamCount.this)
+        new AlertDialog.Builder(Shew.this)
                 .setTitle("Directions")
-                .setMessage("Pick the correct number of beams to match the photoreceptors.")
+                .setMessage("Select the correct height of the lens to focus the light onto the photoreceptors.")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //User pressed yes

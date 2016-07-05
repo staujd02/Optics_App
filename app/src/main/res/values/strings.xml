@@ -47,14 +47,11 @@
         <item>Crown Glass Med N</item>
         <item>Flint Glass High N</item>
     </string-array>
-    <string-array name="beam_choice">
+    <string-array name="skew">
         <item>Pick One</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
+        <item>Above Medium</item>
+        <item>At Medium</item>
+        <item>Below Medium</item>
     </string-array>
     <string-array name="distances">
         <item>Pick One</item>

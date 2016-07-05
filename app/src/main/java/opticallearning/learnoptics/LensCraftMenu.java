@@ -18,7 +18,7 @@ public class LensCraftMenu extends ListActivity{
         setContentView(R.layout.lenscraft_extended);
         setTitle("Explore");
 
-        String[] pages = {"Concave vs. Convex","N Index","Beam Count","Distance","Lens Width","Number of Lens"};
+        String[] pages = {"Concave vs. Convex","N Index","Height","Distance","Lens Width","Number of Lens"};
 
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,pages));
     }
@@ -38,7 +38,7 @@ public class LensCraftMenu extends ListActivity{
                 startActivity(new Intent(LensCraftMenu.this, NIndex.class));
                 break;
             case 2:
-                startActivity(new Intent(LensCraftMenu.this, BeamCount.class));
+                startActivity(new Intent(LensCraftMenu.this, Shew.class));
                 break;
             case 3:
                 startActivity(new Intent(LensCraftMenu.this, Distances.class));
