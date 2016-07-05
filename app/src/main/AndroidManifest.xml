@@ -16,14 +16,13 @@
         </activity>
         <activity android:name=".LensCraft"
             android:screenOrientation="landscape"/>
-        <activity android:name=".BrightSource"
+        <activity android:name=".UserMenu"
             android:screenOrientation="portrait"/>
         <activity android:name=".Medium"
             android:screenOrientation="portrait"/>
         <activity android:name=".SpectrumMatcher"/>
         <activity android:name=".Credits"/>
         <activity android:name=".Portal"/>
-        <activity android:name=".BGBrightSource"/>
         <activity android:name=".BGLensCraft"/>
         <activity android:name=".BGMedium"/>
         <activity android:name=".BGSpectrumMatcher"/>

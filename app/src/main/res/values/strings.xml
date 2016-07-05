@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Learn Optics</string>
-    <string name="btnBrightSource">Bright Source</string>
+    <string name="btnUserMenu">User Settings</string>
     <string name="btnLens">LensCraft</string>
     <string name="btnSpec">Spectrum Matcher</string>
     <string name="btnMedium">Pick the Medium</string>

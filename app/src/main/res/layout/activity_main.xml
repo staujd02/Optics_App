@@ -28,9 +28,9 @@
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/bs_ico"
-                android:id="@+id/btnBrightSource"
-                android:contentDescription="@string/btnBrightSource"
+                android:src="@drawable/user_ico"
+                android:id="@+id/btnUserMenu"
+                android:contentDescription="@string/btnUserMenu"
                 android:clickable="true"
                 android:scaleType="fitCenter"
                 android:layout_weight="1"

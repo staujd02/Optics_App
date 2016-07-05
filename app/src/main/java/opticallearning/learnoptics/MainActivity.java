@@ -3,11 +3,8 @@ package opticallearning.learnoptics;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
@@ -21,7 +18,7 @@ public class MainActivity extends Activity {
                 (ImageButton) findViewById(R.id.btnMedium),         //0
                 (ImageButton) findViewById(R.id.btnSpectrum),       //1
                 (ImageButton) findViewById(R.id.btnLensCraft),      //2
-                (ImageButton) findViewById(R.id.btnBrightSource),   //3
+                (ImageButton) findViewById(R.id.btnUserMenu),   //3
                 (ImageButton) findViewById(R.id.btnCredits),        //4
                 (ImageButton) findViewById(R.id.btnPortal)          //5
         };
@@ -52,9 +49,9 @@ public class MainActivity extends Activity {
 
         buttons[3].setOnClickListener(new View.OnClickListener() {
             @Override
-            //BrightSource
+            //UserMenu
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, BGBrightSource.class));
+                startActivity(new Intent(MainActivity.this, UserMenu.class));
             }
         });
 

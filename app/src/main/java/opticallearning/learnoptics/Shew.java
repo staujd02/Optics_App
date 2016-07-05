@@ -14,7 +14,7 @@ public class Shew extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.skew);
-        setTitle("Number of Beams");
+        setTitle("Lens Height");
 
         Spinner spinner = (Spinner) findViewById(R.id.spinBeamCount);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
