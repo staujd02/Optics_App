@@ -1,10 +1,7 @@
 package opticallearning.learnoptics;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.hardware.camera2.params.LensShadingMap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -35,7 +32,7 @@ public class LensCraftMenu extends ListActivity{
 
         switch (position){
             case 0:
-                startActivity(new Intent(LensCraftMenu.this, concaveconvex.class));
+                startActivity(new Intent(LensCraftMenu.this, ConcaveConvex.class));
                 break;
             case 1:
                 startActivity(new Intent(LensCraftMenu.this, NIndex.class));

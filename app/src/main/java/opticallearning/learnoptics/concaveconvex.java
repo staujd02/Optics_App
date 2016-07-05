@@ -1,6 +1,8 @@
 package opticallearning.learnoptics;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -8,7 +10,7 @@ import android.widget.Spinner;
 /**
  * Created by Joel on 7/1/2016.
  */
-public class concaveconvex extends Activity {
+public class ConcaveConvex extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,15 @@ public class concaveconvex extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        new AlertDialog.Builder(ConcaveConvex.this)
+                .setTitle("Directions")
+                .setMessage("Pick the lens type, concave or convex, to direct the laser to the photodetectors.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //User pressed yes
+                    }
+                })
+                .show();
 
     }
 }

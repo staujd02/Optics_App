@@ -1,6 +1,8 @@
 package opticallearning.learnoptics;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -19,6 +21,19 @@ public class BeamCount extends Activity {
                 R.array.beam_choice, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        new AlertDialog.Builder(BeamCount.this)
+                .setTitle("Directions")
+                .setMessage("Pick the correct number of beams to match the photoreceptors.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //User pressed yes
+                    }
+                })
+                .show();
+                //.setIcon(android.R.drawable.ic_dialog_alert)
+                //.show();
+        //End of Dialogue
 
 
     }

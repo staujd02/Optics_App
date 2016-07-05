@@ -29,7 +29,7 @@
         <activity android:name=".BGSpectrumMatcher"/>
         <activity android:name=".BeamCount"
             android:screenOrientation="landscape"/>
-        <activity android:name=".concaveconvex"
+        <activity android:name=".ConcaveConvex"
             android:screenOrientation="landscape"/>
         <activity android:name=".Distances"
             android:screenOrientation="landscape"/>
