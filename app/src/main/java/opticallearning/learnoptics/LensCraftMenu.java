@@ -12,13 +12,16 @@ import android.widget.ListView;
  */
 public class LensCraftMenu extends ListActivity{
 
+    //ToDo generate pages[] dynamically based on user data
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lenscraft_extended);
         setTitle("Explore");
 
-        String[] pages = {"Concave vs. Convex","N Index","Height","Distance","Lens Width","Number of Lens"};
+        //This array needs to be generated dynamically based on user data
+        String[] pages = {"Background","Concave vs. Convex","N Index","Height","Distance","Lens Width","Number of Lens"};
 
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,pages));
     }
@@ -32,21 +35,24 @@ public class LensCraftMenu extends ListActivity{
 
         switch (position){
             case 0:
-                startActivity(new Intent(LensCraftMenu.this, ConcaveConvex.class));
+                startActivity(new Intent(LensCraftMenu.this, BGLensCraft.class));
                 break;
             case 1:
-                startActivity(new Intent(LensCraftMenu.this, NIndex.class));
+                startActivity(new Intent(LensCraftMenu.this, ConcaveConvex.class));
                 break;
             case 2:
-                startActivity(new Intent(LensCraftMenu.this, Shew.class));
+                startActivity(new Intent(LensCraftMenu.this, NIndex.class));
                 break;
             case 3:
-                startActivity(new Intent(LensCraftMenu.this, Distances.class));
+                startActivity(new Intent(LensCraftMenu.this, Shew.class));
                 break;
             case 4:
-                startActivity(new Intent(LensCraftMenu.this, LensWidth.class));
+                startActivity(new Intent(LensCraftMenu.this, Distances.class));
                 break;
             case 5:
+                startActivity(new Intent(LensCraftMenu.this, LensWidth.class));
+                break;
+            case 6:
                 startActivity(new Intent(LensCraftMenu.this, NumberOfLens.class));
                 break;
         }
