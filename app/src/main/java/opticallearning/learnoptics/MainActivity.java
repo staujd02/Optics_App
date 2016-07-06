@@ -16,7 +16,6 @@ public class MainActivity extends Activity {
 
     User user;  //Current user
 
-    // TODO: Load user information
     // TODO: Load databases (.json)
 
     @Override
@@ -25,12 +24,22 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main); //sets the layout
         setTitle("Learn Optics");   //Assigns a descriptive title to the title bar
 
+        //Load user
+        user = User.loadUser("default.dat");
+
+        //Check User
+        if(user == null){
+            //If the reference is null, create default user
+            user = new User("Galileo");
+            user.saveUser("default.dat");
+        }
+
         //Create image buttons
         ImageButton[] buttons = {
                 (ImageButton) findViewById(R.id.btnMedium),         //0
                 (ImageButton) findViewById(R.id.btnSpectrum),       //1
                 (ImageButton) findViewById(R.id.btnLensCraft),      //2
-                (ImageButton) findViewById(R.id.btnUserMenu),   //3
+                (ImageButton) findViewById(R.id.btnUserMenu),       //3
                 (ImageButton) findViewById(R.id.btnCredits),        //4
                 (ImageButton) findViewById(R.id.btnPortal)          //5
         };
@@ -41,7 +50,12 @@ public class MainActivity extends Activity {
             @Override
             //Pick the Medium
             public void onClick(View v) {
-              startActivity(new Intent(MainActivity.this, BGMedium.class));
+                if(user.getBackground() == true) {
+                    startActivity(new Intent(MainActivity.this, BGMedium.class));
+                }
+                else{
+                    startActivity(new Intent(MainActivity.this, Medium.class));
+                }
             }
         });
 
@@ -49,7 +63,12 @@ public class MainActivity extends Activity {
             @Override
             //Spectrum Matcher
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, BGSpectrumMatcher.class));
+                if(user.getBackground() == true) {
+                    startActivity(new Intent(MainActivity.this, BGSpectrumMatcher.class));
+                }
+                else{
+                    startActivity(new Intent(MainActivity.this, SpectrumMenu.class));
+                }
             }
         });
 
@@ -57,7 +76,12 @@ public class MainActivity extends Activity {
             @Override
             //LensCraft
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, BGLensCraft.class));
+                if(user.getBackground() == true) {
+                    startActivity(new Intent(MainActivity.this, BGLensCraft.class));
+                }
+                else{
+                    startActivity(new Intent(MainActivity.this, LensCraftMenu.class));
+                }
             }
         });
 

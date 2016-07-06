@@ -10,21 +10,29 @@ import java.io.Serializable;
 
 /**
  * Created by Joel on 7/6/2016.
+ *
+ * User object intended to store the user's information and tracking info
+ *
+ * This class tracks the user's performance, provides access to the higher levels,
+ * and handles loading and saving the user object
  */
 public class User implements Serializable{
 
-    String name;    //User's name
-    //String school;  //String corresponding to user's school
-    //int icon_id;  //Resource id integer corresponding to user's icon
-    //int viewCount //Tracks how many questions the user has viewed (not necessarily answered)
-    int score;      //User's score
-    int attempts;   //Question attempts
-    int correct;    //Questions answered correctly
-    int incorrect;  //Questions answered incorrectly
+    private String name;    //User's name
+    //private String school;  //String corresponding to user's school
+    //private int icon_id;  //Resource id integer corresponding to user's icon
+    //private int viewCount //Tracks how many questions the user has viewed (not necessarily answered)
+    private int score;      //User's score
+    private int attempts;   //Question attempts
+    private int correct;    //Questions answered correctly
+    private int incorrect;  //Questions answered incorrectly
 
-    int lensLVL;    //Number of unlocked levels in Lens Crafter sub menu
-    int specLVL;    // "                        "  Spectrum matcher sub menu
-    int medLVL;     // "                        "  Rank the Medium
+    private int lensLVL;    //Number of unlocked levels in Lens Crafter sub menu
+    private int specLVL;    // "                        "  Spectrum matcher sub menu
+    private int medLVL;     // "                        "  Rank the Medium
+
+    private boolean hints;      //Option for the user to bypass hints
+    private boolean background; //Option for the user to bypass the background sections
 
     public User(){
         name = "anonymous";
@@ -39,6 +47,10 @@ public class User implements Serializable{
         lensLVL = 1;
         specLVL = 1;
         medLVL = 1;
+
+        //Turn on background/hints by default
+        hints = true;
+        background = true;
     }
 
     public User(String name){
@@ -54,6 +66,10 @@ public class User implements Serializable{
         lensLVL = 1;
         specLVL = 1;
         medLVL = 1;
+
+        //Turn on background/hints by default
+        hints = true;
+        background = true;
     }
 
     /*
@@ -201,6 +217,16 @@ public class User implements Serializable{
     public void setName(String name) {
         this.name = name;
     }
+
+    //Hints: get and set
+    public boolean getHints() {return hints;}
+
+    public void setHints(boolean view){hints = view;}
+
+    //Background: get and set
+    public boolean getBackground() {return background;}
+
+    public void setBackground(boolean view) {background = view;}
 
     //LensLVL: get and set
     public int getLensLVL() {
