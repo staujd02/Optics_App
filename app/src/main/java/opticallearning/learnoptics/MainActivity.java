@@ -14,6 +14,8 @@ import android.widget.ImageButton;
  */
 public class MainActivity extends Activity {
 
+    User user;  //Current user
+
     // TODO: Load user information
     // TODO: Load databases (.json)
 
@@ -84,4 +86,13 @@ public class MainActivity extends Activity {
         });
 
     }
+
+    public User getCurrentUser(){
+        return user;
+    }
+
+    public void setCurrentUser(User user){
+        this.user = user;
+    }
+
 }

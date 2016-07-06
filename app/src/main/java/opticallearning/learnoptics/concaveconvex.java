@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 /**
@@ -23,17 +25,41 @@ public class ConcaveConvex extends Activity {
         setContentView(R.layout.concaveconvex); //set the view
         setTitle("Concave vs. Convex"); //Assign title
 
-        //Create spinner object and connect to spinCC in concaveconvex.xml
-        Spinner spinner = (Spinner) findViewById(R.id.spinCC);
+        //Create button object and connect to spinCC in concaveconvex.xml
+        final Button spinner = (Button) findViewById(R.id.spinCC);
+        spinner.setText("Pick Lens");
 
-        //Assign to string array lensTypes {"Pick One", "Concave", "Convex"}
+        //Assign to string array lensTypes {"Concave", "Convex"}
         //using an adapter
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.lensTypes, android.R.layout.simple_spinner_item);
+
         //Sets the drop down view type
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Assigns the created adapter to spinner
-        spinner.setAdapter(adapter);
+
+        //Create onClickListener
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create Dialog for the user to pick a lens
+                new AlertDialog.Builder(ConcaveConvex.this)
+                        //Set title and the adapter created above
+                        .setTitle("Pick Lens Type")
+                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Grabs array of choices
+                                String[] s = getResources().getStringArray(R.array.lensTypes);
+                                //Sets the user's choice as the button's text
+                                spinner.setText(s[which]);
+
+                                //Ends the dialog
+                                dialog.dismiss();
+                            }
+                            //creates dialog object and displays it
+                        }).create().show();
+            }
+        });
 
         //todo check if hints are enable or not
 

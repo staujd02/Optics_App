@@ -37,7 +37,6 @@
     <string name="bg_spec">This is basic content where the user is introduced to the subject.</string>
     <string name="btContinue">Continue</string>
     <string-array name="lensTypes">
-        <item>Pick One</item>
         <item>Concave</item>
         <item>Convex</item>
     </string-array>
