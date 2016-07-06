@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 /**
@@ -22,15 +24,39 @@ public class NumberOfLens extends Activity {
         setTitle("Number of Lens");         //assigns descriptive title
 
         //Creates spinner object and assigns it to spinCount in number_of_lens.xml
-        Spinner spinner = (Spinner) findViewById(R.id.spinCount);
+        final Button spinner = (Button) findViewById(R.id.spinCount);
+        spinner.setText("Pick number of lens");
+
         //Creates array adapter for reading array lens_Nums into the spinner
         //lens_Nums = {"1","2","3"}
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.lens_Nums, android.R.layout.simple_spinner_item);
         //Assigns dropdown behaviour to spinner
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Assigns the adapter to the spinner
-        spinner.setAdapter(adapter);
+
+        //Create onClickListener
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create Dialog for the user to pick a lens
+                new AlertDialog.Builder(NumberOfLens.this)
+                        //Set title and the adapter created above
+                        .setTitle("Pick Number of Lens")
+                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Grabs array of choices
+                                String[] s = getResources().getStringArray(R.array.lens_Nums);
+                                //Sets the user's choice as the button's text
+                                spinner.setText(s[which]);
+
+                                //Ends the dialog
+                                dialog.dismiss();
+                            }
+                            //creates dialog object and displays it
+                        }).create().show();
+            }
+        });
 
         //todo check if hints are enable or not
 

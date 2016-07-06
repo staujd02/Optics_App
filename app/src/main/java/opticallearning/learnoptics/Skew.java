@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
 
 /**
  * Created by Joel on 7/1/2016.
@@ -16,26 +17,51 @@ import android.widget.Spinner;
  * towards the photodetectors
  *
  */
-public class Shew extends Activity {
+public class Skew extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //call super constructor
         setContentView(R.layout.skew);  //sets the view
         setTitle("Lens Height");        //assigns descriptive title
 
         //Creates spinner object and assigns it to spinSkew in skew.xml
-        Spinner spinner = (Spinner) findViewById(R.id.spinSkew);
+        final Button spinner = (Button) findViewById(R.id.spinSkew);
+        spinner.setText("Pick Lens Height");
+
         //Creates array adapter for reading skew[] into spinSkew
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        //skew > {"Above Median", "At Median", "Below Median"}
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.skew, android.R.layout.simple_spinner_item);
         //Assigns dropdown behaviour of adapter
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //assigns adapter to spinner
-        spinner.setAdapter(adapter);
+
+        //Create onClickListener
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create Dialog for the user to pick a lens
+                new AlertDialog.Builder(Skew.this)
+                        //Set title and the adapter created above
+                        .setTitle("Pick Lens Height")
+                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Grabs array of choices
+                                String[] s = getResources().getStringArray(R.array.skew);
+                                //Sets the user's choice as the button's text
+                                spinner.setText(s[which]);
+
+                                //Ends the dialog
+                                dialog.dismiss();
+                            }
+                            //creates dialog object and displays it
+                        }).create().show();
+            }
+        });
 
         //todo check if hints are enable or not
 
         //Provides the user a hint on how they should proceed
-        new AlertDialog.Builder(Shew.this)
+        new AlertDialog.Builder(Skew.this)
                 //Sets the dialog's title
                 .setTitle("Directions")
                 //sets the dialog's message

@@ -78,6 +78,7 @@
         android:id="@+id/spinCC"
         android:background="@drawable/border"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="5sp" />
 
 </RelativeLayout>

@@ -21,7 +21,7 @@ import java.util.ArrayList;
  *
  * ConcaveConvex.java,      Distances.java,
  * LensWidth.java,          NIndex.java
- * Shew.java, and           NumberOfLens.java
+ * Skew.java, and           NumberOfLens.java
  *
  */
 public class LensCraftMenu extends ListActivity{
@@ -43,6 +43,9 @@ public class LensCraftMenu extends ListActivity{
         else {
             access = user.getLensLVL();
         }
+
+        //USED FOR TESTING
+        access = 6;
 
         ArrayList<String> pages = new ArrayList<String>();
 
@@ -109,8 +112,8 @@ public class LensCraftMenu extends ListActivity{
                 startActivity(new Intent(LensCraftMenu.this, NIndex.class));
                 break;
             case 3:
-                //Starts the Shew module, shew.xml
-                startActivity(new Intent(LensCraftMenu.this, Shew.class));
+                //Starts the Skew module, shew.xml
+                startActivity(new Intent(LensCraftMenu.this, Skew.class));
                 break;
             case 4:
                 //Starts the (Lens) Distances module, distance.xml

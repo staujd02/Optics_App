@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 /**
@@ -23,14 +25,40 @@ public class NIndex extends Activity {
         setTitle("Index of Refraction");    //assigns descriptive title
 
         //Creates spinner object and assigns it to spinMaterial in n_index.xml
-        Spinner spinner = (Spinner) findViewById(R.id.spinMaterial);
+        final Button spinner = (Button) findViewById(R.id.spinMaterial);
+        spinner.setText("Pick Lens Material");
+
         //Creates Adapter for reading the array materials into spinMaterials
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        //spinMaterial > {"Acetone Low N","Crown Glass Med N","Flint Glass High N"}
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.materials, android.R.layout.simple_spinner_item);
+
         //Assigns dropdown behaviour
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Assigns the adapter to the spinner
-        spinner.setAdapter(adapter);
+
+        //Create onClickListener
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create Dialog for the user to pick a lens
+                new AlertDialog.Builder(NIndex.this)
+                        //Set title and the adapter created above
+                        .setTitle("Pick Lens Material")
+                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Grabs array of choices
+                                String[] s = getResources().getStringArray(R.array.materials);
+                                //Sets the user's choice as the button's text
+                                spinner.setText(s[which]);
+
+                                //Ends the dialog
+                                dialog.dismiss();
+                            }
+                            //creates dialog object and displays it
+                        }).create().show();
+            }
+        });
 
 
         //todo check if hints are enable or not

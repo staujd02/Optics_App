@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 /**
@@ -29,16 +31,40 @@ public class Distances extends Activity {
         setTitle("Lens Distance");          //Assigns specific title over default
 
         //Creates spinner object and sets the reference to spinner spinDistance in distance.xml
-        Spinner spinner = (Spinner) findViewById(R.id.spinDistance);
+        final Button spinner = (Button) findViewById(R.id.spinDistance);
+        spinner.setText("Pick Distance");
 
         //Creates array adapter for loading string array into the spinner,
-        //distances is in strings.xml --> {"Short", "Medium", "Long"}
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        //distances is in strings.xml --> {"Short", "Medium", "Far"}
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.distances, android.R.layout.simple_spinner_item);
+
         //Assign drop down behaviour
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Assigns created adapter to spinner
-        spinner.setAdapter(adapter);
+
+        //Create onClickListener
+        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Create Dialog for the user to pick a lens
+                new AlertDialog.Builder(Distances.this)
+                        //Set title and the adapter created above
+                        .setTitle("Pick Distance")
+                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Grabs array of choices
+                                String[] s = getResources().getStringArray(R.array.distances);
+                                //Sets the user's choice as the button's text
+                                spinner.setText(s[which]);
+
+                                //Ends the dialog
+                                dialog.dismiss();
+                            }
+                            //creates dialog object and displays it
+                        }).create().show();
+            }
+        });
 
         //todo check if hints are enable or not
 
