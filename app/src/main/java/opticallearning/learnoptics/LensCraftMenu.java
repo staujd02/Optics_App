@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Joel on 7/1/2016.
  *
@@ -24,16 +26,47 @@ import android.widget.ListView;
  */
 public class LensCraftMenu extends ListActivity{
 
-    //ToDo generate array pages[] dynamically based on user data
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Call super constructor
         setContentView(R.layout.lenscraft_extended);    //set the view to Lens Crafter menu
         setTitle("Explore");    //Assign a descriptive title
+        int access;
 
-        //This array needs to be generated dynamically based on user data
-        String[] pages = {"Background","Concave vs. Convex","N Index","Height","Distance","Lens Width","Number of Lens"};
+        user = MainActivity.user;
+
+        if(user == null){
+            access = 1;
+        }
+        else {
+            access = user.getLensLVL();
+        }
+
+        ArrayList<String> pages = new ArrayList<String>();
+
+        pages.add("Background");
+
+        //Array generated dynamically based on user's access level
+        //Each item is added at the first index to ensure
+        //the list is ordered correctly
+        switch (access){
+            case 6:
+                //Highest Level
+                pages.add("Number of Lens");
+            case 5:
+                pages.add(1,"Lens Width");
+            case 4:
+                pages.add(1,"Distance");
+            case 3:
+                pages.add(1,"Height");
+            case 2:
+                pages.add(1,"N Index");
+            case 1:
+                //Lowest Level
+                pages.add(1,"Concave vs. Convex");
+        }
 
         //Sets the list adapter to display the array pages[]
         setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,pages));
@@ -44,6 +77,9 @@ public class LensCraftMenu extends ListActivity{
      * instead of back to the background information
      */
     public void onBackPressed() {
+        //Send the user to the main menu,
+        // prevents the user from returning to the
+        //background page
         startActivity(new Intent(LensCraftMenu.this, MainActivity.class));
     }
 
