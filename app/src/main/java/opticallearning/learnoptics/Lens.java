@@ -16,28 +16,45 @@ public class Lens {
     private String material;
     private String graphic_Reference;
     private int fLen;
-    private int nIndex;
     private boolean concave;
 
     private Point origin = null;
     private int height = -1;
     private int width = -1;
 
-    public Lens(String id, String material, String graphic_Reference, int fLen, int nIndex, boolean concave) {
+    /**
+     *  Constructor intended for loading the lens into memory from data file
+     *
+     * @param id        This is the the lens's unique string identifier
+     * @param material  A string description of the lens's material
+     * @param graphic_Reference String filename of the lens's image
+     * @param fLen      Focal length of the lens
+     * @param concave   boolean, if true the lens is concave, otherwise it is convex
+     */
+    public Lens(String id, String material, String graphic_Reference, int fLen,boolean concave) {
         this.id = id;
         this.material = material;
         this.graphic_Reference = graphic_Reference;
         this.fLen = fLen;
-        this.nIndex = nIndex;
         this.concave = concave;
     }
 
+    /**
+     * Sets the location of the lens in a relative space
+     *
+     * @param origin the top left corner of where the rectangle binding
+     *               space starts > the (0,0) of the lens
+     * @param height The height of the lens
+     * @param width  The width of the lens
+     */
     public void setLocation(Point origin, int height, int width){
         this.origin = origin;
         this.height = height;
         this.width = width;
     }
 
+    //Getters
+    //************************************
     public Point getOrigin() {
         return origin;
     }
@@ -64,10 +81,6 @@ public class Lens {
 
     public int getfLen() {
         return fLen;
-    }
-
-    public int getnIndex() {
-        return nIndex;
     }
 
     public boolean isConcave() {
