@@ -37,13 +37,10 @@
     <opticallearning.learnoptics.DrawingView
         android:layout_width="30sp"
         android:layout_height="100sp"
-        android:id="@+id/view2"
+        android:id="@+id/orginalLens"
         android:background="@drawable/border"
-        android:layout_marginRight="60dp"
-        android:layout_marginEnd="63dp"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/view3"
-        android:layout_toStartOf="@+id/view3" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="30sp"
@@ -60,7 +57,6 @@
         android:layout_height="30sp"
         android:id="@+id/dectTwo"
         android:src="@drawable/detector"
-        android:layout_above="@+id/view2"
         android:layout_alignLeft="@+id/dectOne"
         android:layout_alignStart="@+id/dectOne"
         android:contentDescription="@string/detector" />
@@ -70,18 +66,19 @@
         android:layout_height="30sp"
         android:id="@+id/dectThree"
         android:src="@drawable/detector"
-        android:layout_below="@+id/view2"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/detector" />
+        android:layout_alignParentEnd="true" />
 
     <opticallearning.learnoptics.DrawingView
         android:layout_width="30sp"
         android:layout_height="100sp"
-        android:id="@+id/view3"
+        android:id="@+id/lens"
         android:background="@drawable/border"
-        android:layout_above="@+id/dectThree"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/orginalLens"
+        android:layout_marginRight="45dp" />
 
     <opticallearning.learnoptics.DrawingView
         android:layout_width="30sp"
@@ -90,8 +87,7 @@
         android:layout_marginLeft="60dp"
         android:layout_marginStart="57dp"
         android:background="@drawable/border"
-        android:layout_above="@+id/dectThree"
-        android:layout_toRightOf="@+id/view3"
-        android:layout_toEndOf="@+id/view3" />
+        android:layout_toEndOf="@+id/orginalLens"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

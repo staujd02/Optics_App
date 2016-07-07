@@ -36,6 +36,7 @@
     <string name="bg_medium">This is basic content where the user is introduced to the subject.</string>
     <string name="bg_spec">This is basic content where the user is introduced to the subject.</string>
     <string name="btContinue">Continue</string>
+    <string name="lens">Lens</string>
     <string-array name="lensTypes">
         <item>Concave</item>
         <item>Convex</item>
