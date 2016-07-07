@@ -28,6 +28,8 @@ public class LensCraftMenu extends ListActivity{
 
     private User user;
 
+    //TODO load lenses from database
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Call super constructor

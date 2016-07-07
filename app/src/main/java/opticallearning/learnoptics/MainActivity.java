@@ -16,8 +16,6 @@ public class MainActivity extends Activity {
 
     static protected User user;
 
-    // TODO: Load databases (.json)
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //calls the super constructor

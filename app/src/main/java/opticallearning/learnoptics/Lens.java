@@ -8,6 +8,7 @@ import android.graphics.Point;
  * Lens object responsible for holding data necessary for calculations and drawing
  * the lens bitmaps
  *
+ *
  * This is intended for use in the custom views implemented in Lens Crafter (LensCraft.java)
  */
 public class Lens {
