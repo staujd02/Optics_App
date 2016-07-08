@@ -2,7 +2,6 @@ package opticallearning.learnoptics;
 
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
@@ -40,6 +39,10 @@ public class Laser {
     public Laser(PointF start,Point maxPoint ){
         this.start = start;
         MAX_POINT = maxPoint;
+
+        lenses = new ArrayList<>();
+        decoratedLenses = new ArrayList<>();
+        segs = new ArrayList<>();
     }
 
     /**
@@ -71,16 +74,18 @@ public class Laser {
      * This is the more descriptive constructor and it must be used for the first lens
      * Otherwise, the laser cannot begin a calculation
      *
-     * @param lens  The lens you wish to add to the laser's interaction
+     * @param /lens  The lens you wish to add to the laser's interaction
      *              *NOTE: the Lens must have a valid location for the calculation to proceed
      *
-     * @param angle The angle at which the laser is entering the lens (Typically 90 degrees)
+     * @param /angle The angle at which the laser is entering the lens (Typically 90 degrees)
      */
+    /*
     public void addInitialLens(Lens lens, float angle){
         LaserLens len = new LaserLens(lens, angle);
         //The lens is added to the front of the array
-        lenses.add(0,lens);
+        decoratedLenses.add(0,len);
     }
+    */
 
     //Calculate(Point start, or StartX, StartY)
     //have to fetch focal length of lens
@@ -116,7 +121,7 @@ public class Laser {
                 //Find horizontal midpoint -> lowest x plus highest x divided by two
                 focalPoint.x = (l.getOrigin().x + l.getWidth()+l.getOrigin().x) / 2;
                 //Add focal length for x
-                focalPoint.x = focalPoint.x + l.getfLen();
+                focalPoint.x = (float) (focalPoint.x + l.getfLen());
 
                 //slope equation - NEW SLOPE
                 m = (focalPoint.y - impact.y) / (focalPoint.x - impact.x);
@@ -147,6 +152,8 @@ public class Laser {
             impact.x = impact.x + TRACE_DEFINITION;
             impact.y = (float) (impact.x * m + b);
         }
+
+        End = impact;
 
         segs.add(new LaserLine(start, impact));
     }
@@ -279,6 +286,12 @@ public class Laser {
 
             return array;
         }
+
+
+    }
+
+    public PointF getEnd() {
+        return End;
     }
 
 }

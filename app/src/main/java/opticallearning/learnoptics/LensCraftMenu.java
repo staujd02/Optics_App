@@ -148,6 +148,7 @@ public class LensCraftMenu extends ListActivity{
                 rectArray = (JSONArray) lens.get("rect");
 
                 //read primative values from JSON array to create Rect object
+                //new Rect(left,top,right,bottom)
                 Rect rect = new Rect(rectArray.getInt(0),rectArray.getInt(1),
                                         rectArray.getInt(2),rectArray.getInt(3));
 

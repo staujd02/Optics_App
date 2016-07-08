@@ -8,6 +8,9 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 /**
  * Created by Joel on 6/29/2016.
@@ -21,9 +24,8 @@ public class DrawingView extends View implements View.OnTouchListener{
 
     //Create paint object for drawing graphics
     Paint paint = new Paint();
-
-    //This view is a lens or a laser backdrop
-    Boolean lens;
+    ArrayList<Laser> lasers;
+    Lens lens;
 
     /**
      * First constructor and simplest constructor
@@ -71,6 +73,8 @@ public class DrawingView extends View implements View.OnTouchListener{
         setFocusableInTouchMode(true);  //Must be true for user interaction
         setWillNotDraw(false);          //Must be false to drawn on view
 
+        lasers = new ArrayList<>();
+
         //Assign the onTouchListener, defined below, to the object's own defined onTouchListener
         this.setOnTouchListener(this);
 
@@ -78,14 +82,45 @@ public class DrawingView extends View implements View.OnTouchListener{
         paint.setAntiAlias(true);
     }
 
+    public void drawLens(Lens lens){
+        this.lens = lens;
+        invalidate();
+    }
+
+    public void drawLasers(ArrayList<Laser> lasers){
+        this.lasers = lasers;
+        invalidate();
+    }
+
     @Override
      protected void onDraw(Canvas canvas) {
          super.onDraw(canvas); //Draws everything defined in the .xml parameters
 
-         //Use this for drawing lasers
-         paint.setColor(Color.RED);
-         paint.setStrokeWidth(3f);
-         //canvas.drawLine(0.0f, 0.0f, 15f, 15f, paint);
+        //Use this for drawing lasers
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(3f);
+
+        if(lasers != null){
+            for(Laser l: lasers){
+                ArrayList<PointF[]> points = l.getSegments();
+                for(PointF[] f: points){
+                    if(f != null){
+                        canvas.drawLine(f[0].x, f[0].y, f[1].x, f[1].y, paint);
+                    }
+                }
+            }
+        }
+
+        if(lens != null){
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.lens);
+            Rect rect = new Rect(0,0,getWidth(),getHeight());
+
+            //canvas.drawBitmap(bm,lens.getGraphic_Reference(),rect,paint);
+            //canvas.drawBitmap(bm,new Rect(0,0,getWidth(),getHeight()),rect,paint);
+            canvas.drawBitmap(bm,null,rect,paint);
+        }
+
+
      }
 
     @Override

@@ -1,12 +1,12 @@
 [{"ID":"vnc","Lens Shape":"concave","Material":"crown glass","Focal cm":48,"n index":1.52,"cr":50,"rect":[12,0,39,103],"Description":"Normal concave lens made of crown glass"},
 {"ID":"vna","Lens Shape":"concave","Material":"acetone","Focal cm":69.25,"n index":1.36,"cr":50,"rect":[71,0,98,103],"Description":"Normal concave lens made of acetone"},
 {"ID":"vnf","Lens Shape":"concave","Material":"flint glass","Focal cm":37,"n index":1.67,"cr":50,"rect":[129,0,156,103],"Description":"Normal concave lens made of flint glass"},
-{"ID":"xnc","Lens Shape":"convex","Material":"crown glass","Focal cm":-48,"n index":1.52,"cr":50,"rect":[8,109,43,212],"Description":"Normal concave lens made of crown glass"},
+{"ID":"xnc","Lens Shape":"convex","Material":"crown glass","Focal cm":-48,"n index":1.52,"cr":50,"rect":[8,109,43,212],"Description":"Normal convex lens made of crown glass"},
 {"ID":"xna","Lens Shape":"convex","Material":"acetone","Focal cm":-69.25,"n index":1.36,"cr":50,"rect":[67,109,102,212],"Description":"Normal convex lens made of acetone"},
-{"ID":"xnf","Lens Shape":"convex","Material":"flint glass","Focal cm":-37,"n index":1.67,"cr":50,"rect":[126,109,161,212],"Description":"Normal concave lens made of flint glass"},
+{"ID":"xnf","Lens Shape":"convex","Material":"flint glass","Focal cm":-37,"n index":1.67,"cr":50,"rect":[126,109,161,212],"Description":"Normal convex lens made of flint glass"},
 {"ID":"vdc","Lens Shape":"concave short","Material":"crown glass","Focal cm":96,"n index":1.52,"cr":100,"rect":[7,224,46,327],"Description":"Shortened concave lens made of crown glass"},
 {"ID":"vda","Lens Shape":"concave short","Material":"acetone","Focal cm":139,"n index":1.36,"cr":100,"rect":[65,224,104,327],"Description":"Shortened concave lens made of acetone"},
 {"ID":"vdf","Lens Shape":"concave short","Material":"flint glass","Focal cm":74.25,"n index":1.67,"cr":100,"rect":[124,224,163,327],"Description":"Shortened concave lens made of flint glass"},
-{"ID":"xdc","Lens Shape":"convex short","Material":"crown glass","Focal cm":-96,"n index":1.52,"cr":100,"rect":[0,342,52,444],"Description":"Shortened concave lens made of crown glass"},
+{"ID":"xdc","Lens Shape":"convex short","Material":"crown glass","Focal cm":-96,"n index":1.52,"cr":100,"rect":[0,342,52,444],"Description":"Shortened convex lens made of crown glass"},
 {"ID":"xda","Lens Shape":"convex short","Material":"acetone","Focal cm":-139,"n index":1.36,"cr":100,"rect":[59,342,111,445],"Description":"Shortened convex lens made of acetone"},
-{"ID":"xdf","Lens Shape":"convex short","Material":"flint glass","Focal cm":-74.25,"n index":1.67,"cr":100,"rect":[118,342,170,445],"Description":"Shortened concave lens made of flint glass"}]
+{"ID":"xdf","Lens Shape":"convex short","Material":"flint glass","Focal cm":-74.25,"n index":1.67,"cr":100,"rect":[118,342,170,445],"Description":"Shortened convex lens made of flint glass"}]

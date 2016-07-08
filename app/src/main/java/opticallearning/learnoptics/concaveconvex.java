@@ -4,13 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.LogRecord;
 
@@ -24,9 +32,18 @@ import java.util.logging.LogRecord;
  */
 public class ConcaveConvex extends Activity {
 
+    final int CONVEX_LENS = 3;  //Index of the convex lens
+    final int CONCAVE_LENS = 0; //Index of the concave lens
+
     int answerIndex;    //The index of the correct answer
     User user;          //Reference to user object
     Button spinner;     //Button used to select lens
+
+    ArrayList<Laser> lasers;//Array of lasers
+    ImageView[] views;      //Array of references to photodetector views
+
+    Lens lens;          //Concave or convex lens
+    Boolean answered;   //Tracks whether the user has already answered
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +80,14 @@ public class ConcaveConvex extends Activity {
                                 //Sets the user's choice as the button's text
                                 spinner.setText(s[which]);
 
+                                if(which == CONCAVE_LENS){
+                                    lens = LensCraftMenu.lensArrayList.get(CONCAVE_LENS);
+                                }
+                                else{
+                                    lens = LensCraftMenu.lensArrayList.get(CONVEX_LENS);
+                                }
+
+
                                 //Determine Correctness
                                 if(which == answerIndex){
                                     //Run Handler with correct answer given
@@ -97,6 +122,14 @@ public class ConcaveConvex extends Activity {
         super.onStart(); //Always start with the super constructor
 
         int options;    //Picks the correct answer > later is translated to index
+        answered = false;   //Set the answered state back to false
+
+        //Initialize the laser array
+        lasers = new ArrayList<>();
+
+        //Ensure button is clickable
+        Button spin = (Button) findViewById(R.id.spinCC);
+        spin.setClickable(true);
 
         //Correct Index
         Random rand = new Random(); //Create new random
@@ -106,15 +139,21 @@ public class ConcaveConvex extends Activity {
         // 50/50 chance of being positive or negative
         if(options > 0){
             //Correct index is 0
-            answerIndex = 0;
+            answerIndex = CONCAVE_LENS; //Normal concave lens made of crown glass
         }
         else{
             //Correct index is 1
-            answerIndex = 1;
+            answerIndex = CONVEX_LENS; //
         }
 
-        //todo Calculate Laser's Path
-        //todo Move Photodetectors
+        //Get the Lens holder from concaveconvex.xml for measurments
+        DrawingView lencc = (DrawingView) findViewById(R.id.ccLen);
+        //Assign the lens holder location to lens object
+        lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
+
+        setUpLasers();          //Assigns the laser's their origin point dynamically
+        setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
+                                //the photodetectors location (does not render lasers)
 
         //This directions dialog displays until the user opts out of
         //displaying the directions
@@ -134,30 +173,161 @@ public class ConcaveConvex extends Activity {
     }
 
     /**
+     * Assigns the origin point to the lasers and initializes them
+     * It also adds the lasers to lasers array
+     */
+    public void setUpLasers(){
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+        DrawingView drawingview = (DrawingView) findViewById(R.id.view);
+
+        //Highest laser
+        Laser laser1 = new Laser(new PointF(
+                laserBox.getX() + laserBox.getWidth() - 20,
+                (laserBox.getHeight() + 2*laserBox.getY() - 50) / 2
+        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+
+        Laser laser2 = new Laser(new PointF(
+                laserBox.getX() + laserBox.getWidth() - 15,
+                (laserBox.getHeight() + 2*laserBox.getY() - 25) / 2
+        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+
+        Laser laser3 = new Laser(new PointF(
+                laserBox.getX() + laserBox.getWidth() - 15,
+                (laserBox.getHeight() + 2*laserBox.getY() + 25) / 2
+        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+
+        Laser laser4 = new Laser(new PointF(
+                laserBox.getX() + laserBox.getWidth() - 20,
+                (laserBox.getHeight() + 2*laserBox.getY() + 50) / 2
+        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+
+        //Add lasers to laser array list
+        lasers.add(laser1); lasers.add(laser2); lasers.add(laser3); lasers.add(laser4);
+    }
+
+    /**
+     * Assigns correct lens to laser, calculates the destination, and then
+     * moves the photodetectors at that location
+     */
+    private void setUpPhotoDetectors() {
+
+        views = new ImageView[4];
+        TranslateAnimation animation;
+        MyAnimationListener listener;
+        PointF end;
+        Float xDelta;
+        Float yDelta;
+
+        views[0] = (ImageView) findViewById(R.id.ccDet1);
+        views[1] = (ImageView) findViewById(R.id.ccDet2);
+        views[2] = (ImageView) findViewById(R.id.ccDet3);
+        views[3] = (ImageView) findViewById(R.id.ccDet4);
+
+        for(int i = 0; i < views.length; i++){
+
+            lasers.get(i).addLens(LensCraftMenu.lensArrayList.get(answerIndex)); //Grab matching laser
+            lasers.get(i).calculate();
+            end = lasers.get(i).getEnd();
+
+            if(end.x > views[i].getX()){
+                xDelta = end.x - views[i].getX();
+            }
+            else{
+                xDelta = -(views[i].getX() - end.x);
+            }
+
+            if(end.y > views[i].getY()){
+                yDelta = end.y - views[i].getY();
+            }
+            else{
+                yDelta = -(views[i].getY() - end.y);
+            }
+
+            animation = new TranslateAnimation(0, xDelta, 0, yDelta);
+            animation.setDuration(500);
+            animation.setFillAfter(false);
+            listener = new MyAnimationListener();
+            listener.setImage(views[i]);
+            animation.setAnimationListener(listener);
+
+            views[i].startAnimation(animation);
+        }
+    }
+
+    public class MyAnimationListener implements Animation.AnimationListener {
+        ImageView view;
+
+        public void setImage(ImageView view) {
+            this.view = view;
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            for(int i = 0; i < views.length; i++){
+                view.clearAnimation();
+                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(view.getWidth(), view.getHeight());
+                view.setLayoutParams(lp);
+            }
+        }
+        public void onAnimationRepeat(Animation animation) {
+        }
+        public void onAnimationStart(Animation animation) {
+        }
+    }
+
+    /**
      * Handles the action of the user's choice
      *
      * @param correct indicates if the user's answer was wrong or right
      */
     private void ClickHandler(boolean correct){
-        //Create handler object to call runables after a delay
-        Handler dialogEngine = new Handler();
+        if(!answered){
+            //Recorded that the user has answered
+            answered = false;
 
-        //Sends user's score to be recorded
-        recordAnswer(user,correct);
+            //Disable further interaction with button
+            Button spin = (Button) findViewById(R.id.spinCC);
+            spin.setClickable(false);
 
-        //DrawLens()
-        //DrawLasers()
-        //LightPhotodectors()... or not
+            //Create handler object to call runables after a delay
+            Handler dialogEngine = new Handler();
 
-        //Check correctness and display appropriate dialogs
-        if(correct){
-            //User is correct
-            dialogEngine.postDelayed(correctDelay, 2500);
+            //Sends user's score to be recorded
+            recordAnswer(user,correct);
+
+            DrawLens();
+            DrawLasers();
+            //LightPhotodetectors()... or not
+
+            //Check correctness and display appropriate dialogs
+            if(correct){
+                //User is correct
+                dialogEngine.postDelayed(correctDelay, 2500);
+            }
+            else{
+                //User is incorrect
+                dialogEngine.postDelayed(incorrectDelay, 2500);
+            }
         }
-        else{
-            //User is incorrect
-            dialogEngine.postDelayed(incorrectDelay, 2500);
+    }
+
+    private void DrawLasers() {
+        //Capture drawing view
+        DrawingView dv = (DrawingView) findViewById(R.id.view);
+
+        //Add user's choice of lens
+        //and calculate
+        for(Laser l: lasers){
+            l.addLens(lens);
+            l.calculate();
         }
+
+        //Request the drawing view to render lasers
+        dv.drawLasers(lasers);
+    }
+
+    private void DrawLens() {
+        DrawingView view = (DrawingView) findViewById(R.id.ccLen);
+        view.drawLens(lens);
     }
 
     /**
