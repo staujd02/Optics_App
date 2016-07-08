@@ -1,6 +1,7 @@
 package opticallearning.learnoptics;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 
 /**
  * Created by Joel on 6/29/2016.
@@ -15,8 +16,8 @@ public class Lens {
 
     private String id;
     private String material;
-    private String graphic_Reference;
-    private int fLen;
+    Rect graphic_Reference;
+    private double fLen;
     private boolean concave;
 
     private Point origin = null;
@@ -32,7 +33,7 @@ public class Lens {
      * @param fLen      Focal length of the lens
      * @param concave   boolean, if true the lens is concave, otherwise it is convex
      */
-    public Lens(String id, String material, String graphic_Reference, int fLen,boolean concave) {
+    public Lens(String id, String material, Rect graphic_Reference, double fLen, boolean concave) {
         this.id = id;
         this.material = material;
         this.graphic_Reference = graphic_Reference;
@@ -50,6 +51,12 @@ public class Lens {
      */
     public void setLocation(Point origin, int height, int width){
         this.origin = origin;
+        this.height = height;
+        this.width = width;
+    }
+
+    public void setLocation(int x, int y, int height, int width){
+        this.origin = new Point(x,y);
         this.height = height;
         this.width = width;
     }
@@ -76,11 +83,11 @@ public class Lens {
         return material;
     }
 
-    public String getGraphic_Reference() {
+    public Rect getGraphic_Reference() {
         return graphic_Reference;
     }
 
-    public int getfLen() {
+    public double getfLen() {
         return fLen;
     }
 

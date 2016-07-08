@@ -36,42 +36,13 @@
 
     <ImageView
         android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:id="@+id/dectOne"
-        android:src="@drawable/detector"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/detector" />
-
-    <ImageView
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:id="@+id/dectTwo"
-        android:src="@drawable/detector"
-        android:contentDescription="@string/detector"
-        android:layout_alignBottom="@+id/imgLaser"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:id="@+id/dectThree"
-        android:src="@drawable/detector"
-        android:contentDescription="@string/detector"
-        android:layout_alignTop="@+id/imgLaser"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <ImageView
-        android:layout_width="30sp"
         android:layout_height="125sp"
         android:id="@+id/ccLen"
         android:background="@drawable/border"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:contentDescription="@string/lens" />
+        android:contentDescription="@string/lens"
+        android:scaleType="fitCenter" />
 
     <Button
         android:layout_width="wrap_content"
