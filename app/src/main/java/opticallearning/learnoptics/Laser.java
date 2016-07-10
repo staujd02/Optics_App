@@ -70,6 +70,11 @@ public class Laser {
         lenses.add(lens);
     }
 
+    public void setLens(Lens lens){
+        lenses = new ArrayList<>();
+        lenses.add(lens);
+    }
+
     /**
      * This is the more descriptive constructor and it must be used for the first lens
      * Otherwise, the laser cannot begin a calculation
@@ -108,7 +113,7 @@ public class Laser {
 
             if(impact != null){
                 //Impact occurred
-                segs.add(new LaserLine(start, impact)); //make line segment to lens center
+                newLaserLine(start,impact);
                 start = impact; //Swap the old start to impact for continuity
 
                 //THIS FORMULA CURRENTLY ASSUMES THE ANGLE OF INCIDENCE IS 90 DEGREES
@@ -148,14 +153,15 @@ public class Laser {
         impact = new PointF(start.x, start.y);
 
         //Trace steps by incrementing x until it leaves the binding rectangle
-        while(impact.x > 0 && impact.x < MAX_POINT.x && impact.y > 0 && impact.y < MAX_POINT.y){
+        while(impact.x >= 0 && impact.x < MAX_POINT.x && impact.y >= 0 && impact.y < MAX_POINT.y){
             impact.x = impact.x + TRACE_DEFINITION;
             impact.y = (float) (impact.x * m + b);
+            System.out.println("Tracing...");
         }
 
         End = impact;
 
-        segs.add(new LaserLine(start, impact));
+        newLaserLine(start, impact);
     }
 
     public PointF impact(Lens l,double m, double b){
@@ -163,6 +169,8 @@ public class Laser {
         double low_Y;   //lowest y of lens window
         double high_Y;  //greatest y of lens window
         double midpoint_X;//midpoint x of the lens
+
+        System.out.println("IMPACT REGISTERED");
 
         //Calculate x midpoint -> lowest x plus greatest x divided by 2
         midpoint_X = (l.getOrigin().x + (l.getWidth() + l.getOrigin().x)) / 2;

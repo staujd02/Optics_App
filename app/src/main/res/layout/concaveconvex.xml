@@ -38,11 +38,11 @@
         android:layout_width="30sp"
         android:layout_height="125sp"
         android:id="@+id/ccLen"
-        android:background="@drawable/border"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/lens"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:background="@drawable/lens_edging" />
 
     <Button
         android:layout_width="wrap_content"

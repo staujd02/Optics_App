@@ -22,15 +22,17 @@ public class UserMenu extends Activity {
         setContentView(R.layout.user_menu);
         setTitle("User Menu");
 
+        User user = MainActivity.user;
+
         String[] myList = {
-                "Name: ",
-                "Score: ",
-                "Attempts: ",
-                "Correct: ",
-                "Incorrect: ",
-                "Lens Crafter Lvls: ",
-                "Spectrum Lvls: ",
-                "Medium Lvls: "
+                "Name: " + user.getName(),
+                "Score: " + user.getScore(),
+                "Attempts: " + user.getAttempts(),
+                "Correct: " + user.getCorrect(),
+                "Incorrect: " + user.getIncorrect(),
+                "Lens Crafter Lvls: " + user.getLensLVL(),
+                "Spectrum Lvls: " + user.getSpecLVL(),
+                "Medium Lvls: " + user.getMedLVL()
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);

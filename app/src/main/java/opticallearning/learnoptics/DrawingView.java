@@ -113,11 +113,10 @@ public class DrawingView extends View implements View.OnTouchListener{
 
         if(lens != null){
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.lens);
-            Rect rect = new Rect(0,0,getWidth(),getHeight());
+            Rect rect = new Rect(0,0,getMeasuredWidth(),getMeasuredHeight());
+            Rect scr = new Rect(lens.getGraphic_Reference());
 
-            //canvas.drawBitmap(bm,lens.getGraphic_Reference(),rect,paint);
-            //canvas.drawBitmap(bm,new Rect(0,0,getWidth(),getHeight()),rect,paint);
-            canvas.drawBitmap(bm,null,rect,paint);
+            canvas.drawBitmap(bm,scr,rect,paint);
         }
 
 

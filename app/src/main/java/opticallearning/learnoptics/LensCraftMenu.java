@@ -58,7 +58,7 @@ public class LensCraftMenu extends ListActivity{
         }
 
         //USED FOR TESTING
-        access = 6;
+        //access = 6;
 
         //Initialize the pages array
         ArrayList<String> pages = new ArrayList<String>();
@@ -158,7 +158,8 @@ public class LensCraftMenu extends ListActivity{
                                 lens.get("Material").toString(),    //Material description of lens
                                 rect,                               //Subset rect of large Bitmap
                                 Double.parseDouble(lens.get("Focal cm").toString()),//Focal length
-                                concave ));                         //Concave or convex
+                                concave ));                             //Concave or convex
+
             }
 
         } catch (IOException ex) {

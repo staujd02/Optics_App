@@ -42,6 +42,19 @@ public class Lens {
     }
 
     /**
+     * This is a deep copy constructor
+     *
+     * @param l Lens you wish to copy
+     */
+    public Lens(Lens l){
+        this.id = l.getId();
+        this.material = l.getMaterial();
+        this.graphic_Reference = l.getGraphic_Reference();
+        this.fLen = l.getfLen();
+        this.concave = l.isConcave();
+    }
+
+    /**
      * Sets the location of the lens in a relative space
      *
      * @param origin the top left corner of where the rectangle binding
