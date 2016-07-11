@@ -90,8 +90,6 @@ public class ConcaveConvex extends Activity {
                                 //Sets the user's choice as the button's text
                                 spinner.setText(s[which]);
 
-                                //Adds User's choice of lens to the lens view in the center of
-                                //the screen
                                 if(which == 0){
                                     lens = new Lens(LensCraftMenu.lensArrayList.get(CONCAVE_LENS));
                                 }
@@ -148,7 +146,7 @@ public class ConcaveConvex extends Activity {
         //Correct Index
         Random rand = new Random(); //Create new random
 
-        options = (int) rand.nextInt(2); //Gets a number from a set with a
+        options = rand.nextInt(2); //Gets a number from a set with a
         // Gaussian distribution at 0
         // 50/50 chance of being positive or negative
         if(options == 0){
@@ -237,31 +235,6 @@ public class ConcaveConvex extends Activity {
                     new Point(drawingview.getWidth(),drawingview.getHeight()));
             lasers.add(laser);
         }
-
-/*
-        //Highest laser
-        Laser laser1 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getMeasuredWidth() - 20,
-                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 - 50),
-                new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));
-
-        Laser laser2 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getMeasuredWidth() - 15,
-                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 - 25
-        ),new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));
-
-        Laser laser3 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getMeasuredWidth() - 15,
-                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 + 25
-        ),new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));
-
-        Laser laser4 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getMeasuredWidth() - 20,
-                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 + 50
-        ),new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));*/
-
-        //Add lasers to laser array list
-        //lasers.add(laser1); lasers.add(laser2); lasers.add(laser3); lasers.add(laser4);
     }
 
     /**
@@ -272,7 +245,6 @@ public class ConcaveConvex extends Activity {
 
         views = new ImageView[4];
         TranslateAnimation animation;
-        MyAnimationListener listener;
         PointF end;
         Float xDelta;
         Float yDelta;
@@ -281,26 +253,6 @@ public class ConcaveConvex extends Activity {
         views[1] = (ImageView) findViewById(R.id.ccDet2);
         views[2] = (ImageView) findViewById(R.id.ccDet3);
         views[3] = (ImageView) findViewById(R.id.ccDet4);
-
-        /*
-         //Capture drawing view
-        DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.ccLen);
-
-        lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-
-        //New laser list
-        lasers = new ArrayList<>();
-
-        setUpLasers();
-
-        //Add user's choice of lens
-        //and calculate
-        for(Laser l: lasers){
-            l.setLens(lens);
-            l.calculate();
-        }
-         */
 
         //Initialize the lens object
         lens = new Lens(LensCraftMenu.lensArrayList.get(answerIndex));
@@ -311,11 +263,6 @@ public class ConcaveConvex extends Activity {
         //Assign the lens holder location to lens object
         lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
 
-        System.out.println("Lens Origin" + lens.getOrigin());
-        System.out.println(lens.getHeight());
-        System.out.println(lens.getWidth());
-        System.out.println("Lens terminated");
-
         for(int i = 0; i < views.length; i++){
             lasers.get(i).setLens(lens); //Grab matching laser
             lasers.get(i).calculate();
@@ -325,9 +272,6 @@ public class ConcaveConvex extends Activity {
             //photodetector view
             end.y = end.y - (photoTemplate.getHeight() / 2);
             end.x = end.x - (float) (photoTemplate.getWidth() * .75);
-
-            System.out.println("End of Laser!");
-            System.out.println(end.toString());
 
             if(end.x > views[i].getX()){
                 xDelta = end.x - views[i].getX();
@@ -346,31 +290,7 @@ public class ConcaveConvex extends Activity {
             animation = new TranslateAnimation(0, xDelta, 0, yDelta);
             animation.setDuration(500);
             animation.setFillAfter(true);
-            listener = new MyAnimationListener();
-            listener.setImage(views[i]);
-            animation.setAnimationListener(listener);
-
             views[i].startAnimation(animation);
-        }
-    }
-
-    public class MyAnimationListener implements Animation.AnimationListener {
-        ImageView view;
-
-        public void setImage(ImageView view) {
-            this.view = view;
-        }
-
-        public void onAnimationEnd(Animation animation) {
-            for(int i = 0; i < views.length; i++){
-                //view.clearAnimation();
-                //RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(view.getWidth(), view.getHeight());
-               // view.setLayoutParams(lp);
-            }
-        }
-        public void onAnimationRepeat(Animation animation) {
-        }
-        public void onAnimationStart(Animation animation) {
         }
     }
 
@@ -410,6 +330,10 @@ public class ConcaveConvex extends Activity {
         }
     }
 
+    /**
+     * Sets up the lasers and sends them to Drawing view to be
+     * rendered
+     */
     private void DrawLasers() {
         //Capture drawing view
         DrawingView dv = (DrawingView) findViewById(R.id.view);
@@ -429,16 +353,14 @@ public class ConcaveConvex extends Activity {
             l.calculate();
         }
 
-        System.out.println("End of Lasers!");
-        System.out.println(lasers.get(0).getEnd().toString());
-        System.out.println(lasers.get(1).getEnd().toString());
-        System.out.println(lasers.get(2).getEnd().toString());
-        System.out.println(lasers.get(3).getEnd().toString());
-
         //Request the drawing view to render lasers
         dv.drawLasers(lasers);
     }
 
+    /**
+     * This function retrieves the lens holder view and executes the render
+     * lens function
+     */
     private void DrawLens() {
         DrawingView view = (DrawingView) findViewById(R.id.ccLen);
         view.drawLens(lens);
