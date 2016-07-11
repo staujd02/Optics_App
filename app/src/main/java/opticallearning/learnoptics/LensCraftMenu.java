@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class LensCraftMenu extends ListActivity{
 
-    private User user;              //MainActivity User -> already loaded
+    static protected User user;              //MainActivity User -> already loaded
     static protected ArrayList<Lens> lensArrayList; //Loaded array of lenses
 
     @Override

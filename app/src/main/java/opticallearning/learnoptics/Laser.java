@@ -30,6 +30,8 @@ public class Laser {
     private ArrayList<LaserLine> segs;  //Array of individual line segments of the laser
                                         //this is what will be rendered after calculation
 
+    private int impactCount;
+
     /**
      * Basic Laser constructor
      *
@@ -39,6 +41,7 @@ public class Laser {
     public Laser(PointF start,Point maxPoint ){
         this.start = start;
         MAX_POINT = maxPoint;
+        System.out.println(MAX_POINT.toString());
 
         lenses = new ArrayList<>();
         decoratedLenses = new ArrayList<>();
@@ -96,13 +99,10 @@ public class Laser {
     //have to fetch focal length of lens
     // - no lens null focal length
     public void calculate(){
-        PointF lensCenter;
-
         //y = mx + b
         double x;
         double m = 0;   //Slope of initial Laser line segment
         double b = start.y; //Y intercept of Laser line segment
-        LaserLine line;
         PointF start = this.start;
         PointF focalPoint = new PointF();
         PointF impact;
@@ -114,7 +114,7 @@ public class Laser {
             if(impact != null){
                 //Impact occurred
                 newLaserLine(start,impact);
-                start = impact; //Swap the old start to impact for continuity
+                start = new PointF(impact.x,impact.y); //Copy impact to a start for continuity
 
                 //THIS FORMULA CURRENTLY ASSUMES THE ANGLE OF INCIDENCE IS 90 DEGREES
                 //calculate exit angle / line
@@ -153,24 +153,38 @@ public class Laser {
         impact = new PointF(start.x, start.y);
 
         //Trace steps by incrementing x until it leaves the binding rectangle
-        while(impact.x >= 0 && impact.x < MAX_POINT.x && impact.y >= 0 && impact.y < MAX_POINT.y){
+        while((impact.x >= 0 && impact.x < MAX_POINT.x) && (impact.y >= 0 && impact.y < MAX_POINT.y)){
             impact.x = impact.x + TRACE_DEFINITION;
             impact.y = (float) (impact.x * m + b);
-            System.out.println("Tracing...");
         }
+
+        System.out.println("Laser traced;");
 
         End = impact;
 
         newLaserLine(start, impact);
     }
 
+    /**
+     * This function determines if the given laser
+     * impacts the lens given the line equation
+     *
+     * @param l Checking this lens against impact
+     * @param m the m value of y=mx+b (slope)
+     * @param b the b value of y=mx+b (y-intercept)
+     * @return  null if no impact otherwise the point of impact
+     */
     public PointF impact(Lens l,double m, double b){
         double y;       //laser's entry y
         double low_Y;   //lowest y of lens window
         double high_Y;  //greatest y of lens window
         double midpoint_X;//midpoint x of the lens
 
-        System.out.println("IMPACT REGISTERED");
+        //If every possible lens was hit, no reason to look
+        //for another impact
+        if(lenses.size() <= impactCount){
+            return null;
+        }
 
         //Calculate x midpoint -> lowest x plus greatest x divided by 2
         midpoint_X = (l.getOrigin().x + (l.getWidth() + l.getOrigin().x)) / 2;
@@ -185,6 +199,8 @@ public class Laser {
         //If the laser's y falls within the lens window
         if(y > low_Y && y < high_Y){
             //return point of impact
+            System.out.println("IMPACT REGISTERED");
+            impactCount++;
             return new PointF( (float) midpoint_X, (float) y);
         }
         else{

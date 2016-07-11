@@ -9,6 +9,7 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -16,8 +17,10 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.LogRecord;
@@ -32,8 +35,15 @@ import java.util.logging.LogRecord;
  */
 public class ConcaveConvex extends Activity {
 
-    final int CONVEX_LENS = 3;  //Index of the convex lens
-    final int CONCAVE_LENS = 0; //Index of the concave lens
+    final int CONVEX_LENS = 0;  //Index of the convex lens
+    final int CONCAVE_LENS = 6; //Index of the concave lens
+
+    //These three constant are used to determine where the
+    //lasers will be drawn
+    final int LASER_COUNT = 4;                //Number of lasers to be drawn
+    final int LASER_APERTURE_BOTTOM = 44; //The height at which the laser aperture starts (in px)
+    final int LASER_APERTURE_TOP = 78;    //The height at which the laser aperture stops (in px)
+    final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
     int answerIndex;    //The index of the correct answer
     User user;          //Reference to user object
@@ -50,7 +60,7 @@ public class ConcaveConvex extends Activity {
         super.onCreate(savedInstanceState); //call super constructor
         setContentView(R.layout.concaveconvex); //set the view
         setTitle("Concave vs. Convex"); //Assign title
-        user = MainActivity.user;
+        user = LensCraftMenu.user;
 
         //Create button object and connect to spinCC in concaveconvex.xml
         spinner = (Button) findViewById(R.id.spinCC);
@@ -80,16 +90,17 @@ public class ConcaveConvex extends Activity {
                                 //Sets the user's choice as the button's text
                                 spinner.setText(s[which]);
 
-                                if(which == CONCAVE_LENS){
-                                    lens = LensCraftMenu.lensArrayList.get(CONCAVE_LENS);
+                                //Adds User's choice of lens to the lens view in the center of
+                                //the screen
+                                if(which == 0){
+                                    lens = new Lens(LensCraftMenu.lensArrayList.get(CONCAVE_LENS));
                                 }
                                 else{
-                                    lens = LensCraftMenu.lensArrayList.get(CONVEX_LENS);
+                                    lens = new Lens(LensCraftMenu.lensArrayList.get(CONVEX_LENS));
                                 }
 
-
                                 //Determine Correctness
-                                if(which == answerIndex){
+                                if(which == 0 && answerIndex == CONCAVE_LENS || which == 1 && answerIndex == CONVEX_LENS){
                                     //Run Handler with correct answer given
                                     ClickHandler(true);
                                 }
@@ -131,46 +142,64 @@ public class ConcaveConvex extends Activity {
         Button spin = (Button) findViewById(R.id.spinCC);
         spin.setClickable(true);
 
+        //Reset Photodetector Image
+        LightPhotodetectors(false);
+
         //Correct Index
         Random rand = new Random(); //Create new random
 
-        options = (int) rand.nextGaussian(); //Gets a number from a set with a
+        options = (int) rand.nextInt(2); //Gets a number from a set with a
         // Gaussian distribution at 0
         // 50/50 chance of being positive or negative
-        if(options > 0){
-            //Correct index is 0
-            answerIndex = CONCAVE_LENS; //Normal concave lens made of crown glass
+        if(options == 0){
+            //Correct index corresponds to concave lens
+            answerIndex = CONCAVE_LENS;
         }
         else{
-            //Correct index is 1
-            answerIndex = CONVEX_LENS; //
+            //Correct index corresponds to convex lens
+            answerIndex = CONVEX_LENS;
         }
-
-        //Get the Lens holder from concaveconvex.xml for measurments
-        DrawingView lencc = (DrawingView) findViewById(R.id.ccLen);
-        //Assign the lens holder location to lens object
-        lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
-
-        setUpLasers();          //Assigns the laser's their origin point dynamically
-        setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
-                                //the photodetectors location (does not render lasers)
 
         //This directions dialog displays until the user opts out of
         //displaying the directions
-        if(user.getHints()){
-            //Directions Alert Dialogue
-            new AlertDialog.Builder(ConcaveConvex.this)
-                    .setTitle("Directions") //Sets the title of the dialogue
-                    .setMessage("Pick the lens type, concave or convex, to direct the laser to the photodetectors.") //Sets the Message
-                    //Creates OK button for user interaction (Dismisses Dialogue)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //User pressed yes
-                        }
-                    })
-                    .show(); //Shows created dialogue
+        if (user != null) {
+            if(user.getHints()){
+                //Directions Alert Dialogue
+                new AlertDialog.Builder(ConcaveConvex.this)
+                        .setTitle("Directions") //Sets the title of the dialogue
+                        .setMessage("Pick the lens type, concave or convex, to direct the laser to the photodetectors.") //Sets the Message
+                        //Creates OK button for user interaction (Dismisses Dialogue)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //User pressed yes
+                                setUpLasers();          //Assigns the laser's their origin point dynamically
+                                setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
+                                //the photodetectors location (does not render lasers)
+                            }
+                        })
+                        .setCancelable(false)
+                        .show(); //Shows created dialogue
+            }
+            else{
+                //Start Alert Dialogue
+                new AlertDialog.Builder(ConcaveConvex.this)
+                        .setTitle("Start?") //Sets the title of the dialogue
+                        .setMessage("Press OK to start.") //Sets the Message
+                        //Creates OK button for user interaction (Dismisses Dialogue)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //User pressed yes
+                                setUpLasers();          //Assigns the laser's their origin point dynamically
+                                setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
+                                //the photodetectors location (does not render lasers)
+                            }
+                        })
+                        .setCancelable(false)
+                        .show(); //Shows created dialogue
+            }
         }
     }
+
 
     /**
      * Assigns the origin point to the lasers and initializes them
@@ -180,29 +209,59 @@ public class ConcaveConvex extends Activity {
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
         DrawingView drawingview = (DrawingView) findViewById(R.id.view);
 
+        laserBox.measure(laserBox.getWidth(), laserBox.getHeight());
+        drawingview.measure(drawingview.getWidth(), drawingview.getHeight());
+
+        //Determine where to draw lasers
+        int yBottom; int yTop; int ySegment;
+
+        //Use the midpoint of laserbox x for laser x
+        int x = (int) (laserBox.getX()*2 + laserBox.getWidth()) / 2;
+
+        yBottom = (LASER_APERTURE_BOTTOM * laserBox.getMeasuredHeight())
+                                / ORIGINAL_SIZE;
+        yTop = (LASER_APERTURE_TOP * laserBox.getMeasuredHeight())
+                                / ORIGINAL_SIZE;
+
+        //Divide equally between lasers
+        ySegment = (yTop - yBottom)
+                        / (LASER_COUNT + 1);
+
+        Laser laser;
+
+        //Draw lasers Lasers
+        if(LASER_COUNT > 0)
+        for(int i = 1; i <= LASER_COUNT; i++){
+            laser = new Laser(new PointF(x,
+                    laserBox.getY() + yBottom + ySegment*i),
+                    new Point(drawingview.getWidth(),drawingview.getHeight()));
+            lasers.add(laser);
+        }
+
+/*
         //Highest laser
         Laser laser1 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getWidth() - 20,
-                (laserBox.getHeight() + 2*laserBox.getY() - 50) / 2
-        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+                laserBox.getX() + laserBox.getMeasuredWidth() - 20,
+                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 - 50),
+                new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));
 
         Laser laser2 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getWidth() - 15,
-                (laserBox.getHeight() + 2*laserBox.getY() - 25) / 2
-        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+                laserBox.getX() + laserBox.getMeasuredWidth() - 15,
+                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 - 25
+        ),new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));
 
         Laser laser3 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getWidth() - 15,
-                (laserBox.getHeight() + 2*laserBox.getY() + 25) / 2
-        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+                laserBox.getX() + laserBox.getMeasuredWidth() - 15,
+                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 + 25
+        ),new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));
 
         Laser laser4 = new Laser(new PointF(
-                laserBox.getX() + laserBox.getWidth() - 20,
-                (laserBox.getHeight() + 2*laserBox.getY() + 50) / 2
-        ),new Point(drawingview.getWidth(),drawingview.getHeight()));
+                laserBox.getX() + laserBox.getMeasuredWidth() - 20,
+                (laserBox.getMeasuredHeight() + 2*laserBox.getY()) / 2 + 50
+        ),new Point(drawingview.getMeasuredWidth(),drawingview.getMeasuredHeight()));*/
 
         //Add lasers to laser array list
-        lasers.add(laser1); lasers.add(laser2); lasers.add(laser3); lasers.add(laser4);
+        //lasers.add(laser1); lasers.add(laser2); lasers.add(laser3); lasers.add(laser4);
     }
 
     /**
@@ -223,11 +282,52 @@ public class ConcaveConvex extends Activity {
         views[2] = (ImageView) findViewById(R.id.ccDet3);
         views[3] = (ImageView) findViewById(R.id.ccDet4);
 
-        for(int i = 0; i < views.length; i++){
+        /*
+         //Capture drawing view
+        DrawingView dv = (DrawingView) findViewById(R.id.view);
+        DrawingView dl = (DrawingView) findViewById(R.id.ccLen);
 
-            lasers.get(i).addLens(LensCraftMenu.lensArrayList.get(answerIndex)); //Grab matching laser
+        lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+
+        //New laser list
+        lasers = new ArrayList<>();
+
+        setUpLasers();
+
+        //Add user's choice of lens
+        //and calculate
+        for(Laser l: lasers){
+            l.setLens(lens);
+            l.calculate();
+        }
+         */
+
+        //Initialize the lens object
+        lens = new Lens(LensCraftMenu.lensArrayList.get(answerIndex));
+
+        //Get the Lens holder from concaveconvex.xml for measurments
+        DrawingView lencc = (DrawingView) findViewById(R.id.ccLen);
+        ImageView photoTemplate = (ImageView) findViewById(R.id.ccDet1);
+        //Assign the lens holder location to lens object
+        lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
+
+        System.out.println("Lens Origin" + lens.getOrigin());
+        System.out.println(lens.getHeight());
+        System.out.println(lens.getWidth());
+        System.out.println("Lens terminated");
+
+        for(int i = 0; i < views.length; i++){
+            lasers.get(i).setLens(lens); //Grab matching laser
             lasers.get(i).calculate();
-            end = lasers.get(i).getEnd();
+            end = new PointF(lasers.get(i).getEnd().x, lasers.get(i).getEnd().y);
+
+            //Compensate for offset of end point and origin of
+            //photodetector view
+            end.y = end.y - (photoTemplate.getHeight() / 2);
+            end.x = end.x - (float) (photoTemplate.getWidth() * .75);
+
+            System.out.println("End of Laser!");
+            System.out.println(end.toString());
 
             if(end.x > views[i].getX()){
                 xDelta = end.x - views[i].getX();
@@ -245,7 +345,7 @@ public class ConcaveConvex extends Activity {
 
             animation = new TranslateAnimation(0, xDelta, 0, yDelta);
             animation.setDuration(500);
-            animation.setFillAfter(false);
+            animation.setFillAfter(true);
             listener = new MyAnimationListener();
             listener.setImage(views[i]);
             animation.setAnimationListener(listener);
@@ -263,9 +363,9 @@ public class ConcaveConvex extends Activity {
 
         public void onAnimationEnd(Animation animation) {
             for(int i = 0; i < views.length; i++){
-                view.clearAnimation();
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(view.getWidth(), view.getHeight());
-                view.setLayoutParams(lp);
+                //view.clearAnimation();
+                //RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(view.getWidth(), view.getHeight());
+               // view.setLayoutParams(lp);
             }
         }
         public void onAnimationRepeat(Animation animation) {
@@ -281,7 +381,7 @@ public class ConcaveConvex extends Activity {
      */
     private void ClickHandler(boolean correct){
         if(!answered){
-            //Recorded that the user has answered
+            //Records that the user has answered
             answered = false;
 
             //Disable further interaction with button
@@ -296,7 +396,7 @@ public class ConcaveConvex extends Activity {
 
             DrawLens();
             DrawLasers();
-            //LightPhotodetectors()... or not
+            LightPhotodetectors(correct);
 
             //Check correctness and display appropriate dialogs
             if(correct){
@@ -313,13 +413,27 @@ public class ConcaveConvex extends Activity {
     private void DrawLasers() {
         //Capture drawing view
         DrawingView dv = (DrawingView) findViewById(R.id.view);
+        DrawingView dl = (DrawingView) findViewById(R.id.ccLen);
+
+        lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+
+        //New laser list
+        lasers = new ArrayList<>();
+
+        setUpLasers();
 
         //Add user's choice of lens
         //and calculate
         for(Laser l: lasers){
-            l.addLens(lens);
+            l.setLens(lens);
             l.calculate();
         }
+
+        System.out.println("End of Lasers!");
+        System.out.println(lasers.get(0).getEnd().toString());
+        System.out.println(lasers.get(1).getEnd().toString());
+        System.out.println(lasers.get(2).getEnd().toString());
+        System.out.println(lasers.get(3).getEnd().toString());
 
         //Request the drawing view to render lasers
         dv.drawLasers(lasers);
@@ -359,6 +473,25 @@ public class ConcaveConvex extends Activity {
             runResultsDialog(false);
         }
     };
+
+    private void LightPhotodetectors(boolean lit){
+        ImageView[] views = new ImageView[4];
+        views[0] = (ImageView) findViewById(R.id.ccDet1);
+        views[1] = (ImageView) findViewById(R.id.ccDet2);
+        views[2] = (ImageView) findViewById(R.id.ccDet3);
+        views[3] = (ImageView) findViewById(R.id.ccDet4);
+
+        if(lit == true){
+            for(ImageView i: views){
+                i.setImageResource(R.drawable.detector_lit);
+            }
+        }
+        else{
+            for(ImageView i: views){
+                i.setImageResource(R.drawable.detector);
+            }
+        }
+    }
 
     /**
      * This class displays a dialog informing the user if their answer was
@@ -426,14 +559,21 @@ public class ConcaveConvex extends Activity {
         //This is a good place to double check for a bad reference
 
         //if the user's answer == correct index
-        if(correct){
-            //Increment the user's correct count
-            user.incCorrect();
-        }
-        else{
-            //User is wrong
-            //Increment user's incorrect count
-            user.incCorrect();
+        if (user != null) {
+            if(correct){
+                //Increment the user's correct count
+                user.incCorrect();
+                if(user.getLensLVL() < 2){
+                    user.setLensLVL(2);
+                }
+            }
+            else{
+                //User is wrong
+                //Increment user's incorrect count
+                user.incCorrect();
+            }
+
+            user.saveUser("default.dat");
         }
     }
 }
