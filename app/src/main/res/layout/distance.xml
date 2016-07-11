@@ -37,7 +37,7 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/dectOne"
+        android:id="@+id/skDect1"
         android:src="@drawable/detector"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"

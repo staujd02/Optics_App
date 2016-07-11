@@ -58,7 +58,7 @@ public class LensCraftMenu extends ListActivity{
         }
 
         //USED FOR TESTING
-        access = 2;
+        //access = 2;
 
         //Initialize the pages array
         ArrayList<String> pages = new ArrayList<String>();

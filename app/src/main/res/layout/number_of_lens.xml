@@ -69,7 +69,7 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/dectOne"
+        android:id="@+id/skDect1"
         android:src="@drawable/detector"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
@@ -82,8 +82,8 @@
         android:id="@+id/dectTwo"
         android:src="@drawable/detector"
         android:layout_above="@+id/len1"
-        android:layout_alignLeft="@+id/dectOne"
-        android:layout_alignStart="@+id/dectOne"
+        android:layout_alignLeft="@+id/skDect1"
+        android:layout_alignStart="@+id/skDect1"
         android:contentDescription="@string/detector" />
 
     <ImageView

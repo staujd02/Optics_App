@@ -9,12 +9,10 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -268,7 +266,7 @@ public class NIndex extends Activity {
         Float xDelta;
         Float yDelta;
 
-        views[0] = (ImageView) findViewById(R.id.rxDect1);
+        views[0] = (ImageView) findViewById(R.id.skDect1);
         views[1] = (ImageView) findViewById(R.id.rxDect2);
         views[2] = (ImageView) findViewById(R.id.rxDect3);
         views[3] = (ImageView) findViewById(R.id.rxDect4);
@@ -278,7 +276,7 @@ public class NIndex extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView materialLen = (DrawingView) findViewById(R.id.materialLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.rxDect1);
+        ImageView photoTemplate = (ImageView) findViewById(R.id.skDect1);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) materialLen.getX(), (int) materialLen.getY(),materialLen.getHeight(), materialLen.getWidth());
@@ -331,6 +329,7 @@ public class NIndex extends Activity {
 
             //Sends user's score to be recorded
             recordAnswer(user,correct);
+            System.out.println("Sent " + correct + " to be logged.");
 
             DrawLens();
             DrawLasers();
@@ -421,7 +420,7 @@ public class NIndex extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.rxDect1);
+        views[0] = (ImageView) findViewById(R.id.skDect1);
         views[1] = (ImageView) findViewById(R.id.rxDect2);
         views[2] = (ImageView) findViewById(R.id.rxDect3);
         views[3] = (ImageView) findViewById(R.id.rxDect4);
@@ -504,12 +503,14 @@ public class NIndex extends Activity {
         //This is a good place to double check for a bad reference
 
         //if the user's answer == correct index
+         System.out.print(user);
         if (user != null) {
             if(correct){
                 //Increment the user's correct count
                 user.incCorrect();
-                if(user.getLensLVL() < 3){
+                if(user.getLensLVL() < 3) {
                     user.setLensLVL(3);
+                    System.out.println("Lens Level was set to three");
                 }
             }
             else{
