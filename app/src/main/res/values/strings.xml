@@ -57,9 +57,10 @@
         <item>Far</item>
     </string-array>
     <string-array name="lens_widths">
-        <item>Thin</item>
-        <item>Normal</item>
-        <item>Thick</item>
+        <item>Thin Convex</item>
+        <item>Normal Convex</item>
+        <item>Thin Concave</item>
+        <item>Normal Concave</item>
     </string-array>
     <string-array name="lens_Nums">
         <item>1</item>

@@ -38,7 +38,7 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/skDect1"
+        android:id="@+id/wDect1"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
         android:layout_alignParentTop="true"
@@ -52,8 +52,8 @@
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/skDect1"
-        android:layout_alignStart="@+id/skDect1" />
+        android:layout_alignLeft="@+id/wDect1"
+        android:layout_alignStart="@+id/wDect1" />
 
     <ImageView
         android:layout_width="30sp"

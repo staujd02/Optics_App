@@ -1,5 +1,7 @@
 package opticallearning.learnoptics;
 
+import android.content.Context;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -92,10 +94,12 @@ public class User implements Serializable{
      *
      * @param filename the name of the file on which the user's info is stored
      */
-    final public static User loadUser(String filename){
+    final public static User loadUser(String filename, Context c){
         ObjectInputStream ois;          //Create the input stream
-        File file = new File(filename); //Create file object
+        File file; //Create file object
         User load;         //User object reference
+
+        file = c.getFileStreamPath(filename);
 
         //Check whether file exists
         if(!file.exists()){
@@ -133,12 +137,12 @@ public class User implements Serializable{
      *                 *NOTE: the user own's the entire file -> ONE User per File
      * @return returns a boolean indicating save was successful
      */
-    public boolean saveUser(String filename){
+    public boolean saveUser(String filename, Context c){
         ObjectOutputStream oos; //Used for writing objects to a file
         boolean success;    //boolean indicating success of save
 
         //Create file object using filename
-        File file = new File(filename);
+        File file = c.getFileStreamPath(filename);
 
         try {
             //Initialize object output stream, boolean for append is false

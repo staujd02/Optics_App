@@ -71,7 +71,7 @@
         android:contentDescription="@string/detector"
         android:src="@drawable/detector"
         android:scaleType="fitCenter"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -82,7 +82,7 @@
         android:contentDescription="@string/detector"
         android:src="@drawable/detector"
         android:scaleType="fitCenter"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

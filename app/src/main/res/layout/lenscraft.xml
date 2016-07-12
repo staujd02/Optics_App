@@ -45,7 +45,7 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/skDect1"
+        android:id="@+id/wDect1"
         android:src="@drawable/detector"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
@@ -57,8 +57,8 @@
         android:layout_height="30sp"
         android:id="@+id/dectTwo"
         android:src="@drawable/detector"
-        android:layout_alignLeft="@+id/skDect1"
-        android:layout_alignStart="@+id/skDect1"
+        android:layout_alignLeft="@+id/wDect1"
+        android:layout_alignStart="@+id/wDect1"
         android:contentDescription="@string/detector" />
 
     <ImageView

@@ -23,13 +23,13 @@ public class MainActivity extends Activity {
         setTitle("Learn Optics");   //Assigns a descriptive title to the title bar
 
         //Load user
-        user = User.loadUser("default.dat");
+        user = User.loadUser("default.dat", getApplicationContext());
 
         //Check User
         if(user == null){
             //If the reference is null, create default user
             user = new User("Galileo");
-            user.saveUser("default.dat");
+            user.saveUser("default.dat", this.getApplicationContext());
         }
 
         //Create image buttons

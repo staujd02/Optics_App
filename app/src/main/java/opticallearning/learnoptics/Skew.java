@@ -251,7 +251,7 @@ public class Skew extends Activity {
         Float xDelta;
         Float yDelta;
 
-        views[0] = (ImageView) findViewById(R.id.skDect1);
+        views[0] = (ImageView) findViewById(R.id.wDect1);
         views[1] = (ImageView) findViewById(R.id.skDect2);
         views[2] = (ImageView) findViewById(R.id.skDect3);
         views[3] = (ImageView) findViewById(R.id.skDect4);
@@ -261,7 +261,7 @@ public class Skew extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView skewLen = (DrawingView) findViewById(R.id.skewLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.skDect1);
+        ImageView photoTemplate = (ImageView) findViewById(R.id.wDect1);
 
         //Adjust the height based on correct answer
         if(answerIndex == 0){
@@ -435,7 +435,7 @@ public class Skew extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.skDect1);
+        views[0] = (ImageView) findViewById(R.id.wDect1);
         views[1] = (ImageView) findViewById(R.id.skDect2);
         views[2] = (ImageView) findViewById(R.id.skDect3);
         views[3] = (ImageView) findViewById(R.id.skDect4);
@@ -533,7 +533,7 @@ public class Skew extends Activity {
                 user.incCorrect();
             }
 
-            user.saveUser("default.dat");
+            user.saveUser("default.dat", getApplicationContext());
         }
     }
 }

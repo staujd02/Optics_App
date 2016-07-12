@@ -60,6 +60,7 @@ public class ConcaveConvex extends Activity {
         super.onCreate(savedInstanceState); //call super constructor
         setContentView(R.layout.concaveconvex); //set the view
         setTitle("Concave vs. Convex"); //Assign title
+
         user = LensCraftMenu.user;
 
         //Create button object and connect to spinCC in concaveconvex.xml
@@ -146,9 +147,8 @@ public class ConcaveConvex extends Activity {
         //Correct Index
         Random rand = new Random(); //Create new random
 
-        options = rand.nextInt(2); //Gets a number from a set with a
-        // Gaussian distribution at 0
-        // 50/50 chance of being positive or negative
+        options = rand.nextInt(2); //Gets a number from a set of 0,1
+
         if(options == 0){
             //Correct index corresponds to concave lens
             answerIndex = CONCAVE_LENS;
@@ -260,6 +260,7 @@ public class ConcaveConvex extends Activity {
         //Get the Lens holder from concaveconvex.xml for measurments
         DrawingView lencc = (DrawingView) findViewById(R.id.ccLen);
         ImageView photoTemplate = (ImageView) findViewById(R.id.ccDet1);
+
         //Assign the lens holder location to lens object
         lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
 
@@ -495,7 +496,7 @@ public class ConcaveConvex extends Activity {
                 user.incCorrect();
             }
 
-            user.saveUser("default.dat");
+            user.saveUser("default.dat", getApplicationContext());
         }
     }
 }

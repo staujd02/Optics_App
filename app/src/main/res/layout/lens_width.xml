@@ -37,38 +37,48 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/skDect1"
-        android:src="@drawable/detector"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/detector" />
-
-    <ImageView
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:id="@+id/dectTwo"
+        android:id="@+id/wDect1"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
-        android:layout_alignTop="@+id/imgLaser"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/dectThree"
+        android:id="@+id/wDect2"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
-        android:layout_alignBottom="@+id/imgLaser"
-        android:layout_alignLeft="@+id/skDect1"
-        android:layout_alignStart="@+id/skDect1" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/wDect3"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/wDect4"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="30sp"
         android:layout_height="100sp"
         android:id="@+id/wLen"
-        android:background="@drawable/border"
+        android:background="@drawable/lens_edging"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/lens" />
