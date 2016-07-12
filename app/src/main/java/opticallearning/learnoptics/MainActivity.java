@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
             @Override
             //Pick the Medium
             public void onClick(View v) {
-                if(user.getBackground() == true) {
+                if(user.getBackground()) {
                     startActivity(new Intent(MainActivity.this, BGMedium.class));
                 }
                 else{
@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
             @Override
             //Spectrum Matcher
             public void onClick(View v) {
-                if(user.getBackground() == true) {
+                if(user.getBackground()) {
                     startActivity(new Intent(MainActivity.this, BGSpectrumMatcher.class));
                 }
                 else{
@@ -72,9 +72,9 @@ public class MainActivity extends Activity {
 
         buttons[2].setOnClickListener(new View.OnClickListener() {
             @Override
-            //LensCraft
+            //LensCraft Menu
             public void onClick(View v) {
-                if(user.getBackground() == true) {
+                if(user.getBackground()) {
                     startActivity(new Intent(MainActivity.this, BGLensCraft.class));
                 }
                 else{

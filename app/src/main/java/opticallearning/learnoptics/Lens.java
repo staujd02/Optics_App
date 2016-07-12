@@ -10,7 +10,7 @@ import android.graphics.Rect;
  * the lens bitmaps
  *
  *
- * This is intended for use in the custom views implemented in Lens Crafter (LensCraft.java)
+ * This is intended for use in the custom views implemented in Lens Crafter (LensCraftMenu.java)
  */
 public class Lens {
 

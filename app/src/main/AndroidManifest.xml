@@ -14,8 +14,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LensCraft"
-            android:screenOrientation="landscape"/>
         <activity android:name=".UserMenu"
             android:screenOrientation="portrait"/>
         <activity android:name=".Medium"

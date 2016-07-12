@@ -11,7 +11,7 @@ import android.widget.TextView;
 /**
  * Created by Joel on 7/1/2016.
  *
- * This is the background activity for Lens Crafter (LensCraft.java)
+ * This is the background activity for Lens Crafter Module
  *
  *  It provides the user a basic overview of the concepts
  *   involved with this module and its sub-modules
