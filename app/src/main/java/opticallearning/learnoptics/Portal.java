@@ -1,6 +1,5 @@
 package opticallearning.learnoptics;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.net.URI;
 
 /**
  * Created by Joel on 6/27/2016.
@@ -30,17 +27,17 @@ public class Portal extends ListActivity {
         String[] links = {"OSA News","Optics and Photonics Journal","Business: Optics.org","The Basics","Advanced"};
 
         //Sets list adapter for reading links[] into listView
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,links));
+        setListAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 ,links));
     }
 
     /**
      *
      * Handles the behaviour of when the user clicks on the list
      *
-     * @param l
-     * @param v
+     * @param l used in the super constructor
+     * @param v used in the super constructor
      * @param position the index of item the user selected
-     * @param id
+     * @param id used in the super constructor
      */
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {

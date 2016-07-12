@@ -57,17 +57,12 @@ public class Lens {
     /**
      * Sets the location of the lens in a relative space
      *
-     * @param origin the top left corner of where the rectangle binding
+     * @param x the x of the top left corner of where the rectangle binding
      *               space starts > the (0,0) of the lens
+     * @param y the y of the top left corner of the where the rect binding starts
      * @param height The height of the lens
      * @param width  The width of the lens
      */
-    public void setLocation(Point origin, int height, int width){
-        this.origin = origin;
-        this.height = height;
-        this.width = width;
-    }
-
     public void setLocation(int x, int y, int height, int width){
         this.origin = new Point(x,y);
         this.height = height;

@@ -2,14 +2,14 @@ package opticallearning.learnoptics;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * Created by Joel on 6/27/2016.
+ *
+ * This menu provides the user with information about their user statistics.
+ *
  */
 public class UserMenu extends Activity {
 
@@ -35,7 +35,7 @@ public class UserMenu extends Activity {
                 "Medium Lvls: " + user.getMedLVL()
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myList);
         ListView lv = (ListView)findViewById(android.R.id.list);
         lv.setAdapter(adapter);
 

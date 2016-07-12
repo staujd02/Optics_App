@@ -25,7 +25,7 @@ public class Laser {
     private PointF End;     //Laser end destination, this must be calculated by the laser class
 
     private ArrayList<Lens> lenses;     //Array of lens interacting with the laser
-    private ArrayList<LaserLens> decoratedLenses;   //Decorating class that adds information about
+    //private ArrayList<LaserLens> decoratedLenses;   //Decorating class that adds information about
                                                     //the laser interaction with the lens
     private ArrayList<LaserLine> segs;  //Array of individual line segments of the laser
                                         //this is what will be rendered after calculation
@@ -44,48 +44,58 @@ public class Laser {
         System.out.println(MAX_POINT.toString());
 
         lenses = new ArrayList<>();
-        decoratedLenses = new ArrayList<>();
+        //decoratedLenses = new ArrayList<>();
         segs = new ArrayList<>();
     }
 
-    /**
+    /************** UNUSED CONSTRUCTOR ***************************************
      * Basic laser constructor that sends the points by their primitive values
      *
      * @param x     X value of the starting point
      * @param y     Y value of the starting point
      * @param max_X X value of the maximum point of the given area
      * @param max_Y Y value of the maximum point of the given area
-     */
+     *
     public Laser(float x, float y, int max_X, int max_Y){
         start = new PointF(x,y);
         MAX_POINT = new Point(max_X, max_Y);
     }
+     *************************************************************************/
 
-    /**
+    /****************** CURRENTLY UNIMPLEMENTED *******************************
      * This adds a lens to the array of lenses the laser will interact with
      *
      * This is only for use when multiple lenses are in effect, otherwise, if only one
      * lens is in use, you must use the more descriptive constructor when adding a lens
      *
      * @param lens lens object you wish to add to the laser's interaction
-     */
+     *
     public void addLens(Lens lens){
         lenses.add(lens);
     }
+     ***************************************************************************/
 
+
+    /**
+     * This assigns a lens object to the laser object for use in laser
+     * trajectory calculations
+     *
+     * @param lens Assigned lens for calculation
+     */
     public void setLens(Lens lens){
         lenses = new ArrayList<>();
         lenses.add(lens);
     }
 
+
     /**
      * This is the more descriptive constructor and it must be used for the first lens
      * Otherwise, the laser cannot begin a calculation
      *
-     * @param /lens  The lens you wish to add to the laser's interaction
+     * param /lens  The lens you wish to add to the laser's interaction
      *              *NOTE: the Lens must have a valid location for the calculation to proceed
      *
-     * @param /angle The angle at which the laser is entering the lens (Typically 90 degrees)
+     * param /angle The angle at which the laser is entering the lens (Typically 90 degrees)
      */
     /*
     public void addInitialLens(Lens lens, float angle){
@@ -100,7 +110,6 @@ public class Laser {
     // - no lens null focal length
     public void calculate(){
         //y = mx + b
-        double x;
         double m = 0;   //Slope of initial Laser line segment
         double b = start.y; //Y intercept of Laser line segment
         PointF start = this.start;
@@ -247,7 +256,7 @@ public class Laser {
      * Adds an entry angle component
      *
      * Created on laser interaction with lens
-     */
+     ***************************** CURRENTLY UNIMPLEMENTED ******************
     private class LaserLens {
 
         Lens lens;          //Decorated Lens
@@ -259,6 +268,7 @@ public class Laser {
         }
 
     }
+    *************************************************************************/
 
     /**
      * Line segment object
@@ -284,18 +294,19 @@ public class Laser {
             this.end = end;
         }
 
-        /**
+        /********************** UNUSED CONSTRUCTOR *********************
          * Basic constructor alternative, takes primitives for arguments
          *
          * @param x1    start point's x
          * @param y1    start point's y
          * @param x2    end point's x
          * @param y2    end point's y
-         */
+         *
         public LaserLine(float x1, float y1, float x2, float y2){
             start = new PointF(x1,y1);
             end  = new PointF(x2,y2);
         }
+         ****************************************************************/
 
         /**
          * This function breaks the segment into a PointF[] array

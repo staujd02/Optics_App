@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -61,7 +59,7 @@ public class LensCraftMenu extends ListActivity{
         //access = 5;
 
         //Initialize the pages array
-        ArrayList<String> pages = new ArrayList<String>();
+        ArrayList<String> pages = new ArrayList<>();
 
         //Add background to the begining of the list (constant not dependant on access lvl)
         pages.add("Background");
@@ -87,7 +85,7 @@ public class LensCraftMenu extends ListActivity{
         }
 
         //Sets the list adapter to display the array pages[]
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,pages));
+        setListAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 ,pages));
     }
 
     /**
@@ -137,12 +135,7 @@ public class LensCraftMenu extends ListActivity{
                 //determine boolean concave status from char comparison
                 //*The lens shape is more descriptive than what is currently captured
                 //Character at 3 index is either 'c' or 'v' -> con:C:ave or con:V:ex
-                if(lens.get("Lens Shape").toString().charAt(3) == 'c' ){
-                    concave = true;
-                }
-                else{
-                    concave = false;
-                }
+                concave = (lens.get("Lens Shape").toString().charAt(3) == 'c');
 
                 //Cast rect integer array to json array
                 rectArray = (JSONArray) lens.get("rect");
@@ -166,6 +159,7 @@ public class LensCraftMenu extends ListActivity{
             ex.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+            System.out.println("JSON Fault");
         }
     }
 
@@ -184,10 +178,10 @@ public class LensCraftMenu extends ListActivity{
      *
      * This class starts the Activity the user selected
      *
-     * @param l
-     * @param v
+     * @param l used in super constructor
+     * @param v used in super constructor
      * @param position provides the index of the item the user touched
-     * @param id
+     * @param id used in super constructor
      */
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

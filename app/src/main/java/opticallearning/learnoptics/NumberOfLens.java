@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 
 /**
  * Created by Joel on 7/1/2016.
@@ -25,7 +24,7 @@ public class NumberOfLens extends Activity {
 
         //Creates spinner object and assigns it to spinCount in number_of_lens.xml
         final Button spinner = (Button) findViewById(R.id.spinCount);
-        spinner.setText("Pick number of lens");
+        spinner.setText(R.string.spinLensNum);
 
         //Creates array adapter for reading array lens_Nums into the spinner
         //lens_Nums = {"1","2","3"}

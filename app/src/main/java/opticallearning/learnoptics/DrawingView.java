@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -26,12 +25,16 @@ public class DrawingView extends View implements View.OnTouchListener{
     Paint paint = new Paint();
     ArrayList<Laser> lasers;
     Lens lens;
+    Bitmap bm;
+
+    Rect rect;
+    Rect scr;
 
     /**
      * First constructor and simplest constructor
      * that can be called
      *
-     * @param context
+     * @param context required for super constructor
      */
     public DrawingView(Context context)
     {
@@ -43,8 +46,8 @@ public class DrawingView extends View implements View.OnTouchListener{
      * Second constructor, usually the one called by
      * the android system
      *
-     * @param context
-     * @param attrs
+     * @param context required for super constructor
+     * @param attrs required for super constructor
      */
     public DrawingView(Context context, AttributeSet attrs)
     {
@@ -55,9 +58,9 @@ public class DrawingView extends View implements View.OnTouchListener{
     /**
      * Most specific constructor
      *
-     * @param context
-     * @param attrs
-     * @param defStyle
+     * @param context required for super constructor
+     * @param attrs required for super constructor
+     * @param defStyle required for super constructor
      */
     public DrawingView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -72,6 +75,13 @@ public class DrawingView extends View implements View.OnTouchListener{
         setFocusable(true);             //Must be true for user interaction
         setFocusableInTouchMode(true);  //Must be true for user interaction
         setWillNotDraw(false);          //Must be false to drawn on view
+
+        //Load up bitmap for use later
+        bm = BitmapFactory.decodeResource(getResources(), R.drawable.lens);
+
+        //Allocate space for two rectangles
+        rect = new Rect();
+        scr = new Rect();
 
         lasers = new ArrayList<>();
 
@@ -112,9 +122,8 @@ public class DrawingView extends View implements View.OnTouchListener{
         }
 
         if(lens != null){
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.lens);
-            Rect rect = new Rect(0,0,getWidth(),getHeight());
-            Rect scr = new Rect(lens.getGraphic_Reference());
+            rect.set(0,0,getWidth(),getHeight());
+            scr.set(lens.getGraphic_Reference());
 
             canvas.drawBitmap(bm,scr,rect,paint);
         }

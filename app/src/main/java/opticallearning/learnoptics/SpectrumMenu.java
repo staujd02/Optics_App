@@ -30,7 +30,7 @@ public class SpectrumMenu extends ListActivity{
         String[] pages = {"Background","Reflectance","Compound Reflectance","Absorbance","Compound Absorbance","Opacity"};
 
         //sets the listAdapter to read the array pages[] into the listView
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1 ,pages));
+        setListAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 ,pages));
     }
 
     //Sends the user back to the main menu rather than background xml

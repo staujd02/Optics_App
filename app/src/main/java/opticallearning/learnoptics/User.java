@@ -94,7 +94,7 @@ public class User implements Serializable{
      *
      * @param filename the name of the file on which the user's info is stored
      */
-    final public static User loadUser(String filename, Context c){
+    public static User loadUser(String filename, Context c){
         ObjectInputStream ois;          //Create the input stream
         File file; //Create file object
         User load;         //User object reference
@@ -120,10 +120,12 @@ public class User implements Serializable{
             //Return null if input stream failed
             e.printStackTrace();
             load = null;
+            System.out.println("File failed to open");
         } catch (ClassNotFoundException e) {
             //Return null if cast failed
             e.printStackTrace();
             load = null;
+            System.out.println("User failed to parse");
         }
 
         //Return the user (load) to caller
@@ -225,7 +227,7 @@ public class User implements Serializable{
     //Hints: get and set
     public boolean getHints() {return hints;}
 
-    public void setHints(boolean view){hints = view;}
+    //public void setHints(boolean view){hints = view;}
 
     //Background: get and set
     public boolean getBackground() {return background;}
@@ -246,18 +248,14 @@ public class User implements Serializable{
         return specLVL;
     }
 
-    public void setSpecLVL(int specLVL) {
-        this.specLVL = specLVL;
-    }
+    //public void setSpecLVL(int specLVL) {this.specLVL = specLVL;}
 
     //MedLVL: get and set
     public int getMedLVL() {
         return medLVL;
     }
 
-    public void setMedLVL(int medLVL) {
-        this.medLVL = medLVL;
-    }
+    //public void setMedLVL(int medLVL) {this.medLVL = medLVL;}
 
     //Attempts: get
     public int getAttempts() {

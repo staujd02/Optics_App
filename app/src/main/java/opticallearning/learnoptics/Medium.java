@@ -40,9 +40,9 @@ public class Medium extends Activity {
         //https://github.com/koduribalaji/AndroidCoolDragAndDropGridView
         //----------------------------------------------------
 
-        for(int i = 0; i < tiles.length; i++){
+        for(ImageView til: tiles){
 
-            tiles[i].setOnTouchListener(new View.OnTouchListener() {
+            til.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
@@ -66,7 +66,7 @@ public class Medium extends Activity {
                 }
             });
 
-            tiles[i].setOnDragListener(new View.OnDragListener() {
+            til.setOnDragListener(new View.OnDragListener() {
                 @Override
                 public boolean onDrag(View v, DragEvent event) {
                     //Capture Finger Location

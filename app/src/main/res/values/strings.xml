@@ -42,6 +42,7 @@
     <string name="spinWidthText">Pick Lens Width</string>
     <string name="spinMaterialText">Pick Lens Material</string>
     <string name="spinCCText">Pick Lens</string>
+    <string name="spinLensNum">Pick the number of Lenses</string>
     <string-array name="lensTypes">
         <item>Concave</item>
         <item>Convex</item>
