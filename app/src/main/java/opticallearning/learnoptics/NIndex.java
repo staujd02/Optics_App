@@ -266,7 +266,7 @@ public class NIndex extends Activity {
         Float xDelta;
         Float yDelta;
 
-        views[0] = (ImageView) findViewById(R.id.wDect1);
+        views[0] = (ImageView) findViewById(R.id.rxDect1);
         views[1] = (ImageView) findViewById(R.id.rxDect2);
         views[2] = (ImageView) findViewById(R.id.rxDect3);
         views[3] = (ImageView) findViewById(R.id.rxDect4);
@@ -276,7 +276,7 @@ public class NIndex extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView materialLen = (DrawingView) findViewById(R.id.materialLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.wDect1);
+        ImageView photoTemplate = (ImageView) findViewById(R.id.rxDect1);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) materialLen.getX(), (int) materialLen.getY(),materialLen.getHeight(), materialLen.getWidth());
@@ -420,7 +420,7 @@ public class NIndex extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.wDect1);
+        views[0] = (ImageView) findViewById(R.id.rxDect1);
         views[1] = (ImageView) findViewById(R.id.rxDect2);
         views[2] = (ImageView) findViewById(R.id.rxDect3);
         views[3] = (ImageView) findViewById(R.id.rxDect4);
