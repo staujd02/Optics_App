@@ -42,6 +42,8 @@ public class LensWidth extends Activity {
 
     Button spinner; //Button which opens prompt for user selection of lens
 
+    boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
+
     int answerIndex;    //The index of the correct answer
     User user;          //Reference to user object
 
@@ -139,6 +141,19 @@ public class LensWidth extends Activity {
     }
 
     /**
+     * Sets the boolean processStopped according to the current
+     * state of the activity
+     *
+     * User has answered => Call the Unique startup
+     * User hasn't answered yet => Call the Super Constructor for onStart() only
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(!answered)processStopped = true;
+    }
+
+    /**
      * This is the android onStart() method called
      * every time the activity is restarted
      *
@@ -152,6 +167,14 @@ public class LensWidth extends Activity {
     @Override
     protected void onStart() {
         super.onStart(); //Always start with the super constructor
+
+        //If process was stopped, skip setup and allow
+        //super constructor to resume the activity
+        //---Also reset flag
+        if(processStopped == true){
+            processStopped = false;
+            return;
+        }
 
         int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
@@ -533,7 +556,7 @@ public class LensWidth extends Activity {
             else{
                 //User is wrong
                 //Increment user's incorrect count
-                user.incCorrect();
+                user.incIncorrect();
             }
 
             user.saveUser("default.dat", getApplicationContext());

@@ -38,7 +38,7 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/wDect1"
+        android:id="@+id/skDect1"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
         android:layout_alignParentTop="true"
@@ -52,13 +52,23 @@
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/wDect1"
-        android:layout_alignStart="@+id/wDect1" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
         android:id="@+id/skDect3"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/skDect4"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
         android:layout_alignParentTop="true"
@@ -82,15 +92,5 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:padding="5sp" />
-
-    <ImageView
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:id="@+id/skDect4"
-        android:src="@drawable/detector"
-        android:contentDescription="@string/detector"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

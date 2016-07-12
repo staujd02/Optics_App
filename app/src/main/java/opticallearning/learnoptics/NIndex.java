@@ -40,6 +40,8 @@ public class NIndex extends Activity {
 
     Button spinner; //Button which opens prompt for user selection of lens
 
+    boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
+
     int answerIndex;    //The index of the correct answer
     User user;          //Reference to user object
 
@@ -129,6 +131,19 @@ public class NIndex extends Activity {
     }
 
     /**
+     * Sets the boolean processStopped according to the current
+     * state of the activity
+     *
+     * User has answered => Call the Unique startup
+     * User hasn't answered yet => Call the Super Constructor for onStart() only
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(!answered)processStopped = true;
+    }
+
+    /**
      * This is the android onStart() method called
      * every time the activity is restarted
      *
@@ -142,6 +157,14 @@ public class NIndex extends Activity {
     @Override
     protected void onStart() {
         super.onStart(); //Always start with the super constructor
+
+        //If process was stopped, skip setup and allow
+        //super constructor to resume the activity
+        //---Also reset flag
+        if(processStopped == true){
+            processStopped = false;
+            return;
+        }
 
         int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
@@ -245,13 +268,12 @@ public class NIndex extends Activity {
         Laser laser;
 
         //Draw lasers Lasers
-        if (LASER_COUNT > 0)
-            for (int i = 1; i <= LASER_COUNT; i++) {
-                laser = new Laser(new PointF(x,
-                        laserBox.getY() + yBottom + ySegment * i),
-                        new Point(drawingview.getWidth(), drawingview.getHeight()));
-                lasers.add(laser);
-            }
+        for (int i = 1; i <= LASER_COUNT; i++) {
+            laser = new Laser(new PointF(x,
+                    laserBox.getY() + yBottom + ySegment * i),
+                    new Point(drawingview.getWidth(), drawingview.getHeight()));
+            lasers.add(laser);
+        }
     }
 
     /**
@@ -276,7 +298,6 @@ public class NIndex extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView materialLen = (DrawingView) findViewById(R.id.materialLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.rxDect1);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) materialLen.getX(), (int) materialLen.getY(),materialLen.getHeight(), materialLen.getWidth());
@@ -288,8 +309,8 @@ public class NIndex extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (photoTemplate.getHeight() / 2);
-            end.x = end.x - (float) (photoTemplate.getWidth() * .75);
+            end.y = end.y - (views[0].getHeight() / 2);
+            end.x = end.x - (float) (views[0].getWidth() * .75);
 
             if (end.x > views[i].getX()) {
                 xDelta = end.x - views[i].getX();
@@ -425,7 +446,7 @@ public class NIndex extends Activity {
         views[2] = (ImageView) findViewById(R.id.rxDect3);
         views[3] = (ImageView) findViewById(R.id.rxDect4);
 
-        if(lit == true){
+        if(lit){
             for(ImageView i: views){
                 i.setImageResource(R.drawable.detector_lit);
             }
@@ -516,7 +537,7 @@ public class NIndex extends Activity {
             else{
                 //User is wrong
                 //Increment user's incorrect count
-                user.incCorrect();
+                user.incIncorrect();
             }
 
             user.saveUser("default.dat",getApplicationContext());

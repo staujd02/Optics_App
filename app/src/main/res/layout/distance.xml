@@ -37,38 +37,38 @@
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/wDect1"
-        android:src="@drawable/detector"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:contentDescription="@string/detector" />
-
-    <ImageView
-        android:layout_width="30sp"
-        android:layout_height="30sp"
-        android:id="@+id/dectTwo"
+        android:id="@+id/dDect1"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
-        android:layout_alignBottom="@+id/imgLaser"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:id="@+id/dectThree"
+        android:id="@+id/dDect2"
         android:src="@drawable/detector"
         android:contentDescription="@string/detector"
-        android:layout_alignTop="@+id/imgLaser"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/dDect1"
+        android:layout_alignStart="@+id/dDect1" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dDect3"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageView
+    <opticallearning.learnoptics.DrawingView
         android:layout_width="30sp"
         android:layout_height="100sp"
         android:id="@+id/dLen"
-        android:background="@drawable/border"
+        android:background="@drawable/lens_edging"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/lens" />
@@ -81,5 +81,15 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:padding="5sp" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dDect4"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -49,6 +49,8 @@ public class ConcaveConvex extends Activity {
     User user;          //Reference to user object
     Button spinner;     //Button used to select lens
 
+    boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
+
     ArrayList<Laser> lasers;//Array of lasers
     ImageView[] views;      //Array of references to photodetector views
 
@@ -117,6 +119,12 @@ public class ConcaveConvex extends Activity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(!answered)processStopped = true;
+    }
+
     /**
      * This is the android onStart() method called
      * every time the activity is restarted
@@ -130,6 +138,11 @@ public class ConcaveConvex extends Activity {
     @Override
     protected void onStart() {
         super.onStart(); //Always start with the super constructor
+
+        if(processStopped == true){
+            processStopped = false;
+            return;
+        }
 
         int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
@@ -493,7 +506,7 @@ public class ConcaveConvex extends Activity {
             else{
                 //User is wrong
                 //Increment user's incorrect count
-                user.incCorrect();
+                user.incIncorrect();
             }
 
             user.saveUser("default.dat", getApplicationContext());
