@@ -61,7 +61,7 @@ public class NIndex extends Activity {
 
         //Creates spinner object and assigns it to spinMaterial in n_index.xml
         spinner = (Button) findViewById(R.id.spinMaterial);
-        spinner.setText("Pick Lens Material");
+        spinner.setText(R.string.spinMaterialText);
 
         //Creates Adapter for reading the array materials into spinMaterials
         //spinMaterial > {"Acetone Low N","Crown Glass Med N","Flint Glass High N"}
@@ -161,7 +161,7 @@ public class NIndex extends Activity {
         //If process was stopped, skip setup and allow
         //super constructor to resume the activity
         //---Also reset flag
-        if(processStopped == true){
+        if(processStopped){
             processStopped = false;
             return;
         }

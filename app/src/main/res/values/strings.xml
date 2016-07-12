@@ -37,6 +37,11 @@
     <string name="bg_spec">This is basic content where the user is introduced to the subject.</string>
     <string name="btContinue">Continue</string>
     <string name="lens">Lens</string>
+    <string name="spinSkewText">Pick Lens Height</string>
+    <string name="spinDistanceText">Pick Distance</string>
+    <string name="spinWidthText">Pick Lens Width</string>
+    <string name="spinMaterialText">Pick Lens Material</string>
+    <string name="spinCCText">Pick Lens</string>
     <string-array name="lensTypes">
         <item>Concave</item>
         <item>Convex</item>

@@ -68,8 +68,8 @@ public class Distances extends Activity {
         user = LensCraftMenu.user; //Grabs user reference from menu
 
         //Creates spinner object and sets the reference to spinner spinDistance in distance.xml
-        final Button spinner = (Button) findViewById(R.id.spinDistance);
-        spinner.setText("Pick Distance");
+        spinner = (Button) findViewById(R.id.spinDistance);
+        spinner.setText(R.string.spinDistanceText);
 
         //Creates array adapter for loading string array into the spinner,
         //distances is in strings.xml --> {"Short", "Medium", "Far"}
@@ -164,12 +164,11 @@ public class Distances extends Activity {
         //If process was stopped, skip setup and allow
         //super constructor to resume the activity
         //---Also reset flag
-        if(processStopped == true){
+        if(processStopped){
             processStopped = false;
             return;
         }
 
-        int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
 
         //Initialize the laser array
@@ -259,13 +258,12 @@ public class Distances extends Activity {
         Laser laser;
 
         //Draw lasers Lasers
-        if (LASER_COUNT > 0)
-            for (int i = 1; i <= LASER_COUNT; i++) {
-                laser = new Laser(new PointF(x,
-                        laserBox.getY() + yBottom + ySegment * i),
-                        new Point(drawingview.getWidth(), drawingview.getHeight()));
-                lasers.add(laser);
-            }
+        for (int i = 1; i <= LASER_COUNT; i++) {
+            laser = new Laser(new PointF(x,
+                    laserBox.getY() + yBottom + ySegment * i),
+                    new Point(drawingview.getWidth(), drawingview.getHeight()));
+            lasers.add(laser);
+        }
     }
 
     /**
@@ -474,7 +472,7 @@ public class Distances extends Activity {
         views[2] = (ImageView) findViewById(R.id.dDect3);
         views[3] = (ImageView) findViewById(R.id.dDect4);
 
-        if(lit == true){
+        if(lit){
             for(ImageView i: views){
                 i.setImageResource(R.drawable.detector_lit);
             }

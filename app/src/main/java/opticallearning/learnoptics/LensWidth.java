@@ -13,7 +13,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -62,7 +61,7 @@ public class LensWidth extends Activity {
 
         //Creates a spinner object and references spinWidth in lens_width.xml
         spinner = (Button) findViewById(R.id.spinWidth);
-        spinner.setText("Pick Lens Width");
+        spinner.setText(R.string.spinWidthText);
 
         //Creates adapter to load array lens_widths into the spinner
         //lens_widths > {"Thin","Normal"}
@@ -171,7 +170,7 @@ public class LensWidth extends Activity {
         //If process was stopped, skip setup and allow
         //super constructor to resume the activity
         //---Also reset flag
-        if(processStopped == true){
+        if(processStopped){
             processStopped = false;
             return;
         }
@@ -281,13 +280,12 @@ public class LensWidth extends Activity {
         Laser laser;
 
         //Draw lasers Lasers
-        if (LASER_COUNT > 0)
-            for (int i = 1; i <= LASER_COUNT; i++) {
-                laser = new Laser(new PointF(x,
-                        laserBox.getY() + yBottom + ySegment * i),
-                        new Point(drawingview.getWidth(), drawingview.getHeight()));
-                lasers.add(laser);
-            }
+        for (int i = 1; i <= LASER_COUNT; i++) {
+            laser = new Laser(new PointF(x,
+                    laserBox.getY() + yBottom + ySegment * i),
+                    new Point(drawingview.getWidth(), drawingview.getHeight()));
+            lasers.add(laser);
+        }
     }
 
     /**
@@ -313,7 +311,6 @@ public class LensWidth extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView widthLens = (DrawingView) findViewById(R.id.wLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.wDect1);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) widthLens.getX(), (int) widthLens.getY(),widthLens.getHeight(), widthLens.getWidth());
@@ -327,8 +324,8 @@ public class LensWidth extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (photoTemplate.getHeight() / 2);
-            end.x = end.x - (float) (photoTemplate.getWidth() * .75);
+            end.y = end.y - (views[0].getHeight() / 2);
+            end.x = end.x - (float) (views[0].getWidth() * .75);
 
             if(end.x > views[i].getX()) {
                 xDelta = end.x - views[i].getX();
@@ -465,7 +462,7 @@ public class LensWidth extends Activity {
         views[2] = (ImageView) findViewById(R.id.wDect3);
         views[3] = (ImageView) findViewById(R.id.wDect4);
 
-        if(lit == true){
+        if(lit){
             for(ImageView i: views){
                 i.setImageResource(R.drawable.detector_lit);
             }

@@ -64,7 +64,7 @@ public class Skew extends Activity {
 
         //Creates spinner object and assigns it to spinSkew in skew.xml
         spinner = (Button) findViewById(R.id.spinSkew);
-        spinner.setText("Pick Lens Height");
+        spinner.setText(R.string.spinSkewText);
 
         //Creates array adapter for reading skew[] into spinSkew
         //skew > {"Above Median", "At Median", "Below Median"}
@@ -158,12 +158,11 @@ public class Skew extends Activity {
         //If process was stopped, skip setup and allow
         //super constructor to resume the activity
         //---Also reset flag
-        if(processStopped == true){
+        if(processStopped){
             processStopped = false;
             return;
         }
 
-        int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
 
         //Initialize the laser array
@@ -253,13 +252,13 @@ public class Skew extends Activity {
         Laser laser;
 
         //Draw lasers Lasers
-        if (LASER_COUNT > 0)
-            for (int i = 1; i <= LASER_COUNT; i++) {
-                laser = new Laser(new PointF(x,
-                        laserBox.getY() + yBottom + ySegment * i),
-                        new Point(drawingview.getWidth(), drawingview.getHeight()));
-                lasers.add(laser);
-            }
+
+        for (int i = 1; i <= LASER_COUNT; i++) {
+            laser = new Laser(new PointF(x,
+                    laserBox.getY() + yBottom + ySegment * i),
+                    new Point(drawingview.getWidth(), drawingview.getHeight()));
+            lasers.add(laser);
+        }
     }
 
     /**
@@ -284,7 +283,6 @@ public class Skew extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView skewLen = (DrawingView) findViewById(R.id.skewLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.skDect1);
 
         //Adjust the height based on correct answer
         if(answerIndex == 0){
@@ -304,8 +302,8 @@ public class Skew extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (photoTemplate.getHeight() / 2);
-            end.x = end.x - (float) (photoTemplate.getWidth() * .75);
+            end.y = end.y - (views[0].getHeight() / 2);
+            end.x = end.x - (float) (views[0].getWidth() * .75);
 
             if (end.x > views[i].getX()) {
                 xDelta = end.x - views[i].getX();
@@ -463,7 +461,7 @@ public class Skew extends Activity {
         views[2] = (ImageView) findViewById(R.id.skDect3);
         views[3] = (ImageView) findViewById(R.id.skDect4);
 
-        if(lit == true){
+        if(lit){
             for(ImageView i: views){
                 i.setImageResource(R.drawable.detector_lit);
             }
