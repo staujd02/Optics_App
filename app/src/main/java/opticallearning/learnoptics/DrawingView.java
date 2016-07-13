@@ -75,9 +75,12 @@ public class DrawingView extends View implements View.OnTouchListener{
         setFocusable(true);             //Must be true for user interaction
         setFocusableInTouchMode(true);  //Must be true for user interaction
         setWillNotDraw(false);          //Must be false to drawn on view
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+
+        opts.inScaled = false;
 
         //Load up bitmap for use later
-        bm = BitmapFactory.decodeResource(getResources(), R.drawable.lens);
+        bm = BitmapFactory.decodeResource(getResources(), R.drawable.lens, opts);
 
         //Allocate space for two rectangles
         rect = new Rect();
