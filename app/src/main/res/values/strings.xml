@@ -32,7 +32,7 @@
     <string name="njit">NJIT Logo</string>
     <string name="nsf">NSF Logo</string>
     <string name="bg_bright">This is basic content where the user is introduced to the subject.</string>
-    <string name="bg_lens">This is basic content where the user is introduced to the subject.</string>
+    <string name="bg_lens">This is the Lens Crafter Module \n\n\tIn the following sub categories you will be quizzed on your ability to interpret lenses and their effect on a laser beam\'s path. \n\n\tEach sub category will test you on different variables associated with lenses such as width, distance from source, n index, and so forth. \n\nTouch a photodetector to see its center position.\n\nTouch anywhere on the graph to retrieve a points position.</string>
     <string name="bg_medium">This is basic content where the user is introduced to the subject.</string>
     <string name="bg_spec">This is basic content where the user is introduced to the subject.</string>
     <string name="btContinue">Continue</string>
@@ -43,6 +43,10 @@
     <string name="spinMaterialText">Pick Lens Material</string>
     <string name="spinCCText">Pick Lens</string>
     <string name="spinLensNum">Pick the number of Lenses</string>
+    <string name="schoolHint">School ID</string>
+    <string name="userIconHint">User Setup</string>
+    <string name="userNameHint">Username</string>
+    <string name="ageGroup">Age Group</string>
     <string-array name="lensTypes">
         <item>Concave</item>
         <item>Convex</item>

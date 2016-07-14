@@ -6,24 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-
-import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.LogRecord;
 
 /**
  * Created by Joel on 7/1/2016.
@@ -35,8 +27,11 @@ import java.util.logging.LogRecord;
  */
 public class ConcaveConvex extends Activity {
 
-    final int CONVEX_LENS = 0;  //Index of the convex lens
+    final int CONVEX_LENS = 1;  //Index of the convex lens
     final int CONCAVE_LENS = 6; //Index of the concave lens
+
+    final float ENVIRONMENT_WIDTH = 100;
+    final float ENVIRONMENT_HEIGHT = 65;
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -45,17 +40,17 @@ public class ConcaveConvex extends Activity {
     final int LASER_APERTURE_TOP = 78;    //The height at which the laser aperture stops (in px)
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
-    int answerIndex;    //The index of the correct answer
-    User user;          //Reference to user object
-    Button spinner;     //Button used to select lens
+    private int answerIndex;    //The index of the correct answer
+    private User user;          //Reference to user object
+    private Button spinner;     //Button used to select lens
+    private PointF lensCenterPoint; //Center point of the lens
+    private boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
 
-    boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
+    private ArrayList<Laser> lasers;//Array of lasers
+    private ImageView[] views;      //Array of references to photodetector views
 
-    ArrayList<Laser> lasers;//Array of lasers
-    ImageView[] views;      //Array of references to photodetector views
-
-    Lens lens;          //Concave or convex lens
-    Boolean answered;   //Tracks whether the user has already answered
+    private Lens lens;          //Concave or convex lens
+    private boolean answered;   //Tracks whether the user has already answered
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +58,38 @@ public class ConcaveConvex extends Activity {
         setContentView(R.layout.concaveconvex); //set the view
         setTitle("Concave vs. Convex"); //Assign title
 
-        user = LensCraftMenu.user;
+        user = LensCraftMenu.user; //Grab user reference from LensCraft menu
 
         //Create button object and connect to spinCC in concaveconvex.xml
         spinner = (Button) findViewById(R.id.spinCC);
-        spinner.setText("Pick Lens");
+        spinner.setText(R.string.spinCCText);
+
+        DrawingView ccLens = (DrawingView) findViewById(R.id.ccLen);
+        ccLens.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                AlertDialog alertDialog = new AlertDialog.Builder(ConcaveConvex.this).create();
+                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setMessage("(" +
+                        Math.round(lensCenterPoint.x)
+                        +","+
+                        Math.round(lensCenterPoint.y)+
+                        ")");
+                alertDialog.show();
+                return false;
+            }
+        });
+
+
+        String[] array = {
+                "Concave: Focal Length " + LensCraftMenu.lensArrayList.get(CONCAVE_LENS).getfLen(),
+                "Convex: Focal Length " + LensCraftMenu.lensArrayList.get(CONVEX_LENS).getfLen()
+        };
 
         //Assign to string array lensTypes {"Concave", "Convex"}
         //using an adapter
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.lensTypes, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<String> adapter = new ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, array);
 
         //Sets the drop down view type
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -139,7 +156,7 @@ public class ConcaveConvex extends Activity {
     protected void onStart() {
         super.onStart(); //Always start with the super constructor
 
-        if(processStopped == true){
+        if(processStopped){
             processStopped = false;
             return;
         }
@@ -186,6 +203,7 @@ public class ConcaveConvex extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -241,13 +259,66 @@ public class ConcaveConvex extends Activity {
         Laser laser;
 
         //Draw lasers Lasers
-        if(LASER_COUNT > 0)
         for(int i = 1; i <= LASER_COUNT; i++){
             laser = new Laser(new PointF(x,
                     laserBox.getY() + yBottom + ySegment*i),
                     new Point(drawingview.getWidth(),drawingview.getHeight()));
             lasers.add(laser);
         }
+    }
+
+
+    /**
+     * Turn on the grid at runtime to ensure all objects are drawn and
+     * dimensioned
+     */
+    protected void setGrid() {
+        //Make all necessary reference calls
+        DrawingView view = (DrawingView) findViewById(R.id.ccLen);
+        DrawingView canvas = (DrawingView) findViewById(R.id.view);
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+
+        //Activate the grid on the main view, and assign a starting x point
+        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+
+
+        canvas.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                PointF p  = new PointF(event.getX(),event.getY());
+
+                System.out.println(p);
+
+                p.x = p.x - ((DrawingView) v).getStartX();
+
+                System.out.println(p.x);
+
+                //Translate y coordinate from screen plot scheme to standard plot scheme
+                p.y = v.getHeight() - p.y;
+
+                System.out.println(p.y);
+
+                //Convert pixels to standard units
+                p.x = p.x * (ENVIRONMENT_WIDTH/(v.getWidth()));
+                p.y = p.y * (ENVIRONMENT_HEIGHT/(v.getHeight()));
+
+                System.out.println(p);
+
+                new AlertDialog.Builder(ConcaveConvex.this)
+                        .setTitle("Location") //Title of the dialogue
+                        .setMessage("("+
+                                Math.round(p.x)+
+                                ","+
+                                Math.round(p.y)+")") //Where the user touched
+                        //Creates OK button for user interaction (Dismisses Dialogue)
+                        .show(); //Shows created dialogue
+                return false;
+            }
+        });
+
+        //Find the len's center point
+        lensCenterPoint = viewCenter_toGraph(view, canvas);
     }
 
     /**
@@ -272,7 +343,6 @@ public class ConcaveConvex extends Activity {
 
         //Get the Lens holder from concaveconvex.xml for measurments
         DrawingView lencc = (DrawingView) findViewById(R.id.ccLen);
-        ImageView photoTemplate = (ImageView) findViewById(R.id.ccDet1);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
@@ -284,9 +354,10 @@ public class ConcaveConvex extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (photoTemplate.getHeight() / 2);
-            end.x = end.x - (float) (photoTemplate.getWidth() * .75);
+            end.y = end.y - (views[0].getHeight() / 2);
+            end.x = end.x - (float) (views[0].getWidth() * .75);
 
+            //Calculate x Delta
             if(end.x > views[i].getX()){
                 xDelta = end.x - views[i].getX();
             }
@@ -294,6 +365,7 @@ public class ConcaveConvex extends Activity {
                 xDelta = -(views[i].getX() - end.x);
             }
 
+            //Calculate y delta
             if(end.y > views[i].getY()){
                 yDelta = end.y - views[i].getY();
             }
@@ -301,10 +373,11 @@ public class ConcaveConvex extends Activity {
                 yDelta = -(views[i].getY() - end.y);
             }
 
+            //Create animation
             animation = new TranslateAnimation(0, xDelta, 0, yDelta);
-            animation.setDuration(500);
-            animation.setFillAfter(true);
-            views[i].startAnimation(animation);
+            animation.setDuration(500); //Set duration
+            animation.setFillAfter(true);   //Tell the view to remain after translation
+            views[i].startAnimation(animation); //Run animation
         }
     }
 
@@ -417,7 +490,7 @@ public class ConcaveConvex extends Activity {
         views[2] = (ImageView) findViewById(R.id.ccDet3);
         views[3] = (ImageView) findViewById(R.id.ccDet4);
 
-        if(lit == true){
+        if(lit){
             for(ImageView i: views){
                 i.setImageResource(R.drawable.detector_lit);
             }
@@ -465,7 +538,7 @@ public class ConcaveConvex extends Activity {
             new AlertDialog.Builder(ConcaveConvex.this)
                     .setTitle("Nope") //Sets the title of the dialogue
                     .setMessage("Sorry, that is not the right lens. Would you like " +
-                            "to play again?") //Sets the Message
+                            "to try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -511,5 +584,21 @@ public class ConcaveConvex extends Activity {
 
             user.saveUser("default.dat", getApplicationContext());
         }
+    }
+
+    public PointF viewCenter_toGraph(View v, View graph){
+        //Create a new PointF located at the center of the view
+        PointF p = new PointF((v.getX()*2 + v.getWidth())/2f, (v.getY()*2 + v.getHeight())/2f );
+
+        p.x = p.x - ((DrawingView) graph).getStartX();
+
+        //Invert y to measure from the bottom up (like a typical graph)
+        p.y = graph.getHeight() - p.y;
+
+        //Then convert pixels to standard units
+        p.x = p.x * (ENVIRONMENT_WIDTH/graph.getWidth());
+        p.y = p.y * (ENVIRONMENT_HEIGHT/graph.getHeight());
+
+        return p;
     }
 }

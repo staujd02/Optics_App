@@ -21,8 +21,8 @@ import java.io.Serializable;
 public class User implements Serializable{
 
     private String name;    //User's name
-    //private String school;  //String corresponding to user's school
-    //private int icon_id;  //Resource id integer corresponding to user's icon
+    private String school;  //String corresponding to user's school
+    private int icon_id;  //Resource id integer corresponding to user's icon
     //private int viewCount //Tracks how many questions the user has viewed (not necessarily answered)
     private int score;      //User's score
     private int attempts;   //Question attempts
@@ -35,6 +35,7 @@ public class User implements Serializable{
 
     private boolean hints;      //Option for the user to bypass hints
     private boolean background; //Option for the user to bypass the background sections
+    private boolean setupComplete; //Indicates whether the user has gone through setup
 
     public User(){
         name = "anonymous";
@@ -53,6 +54,7 @@ public class User implements Serializable{
         //Turn on background/hints by default
         hints = true;
         background = true;
+        setupComplete = false;
     }
 
     public User(String name){
@@ -215,6 +217,24 @@ public class User implements Serializable{
 
     //Getters and Setters
 
+    //School: get and set
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    //Setup Indicator: Get and set
+    public boolean isSetupComplete() {
+        return setupComplete;
+    }
+
+    public void setSetupComplete(boolean setupComplete) {
+        this.setupComplete = setupComplete;
+    }
+
     //Name: get and set
     public String getName() {
         return name;
@@ -227,7 +247,7 @@ public class User implements Serializable{
     //Hints: get and set
     public boolean getHints() {return hints;}
 
-    //public void setHints(boolean view){hints = view;}
+    public void setHints(boolean view){hints = view;}
 
     //Background: get and set
     public boolean getBackground() {return background;}

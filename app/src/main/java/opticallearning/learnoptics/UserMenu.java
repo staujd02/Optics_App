@@ -16,16 +16,19 @@ public class UserMenu extends Activity {
     //Todo append user information to the list items
     //Todo allow user to turn hints/background on and off
 
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_menu);
         setTitle("User Menu");
 
-        User user = MainActivity.user;
+        user = MainActivity.user;
 
         String[] myList = {
                 "Name: " + user.getName(),
+                "School: " + user.getSchool(),
                 "Score: " + user.getScore(),
                 "Attempts: " + user.getAttempts(),
                 "Correct: " + user.getCorrect(),
@@ -38,9 +41,15 @@ public class UserMenu extends Activity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myList);
         ListView lv = (ListView)findViewById(android.R.id.list);
         lv.setAdapter(adapter);
-
-
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!user.isSetupComplete()){
+
+        }
+    }
+
 
 }

@@ -487,7 +487,7 @@ public class Skew extends Activity {
             new AlertDialog.Builder(Skew.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
                     .setMessage("You chose the correct height. Would you like to " +
-                            "play again?") //Sets the Message
+                            "try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -509,7 +509,7 @@ public class Skew extends Activity {
             new AlertDialog.Builder(Skew.this)
                     .setTitle("Nope") //Sets the title of the dialogue
                     .setMessage("Sorry, that is not the right height. Would you like " +
-                            "to play again?") //Sets the Message
+                            "to try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

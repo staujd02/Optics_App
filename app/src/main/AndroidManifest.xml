@@ -38,5 +38,7 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".LensCraftMenu"/>
         <activity android:name=".SpectrumMenu"/>
+        <activity android:name=".Setup"
+            android:screenOrientation="portrait"/>
     </application>
 </manifest>

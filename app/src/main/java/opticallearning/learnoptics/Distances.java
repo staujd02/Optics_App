@@ -498,7 +498,7 @@ public class Distances extends Activity {
             new AlertDialog.Builder(Distances.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
                     .setMessage("You chose the correct distance. Would you like to " +
-                            "play again?") //Sets the Message
+                            "try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -520,7 +520,7 @@ public class Distances extends Activity {
             new AlertDialog.Builder(Distances.this)
                     .setTitle("Nope") //Sets the title of the dialogue
                     .setMessage("Sorry, that is not the right distance. Would you like " +
-                            "to play again?") //Sets the Message
+                            "to try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

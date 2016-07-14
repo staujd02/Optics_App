@@ -472,7 +472,7 @@ public class NIndex extends Activity {
             new AlertDialog.Builder(NIndex.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
                     .setMessage("You chose the correct lens. Would you like to " +
-                            "play again?") //Sets the Message
+                            "try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -494,7 +494,7 @@ public class NIndex extends Activity {
             new AlertDialog.Builder(NIndex.this)
                     .setTitle("Nope") //Sets the title of the dialogue
                     .setMessage("Sorry, that is not the right lens. Would you like " +
-                            "to play again?") //Sets the Message
+                            "to try again?") //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

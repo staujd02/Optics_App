@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -19,16 +20,20 @@ import java.util.ArrayList;
  * This view is intended for drawing the lenses bitmaps and the behaviour
  * of lasers interacting with them.
  */
-public class DrawingView extends View implements View.OnTouchListener{
+public class DrawingView extends View{
 
     //Create paint object for drawing graphics
-    Paint paint = new Paint();
-    ArrayList<Laser> lasers;
-    Lens lens;
-    Bitmap bm;
+    private Paint paint = new Paint();
+    private ArrayList<Laser> lasers;
+    private Lens lens;
+    private Bitmap bm;
 
-    Rect rect;
-    Rect scr;
+    private float startX;
+    private float startY;
+    private boolean drawGrid;
+
+    private Rect rect;
+    private Rect scr;
 
     /**
      * First constructor and simplest constructor
@@ -88,9 +93,6 @@ public class DrawingView extends View implements View.OnTouchListener{
 
         lasers = new ArrayList<>();
 
-        //Assign the onTouchListener, defined below, to the object's own defined onTouchListener
-        this.setOnTouchListener(this);
-
         //Creates a fuzzier, more attractive draw --> edges not as clean/clear
         paint.setAntiAlias(true);
     }
@@ -108,6 +110,11 @@ public class DrawingView extends View implements View.OnTouchListener{
     @Override
      protected void onDraw(Canvas canvas) {
          super.onDraw(canvas); //Draws everything defined in the .xml parameters
+
+        double interval;
+        boolean draw;
+        float x = startX;
+        float y = startY;
 
         //Use this for drawing lasers
         paint.setColor(Color.RED);
@@ -131,13 +138,67 @@ public class DrawingView extends View implements View.OnTouchListener{
             canvas.drawBitmap(bm,scr,rect,paint);
         }
 
+        if(drawGrid){
+            interval = getWidth() / 20.0;
+
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(1f);
+
+            double height = getHeight();
+            double width = getWidth();
+
+            draw = true;
+
+            while(draw){
+                canvas.drawLine(x,0,x,(float) height, paint);
+                x += interval;
+
+                if(x > width){
+                    draw = false;
+                }
+            }
+
+            interval = getHeight() / 20.0;
+            draw = true;
+
+            while(draw){
+                canvas.drawLine(startX,y,(float) width,y,paint);
+                y -= interval;
+
+                if (y < 0){
+                    draw = false;
+                }
+            }
+
+
+
+        }
+
 
      }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        //Might use this method...
-        return false;
+    /**
+     * This function is a setter, but it ensures that all neccassary
+     *
+     *
+     * @param drawGrid boolen indicating whether the draw cycle should create a grid
+     * @param startX  starting x of the grid
+     * @param startY  starting y of the grid (*Note should be the y maximum - the graph is drawn
+     *                from the bottom up)
+     */
+    public void setDrawGrid(boolean drawGrid, float startX, float startY) {
+        this.drawGrid = drawGrid;
+        this.startX = startX;
+        this.startY = startY;
+        invalidate();
+    }
+
+    public float getStartY() {
+        return startY;
+    }
+
+    public float getStartX() {
+        return startX;
     }
 
     //public void drawLasers(Laser[] lasers){
