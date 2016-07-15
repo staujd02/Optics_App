@@ -24,16 +24,23 @@ public class DrawingView extends View{
 
     //Create paint object for drawing graphics
     private Paint paint = new Paint();
-    private ArrayList<Laser> lasers;
-    private Lens lens;
-    private Bitmap bm;
+    private ArrayList<Laser> lasers;//List of lasers to be rendered
+    private Lens lens;              //Lens object to be rendered
+    private Bitmap bm;              //Loaded bitmap of lenses
 
-    private float startX;
-    private float startY;
-    private boolean drawGrid;
+    final private int LABEL_FREQUENCY = 25;     //Indicates how often a label is printed on graph
+    final private int pixelOFFSET = 6;          //How much padding should be added to printed label
+    final private int LINE_FREQUENCY = 20;
 
-    private Rect rect;
-    private Rect scr;
+    private int environment_height = -1; //Used for calculating label output
+    private int environment_width = -1;  //Used for calculating label output
+
+    private float startX;           //X offset where the grid starts
+    private float startY;           //Y offset where the grid starts
+    private boolean drawGrid;       //Whether or not to render a grid on this view
+
+    private Rect rect;              //Rect output for drawing lens
+    private Rect scr;               //Source rect from lens data base
 
     /**
      * First constructor and simplest constructor
@@ -113,8 +120,11 @@ public class DrawingView extends View{
 
         double interval;
         boolean draw;
+        boolean label = false;
         float x = startX;
         float y = startY;
+        int y_units;
+        int x_units;
 
         //Use this for drawing lasers
         paint.setColor(Color.RED);
@@ -139,7 +149,7 @@ public class DrawingView extends View{
         }
 
         if(drawGrid){
-            interval = getWidth() / 20.0;
+            interval = getWidth() / LINE_FREQUENCY;
 
             System.out.println("Interval: " + interval);
             System.out.println("Width: " + getWidth());
@@ -152,8 +162,19 @@ public class DrawingView extends View{
 
             draw = true;
 
+            if(environment_width != -1 || environment_height != -1){
+                label = true;
+            }
+
             while(draw){
                 canvas.drawLine(x,0,x,(float) height, paint);
+
+                x_units = (int) Math.round((x-startX) * (environment_width/(1.0*width)));
+
+                if(label){
+                    canvas.drawText(x_units + "", x,(float) (height - pixelOFFSET),paint);
+                }
+
                 x += interval;
 
                 if(x > width){
@@ -161,14 +182,19 @@ public class DrawingView extends View{
                 }
             }
 
-            interval = getHeight() / 20.0;
+            interval = height / LINE_FREQUENCY;
             draw = true;
 
             while(draw){
                 canvas.drawLine(startX,y,(float) width,y,paint);
+
+                y_units = (int) Math.round((height - y) * (environment_height/(1.0*height)));
+
+                if(label){
+                    canvas.drawText(y_units + "", (float) (width - pixelOFFSET - 5 ),y,paint);
+                }
+
                 y -= interval;
-
-
 
                 if (y < 0){
                     draw = false;
@@ -201,6 +227,9 @@ public class DrawingView extends View{
     public float getStartY() {
         return startY;
     }
+
+    public void setEHeight(int height){ this.environment_height = height;}
+    public void setEWidth(int width){ this.environment_width = width;}
 
     public float getStartX() {
         return startX;

@@ -299,6 +299,11 @@ public class ConcaveConvex extends Activity {
         DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
+        //Synchronizes environment constants with drawing view
+        //necessary for labels to be drawn
+        canvas.setEHeight((int)ENVIRONMENT_HEIGHT);
+        canvas.setEWidth((int)ENVIRONMENT_WIDTH);
+
         //Activates the grid on the main view, and assign a starting x point
         canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
 
