@@ -345,12 +345,17 @@ public class ConcaveConvex extends Activity {
 
         //Get the Lens holder from concaveconvex.xml for measurments
         DrawingView lencc = (DrawingView) findViewById(R.id.ccLen);
+        DrawingView graph = (DrawingView) findViewById(R.id.view);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
 
         for(int i = 0; i < views.length; i++){
-            lasers.get(i).setLens(lens); //Grab matching laser
+
+            //Adjust the focal length from units to pixels
+            float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
+
+            lasers.get(i).setLens(lens, focalLength); //Grab matching laser
             lasers.get(i).calculate();
             end = new PointF(lasers.get(i).getEnd().x, lasers.get(i).getEnd().y);
 
@@ -438,7 +443,11 @@ public class ConcaveConvex extends Activity {
         //Add user's choice of lens
         //and calculate
         for(Laser l: lasers){
-            l.setLens(lens);
+
+            //Adjust the focal length from units to pixels
+            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+
+            l.setLens(lens,focalLength);
             l.calculate();
         }
 

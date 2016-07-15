@@ -12,6 +12,19 @@
         android:id="@+id/scView"
         android:layout_above="@+id/btnLens_c">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bg_lens"
+            android:id="@+id/txtView"
+            android:typeface="serif"
+            android:textSize="18sp"
+            android:padding="7dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/scView"
+            android:layout_alignParentRight="true" />
     </ScrollView>
 
     <Button
@@ -24,17 +37,4 @@
         android:layout_marginBottom="10dp"
         android:textSize="20sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bg_lens"
-        android:id="@+id/txtView"
-        android:typeface="serif"
-        android:textSize="18sp"
-        android:padding="7dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/scView"
-        android:layout_alignParentRight="true" />
 </RelativeLayout>

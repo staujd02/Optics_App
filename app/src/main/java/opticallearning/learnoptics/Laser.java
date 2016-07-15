@@ -29,7 +29,7 @@ public class Laser {
                                                     //the laser interaction with the lens
     private ArrayList<LaserLine> segs;  //Array of individual line segments of the laser
                                         //this is what will be rendered after calculation
-
+    private float focalLen;
     private int impactCount;
 
     /**
@@ -81,9 +81,11 @@ public class Laser {
      * trajectory calculations
      *
      * @param lens Assigned lens for calculation
+     * @param focalLen Focal length of the lens in pixels
      */
-    public void setLens(Lens lens){
+    public void setLens(Lens lens, float focalLen){
         lenses = new ArrayList<>();
+        this.focalLen = focalLen;
         lenses.add(lens);
     }
 
@@ -135,7 +137,7 @@ public class Laser {
                 //Find horizontal midpoint -> lowest x plus highest x divided by two
                 focalPoint.x = (l.getOrigin().x + l.getWidth()+l.getOrigin().x) / 2;
                 //Add focal length for x
-                focalPoint.x = (float) (focalPoint.x + l.getfLen());
+                focalPoint.x = focalPoint.x + focalLen;
 
                 //slope equation - NEW SLOPE
                 m = (focalPoint.y - impact.y) / (focalPoint.x - impact.x);

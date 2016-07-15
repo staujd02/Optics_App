@@ -394,12 +394,16 @@ public class LensWidth extends Activity {
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView widthLens = (DrawingView) findViewById(R.id.wLen);
+        DrawingView dv = (DrawingView) findViewById(R.id.view);
 
         //Assign the lens holder location to lens object
         lens.setLocation((int) widthLens.getX(), (int) widthLens.getY(),widthLens.getHeight(), widthLens.getWidth());
 
         for(int i = 0; i < views.length; i++) {
-            lasers.get(i).setLens(lens); //Grab matching laser
+            //Adjust the focal length from units to pixels
+            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+
+            lasers.get(i).setLens(lens, focalLength); //Grab matching laser
             lasers.get(i).calculate();
             end = new PointF(lasers.get(i).getEnd().x, lasers.get(i).getEnd().y);
 
@@ -486,7 +490,10 @@ public class LensWidth extends Activity {
         //Add user's choice of lens
         //and calculate
         for(Laser l: lasers){
-            l.setLens(lens);
+
+            //Adjust the focal length from units to pixels
+            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+            l.setLens(lens,focalLength);
             l.calculate();
         }
 
