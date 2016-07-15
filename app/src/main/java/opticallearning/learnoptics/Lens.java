@@ -14,17 +14,17 @@ import android.graphics.Rect;
  */
 public class Lens {
 
-    private String id;
-    private String material;
-    Rect graphic_Reference;
-    private double fLen;
-    private boolean concave;
-    private float radius;
-    private float nIdex;
+    private String id;              //Lens unique ID
+    private String material;        //Lens material makeup
+    private Rect graphic_Reference; //Lens's bitmap binding rectangle
+    private double fLen;            //Lens's focal length (in units)
+    private boolean concave;        //Whether or not lens is concave
+    private float radius;           //Lens's radius
+    private float nIdex;            //Lens's N index
 
-    private Point origin = null;
-    private int height = -1;
-    private int width = -1;
+    private Point origin = null;    //Lens holder location in phone's screen space (x,y)
+    private int height = -1;        //Lens holder height in phone's space
+    private int width = -1;         //Lens holder width in phone's space
 
     /**
      *  Constructor intended for loading the lens into memory from data file

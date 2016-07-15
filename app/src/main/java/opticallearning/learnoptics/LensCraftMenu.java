@@ -31,15 +31,15 @@ import java.util.ArrayList;
  */
 public class LensCraftMenu extends ListActivity{
 
-    static protected User user;              //MainActivity User -> already loaded
+    static protected User user;                     //MainActivity User -> already loaded
     static protected ArrayList<Lens> lensArrayList; //Loaded array of lenses
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); //Call super constructor
+        super.onCreate(savedInstanceState);             //Call super constructor
         setContentView(R.layout.lenscraft_extended);    //set the view to Lens Crafter menu
-        setTitle("Explore");    //Assign a descriptive title
-        int access;         //User's access level
+        setTitle("Lens Crafter Menu");                  //Assign a descriptive title
+        int access;                                     //User's access level
 
         //Loading lenses here
         LoadLenses();
@@ -91,7 +91,7 @@ public class LensCraftMenu extends ListActivity{
      *
      */
     private void LoadLenses() {
-        String json; //json string (First object to be extracted)
+        String json;        //json string (First object to be extracted)
         JSONArray array;    //json array of objects (Second object extracted)
         JSONObject lens;    //json object belonging to array (third object extracted)
         JSONArray rectArray;//json primitive array, belongs to lens JSON object (last object extracted)

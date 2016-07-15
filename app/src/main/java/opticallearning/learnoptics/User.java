@@ -22,7 +22,7 @@ public class User implements Serializable{
 
     private String name;    //User's name
     private String school;  //String corresponding to user's school
-    private int icon_id;  //Resource id integer corresponding to user's icon
+    private int icon_id;    //Resource id integer corresponding to user's icon
     //private int viewCount //Tracks how many questions the user has viewed (not necessarily answered)
     private int score;      //User's score
     private int attempts;   //Question attempts

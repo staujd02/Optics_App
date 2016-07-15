@@ -13,10 +13,9 @@ import android.widget.ListView;
  */
 public class UserMenu extends Activity {
 
-    //Todo append user information to the list items
     //Todo allow user to turn hints/background on and off
 
-    User user;
+    private User user; //User reference from MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +25,7 @@ public class UserMenu extends Activity {
 
         user = MainActivity.user;
 
+        //Create list using user's information
         String[] myList = {
                 "Name: " + user.getName(),
                 "School: " + user.getSchool(),
@@ -38,18 +38,10 @@ public class UserMenu extends Activity {
                 "Medium Lvls: " + user.getMedLVL()
         };
 
+        //Sets the adapter and displays
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myList);
         ListView lv = (ListView)findViewById(android.R.id.list);
         lv.setAdapter(adapter);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!user.isSetupComplete()){
-
-        }
-    }
-
 
 }

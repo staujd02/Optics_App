@@ -37,23 +37,21 @@ public class NIndex extends Activity {
 
     //These three constant are used to determine where the
     //lasers will be drawn
-    final int LASER_COUNT = 4;                //Number of lasers to be drawn
+    final int LASER_COUNT = 4;            //Number of lasers to be drawn
     final int LASER_APERTURE_BOTTOM = 44; //The height at which the laser aperture starts (in px)
     final int LASER_APERTURE_TOP = 78;    //The height at which the laser aperture stops (in px)
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
-    Button spinner; //Button which opens prompt for user selection of lens
-
-    boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
-
-    int answerIndex;    //The index of the correct answer
-    User user;          //Reference to user object
+    private Button spinner;         //Button which opens prompt for user selection of lens
+    private boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
+    private int answerIndex;        //The index of the correct answer
+    private User user;              //Reference to user object
     private PointF lensCenterPoint; //Center point of the lens
-    ArrayList<Laser> lasers;//Array of lasers
-    ImageView[] views;      //Array of references to photodetector views
+    private ArrayList<Laser> lasers;//Array of lasers
+    private ImageView[] views;      //Array of references to photodetector views
 
-    Lens lens;          //Concave or convex lens
-    Boolean answered;   //Tracks whether the user has already answered
+    private Lens lens;              //Concave or convex lens
+    private Boolean answered;       //Tracks whether the user has already answered
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +65,7 @@ public class NIndex extends Activity {
         spinner = (Button) findViewById(R.id.spinMaterial);
         spinner.setText(R.string.spinMaterialText);
 
+        //Sets the lens holder onTouch() event to display the center location of the lens holder
         DrawingView materialLens = (DrawingView) findViewById(R.id.materialLen);
         materialLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -83,6 +82,7 @@ public class NIndex extends Activity {
             }
         });
 
+        //User's options created dynamically by pulling information from data base
         String[] array = {
                 "Convex: N Index " + LensCraftMenu.lensArrayList.get(NINDEX_ONE).getNIndex() + " (Radius " +
                                         LensCraftMenu.lensArrayList.get(NINDEX_ONE).getRadius() + ")",

@@ -37,29 +37,29 @@ public class Skew extends Activity {
 
     //These three constant are used to determine where the
     //lasers will be drawn
-    final int LASER_COUNT = 4;                //Number of lasers to be drawn
+    final int LASER_COUNT = 4;            //Number of lasers to be drawn
     final int LASER_APERTURE_BOTTOM = 44; //The height at which the laser aperture starts (in px)
     final int LASER_APERTURE_TOP = 78;    //The height at which the laser aperture stops (in px)
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
-    Button spinner;                 //Button which opens prompt for user selection of lens
-    private PointF lensCenterPoint; //Center point of the lens
-    boolean processStopped;         //keeps track of the activity's life cycle and responds accordingly
-    int answerIndex;                //The index of the correct answer
-    int userHeight;                 //User's Height selection
-    User user;                      //Reference to user object
+    private Button spinner;             //Button which opens prompt for user selection of lens
+    private PointF lensCenterPoint;     //Center point of the lens
+    private boolean processStopped;     //keeps track of the activity's life cycle and responds accordingly
+    private int answerIndex;            //The index of the correct answer
+    private int userHeight;             //User's Height selection
+    private User user;                  //Reference to user object
 
-    ArrayList<Laser> lasers;//Array of lasers
-    ImageView[] views;      //Array of references to photodetector views
+    private ArrayList<Laser> lasers;    //Array of lasers
+    private ImageView[] views;          //Array of references to photodetector views
 
-    Lens lens;          //Concave or convex lens
-    Boolean answered;   //Tracks whether the user has already answered
+    private Lens lens;                  //Concave or convex lens
+    private Boolean answered;           //Tracks whether the user has already answered
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //call super constructor
-        setContentView(R.layout.skew);  //sets the view
-        setTitle("Lens Height");        //assigns descriptive title
+        setContentView(R.layout.skew);      //sets the view
+        setTitle("Lens Height");            //assigns descriptive title
 
         user = LensCraftMenu.user; //Grab user reference from menu
 

@@ -168,7 +168,7 @@ public class DrawingView extends View{
                 canvas.drawLine(startX,y,(float) width,y,paint);
                 y -= interval;
 
-                System.out.println("Start X:" + startX);
+
 
                 if (y < 0){
                     draw = false;
