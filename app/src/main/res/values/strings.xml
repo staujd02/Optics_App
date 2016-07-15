@@ -62,9 +62,9 @@
         <item>Below Median</item>
     </string-array>
     <string-array name="distances">
-        <item>Short</item>
+        <item>Closer</item>
         <item>Medium</item>
-        <item>Far</item>
+        <item>Farther</item>
     </string-array>
     <string-array name="lens_widths">
         <item>Thin Convex</item>

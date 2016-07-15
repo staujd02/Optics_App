@@ -56,7 +56,7 @@ public class LensCraftMenu extends ListActivity{
         }
 
         //USED FOR TESTING
-        //access = 5;
+        access = 5;
 
         //Initialize the pages array
         ArrayList<String> pages = new ArrayList<>();
@@ -68,9 +68,7 @@ public class LensCraftMenu extends ListActivity{
         //Each item is added at the first index to ensure
         //the list is ordered correctly
         switch (access){
-            case 6:
                 //Highest Level
-                pages.add("Number of Lens");
             case 5:
                 pages.add(1,"Lens Width");
             case 4:
@@ -80,8 +78,8 @@ public class LensCraftMenu extends ListActivity{
             case 2:
                 pages.add(1,"N Index");
             case 1:
-                //Lowest Level
                 pages.add(1,"Concave vs. Convex");
+                //Lowest Level
         }
 
         //Sets the list adapter to display the array pages[]
@@ -145,13 +143,19 @@ public class LensCraftMenu extends ListActivity{
                 Rect rect = new Rect(rectArray.getInt(0),rectArray.getInt(1),
                                         rectArray.getInt(2),rectArray.getInt(3));
 
+                float cr = (float) lens.getDouble("cr");
+                float index = (float) lens.getDouble("n index");
+
                 //Create lens
                 lensArrayList.add(
                         new Lens(lens.get("ID").toString(),         //String ID of lens
                                 lens.get("Material").toString(),    //Material description of lens
                                 rect,                               //Subset rect of large Bitmap
                                 Double.parseDouble(lens.get("Focal cm").toString()),//Focal length
-                                concave ));                             //Concave or convex
+                                concave,                            //Concave or convex
+                                cr,                                 //Curve radius of the lens
+                                index                               //N index of the lens
+                                ));
 
             }
 
@@ -210,10 +214,6 @@ public class LensCraftMenu extends ListActivity{
             case 5:
                 //Starts the LensWidth module, lens_width.xml
                 startActivity(new Intent(LensCraftMenu.this, LensWidth.class));
-                break;
-            case 6:
-                //Starts the Number of Lens module, number_of_lens.xml
-                startActivity(new Intent(LensCraftMenu.this, NumberOfLens.class));
                 break;
         }
     }

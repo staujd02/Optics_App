@@ -141,6 +141,9 @@ public class DrawingView extends View{
         if(drawGrid){
             interval = getWidth() / 20.0;
 
+            System.out.println("Interval: " + interval);
+            System.out.println("Width: " + getWidth());
+
             paint.setColor(Color.BLACK);
             paint.setStrokeWidth(1f);
 
@@ -164,6 +167,8 @@ public class DrawingView extends View{
             while(draw){
                 canvas.drawLine(startX,y,(float) width,y,paint);
                 y -= interval;
+
+                System.out.println("Start X:" + startX);
 
                 if (y < 0){
                     draw = false;

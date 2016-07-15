@@ -19,6 +19,8 @@ public class Lens {
     Rect graphic_Reference;
     private double fLen;
     private boolean concave;
+    private float radius;
+    private float nIdex;
 
     private Point origin = null;
     private int height = -1;
@@ -32,13 +34,16 @@ public class Lens {
      * @param graphic_Reference String filename of the lens's image
      * @param fLen      Focal length of the lens
      * @param concave   boolean, if true the lens is concave, otherwise it is convex
+     * @param radius    float number representative of the lens's radius
      */
-    public Lens(String id, String material, Rect graphic_Reference, double fLen, boolean concave) {
+    public Lens(String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex) {
         this.id = id;
         this.material = material;
         this.graphic_Reference = graphic_Reference;
         this.fLen = fLen;
         this.concave = concave;
+        this.radius = radius;
+        this.nIdex = nIndex;
     }
 
     /**
@@ -74,6 +79,10 @@ public class Lens {
     public Point getOrigin() {
         return origin;
     }
+
+    public float getRadius() {return radius;}
+
+    public float getNIndex() {return  nIdex;}
 
     public int getHeight() {
         return height;

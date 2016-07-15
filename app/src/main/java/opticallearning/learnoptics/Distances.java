@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
@@ -28,8 +29,10 @@ import java.util.Random;
 public class Distances extends Activity {
 
     final int LENS = 10; //Constant lens index
-    final double adjustRatio = 1/8.0; //Constant ratio for determining the adjustFactor
-    int adjustFactor; //Variable adjustment for lens distance
+    final int ADJUST_FACTOR = 25; //Variable adjustment for lens distance
+
+    final float ENVIRONMENT_WIDTH = 100;
+    final float ENVIRONMENT_HEIGHT = 100;
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -39,6 +42,8 @@ public class Distances extends Activity {
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
     Button spinner; //Button which opens prompt for user selection of lens
+
+    private PointF lensCenterPoint; //Center point of the lens
 
     int answerIndex;    //The index of the correct answer
 
@@ -71,10 +76,30 @@ public class Distances extends Activity {
         spinner = (Button) findViewById(R.id.spinDistance);
         spinner.setText(R.string.spinDistanceText);
 
-        //Creates array adapter for loading string array into the spinner,
-        //distances is in strings.xml --> {"Short", "Medium", "Far"}
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.distances, android.R.layout.simple_spinner_item);
+        DrawingView dLens = (DrawingView) findViewById(R.id.dLen);
+        dLens.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                AlertDialog alertDialog = new AlertDialog.Builder(Distances.this).create();
+                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setMessage("(" +
+                        Math.round(lensCenterPoint.x)
+                        +","+
+                        Math.round(lensCenterPoint.y)+
+                        ")");
+                alertDialog.show();
+                return false;
+            }
+        });
+
+        String[] array = {
+                ADJUST_FACTOR + " units closer to laser",
+                "Do not move lens",
+                ADJUST_FACTOR + " units farther from laser",
+        };
+
+        final ArrayAdapter<CharSequence> adapter =  new ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, array);
 
         //Assign drop down behaviour
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -193,7 +218,8 @@ public class Distances extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(Distances.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct distance to place the lens from the laser to focus the light on the photodetectors.") //Sets the Message
+                        .setMessage("Select the correct distance to place the lens from the laser to focus the light on the photodetectors. " +
+                                "The lens has a focal length of " + LensCraftMenu.lensArrayList.get(LENS).getfLen() + ".") //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -201,6 +227,7 @@ public class Distances extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -218,6 +245,7 @@ public class Distances extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -267,6 +295,52 @@ public class Distances extends Activity {
     }
 
     /**
+     * Turn on the grid at runtime to ensure all objects are drawn and
+     * dimensioned
+     */
+    protected void setGrid() {
+        //Make all necessary reference calls
+        DrawingView view = (DrawingView) findViewById(R.id.dLen);
+        DrawingView canvas = (DrawingView) findViewById(R.id.view);
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+
+        //Activate the grid on the main view, and assign a starting x point
+        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+
+        System.out.println(laserBox.getX() + laserBox.getWidth());
+
+        canvas.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                PointF p  = new PointF(event.getX(),event.getY());
+
+                p.x = p.x - ((DrawingView) v).getStartX();
+
+                //Translate y coordinate from screen plot scheme to standard plot scheme
+                p.y = v.getHeight() - p.y;
+
+                //Convert pixels to standard units
+                p.x = p.x * (ENVIRONMENT_WIDTH/(v.getWidth()));
+                p.y = p.y * (ENVIRONMENT_HEIGHT/(v.getHeight()));
+
+                new AlertDialog.Builder(Distances.this)
+                        .setTitle("Location") //Title of the dialogue
+                        .setMessage("("+
+                                Math.round(p.x)+
+                                ","+
+                                Math.round(p.y)+")") //Where the user touched
+                        //Creates OK button for user interaction (Dismisses Dialogue)
+                        .show(); //Shows created dialogue
+                return false;
+            }
+        });
+
+        //Find the len's center point
+        lensCenterPoint = viewCenter_toGraph(view, canvas);
+    }
+
+    /**
      * Assigns correct lens to laser, calculates the destination, and then
      * moves the photodetectors at that location
      */
@@ -291,17 +365,18 @@ public class Distances extends Activity {
         //Get the Lens holder from distance.xml for measurements
         DrawingView dLens = (DrawingView) findViewById(R.id.dLen);
 
-        adjustFactor = (int) (dv.getWidth() * (adjustRatio));
+        //Adjust standard units into a pixel value
+        float pixelFactor = ADJUST_FACTOR * (dv.getWidth()/ENVIRONMENT_WIDTH);
 
         //Adjust the distance based on correct answer
         if(answerIndex == 0){
-            lens.setLocation((int) dLens.getX() - adjustFactor, ((int) dLens.getY()),dLens.getHeight(), dLens.getWidth());
+            lens.setLocation((int) (dLens.getX() - pixelFactor), ((int) dLens.getY()),dLens.getHeight(), dLens.getWidth());
         }
         else if(answerIndex == 1){
             lens.setLocation((int) dLens.getX(), (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
         }
         else{
-            lens.setLocation((int) dLens.getX() + adjustFactor, (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
+            lens.setLocation((int) (dLens.getX() + pixelFactor), (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
         }
 
         for(int i = 0; i < views.length; i++) {
@@ -380,35 +455,42 @@ public class Distances extends Activity {
         DrawingView dl = (DrawingView) findViewById(R.id.dLen);
         TranslateAnimation animation;
 
-        adjustFactor = (int) (dv.getWidth() * (adjustRatio)); //Assign adjustment length by constant ratio
+        //Adjust standard units into a pixel value
+        float pixelFactor = ADJUST_FACTOR * (dv.getWidth()/ENVIRONMENT_WIDTH);
 
+        //Translate the lens location according to the user's preference
         switch (userHeight){
             case 0:
-                lens.setLocation((int)dl.getX() - adjustFactor,(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, -adjustFactor,0,0);
+                //Move lens backwards
+                lens.setLocation((int)(dl.getX() - pixelFactor),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+                animation = new TranslateAnimation(0,(int) -pixelFactor,0,0);
                 break;
             case 1:
+                //Don't move the lens at all
                 lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
                 animation = new TranslateAnimation(0, 0, 0, 0);
                 break;
             case 2:
-                lens.setLocation((int)dl.getX() + adjustFactor,(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, adjustFactor, 0, 0);
+                //Move the lens forward
+                lens.setLocation((int)(dl.getX() + pixelFactor),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+                animation = new TranslateAnimation(0, (int) pixelFactor, 0, 0);
                 break;
             default:
+                //Don't move the lens as default
                 lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
                 animation = new TranslateAnimation(0, 0, 0, dl.getY());
                 break;
         }
 
+        //Set animation prefences
         animation.setDuration(100);
-        animation.setFillAfter(true);
-        dl.startAnimation(animation);
+        animation.setFillAfter(true);   //Lens remains where drawing finished
+        dl.startAnimation(animation);   //Start the animation
 
         //New laser list
         lasers = new ArrayList<>();
 
-        setUpLasers();
+        setUpLasers();  //Call a laser setup
 
         //Add user's choice of lens
         //and calculate
@@ -566,4 +648,21 @@ public class Distances extends Activity {
             user.saveUser("default.dat", getApplicationContext());
         }
     }
+
+    public PointF viewCenter_toGraph(View v, View graph){
+        //Create a new PointF located at the center of the view
+        PointF p = new PointF((v.getX()*2 + v.getWidth())/2f, (v.getY()*2 + v.getHeight())/2f );
+
+        p.x = p.x - ((DrawingView) graph).getStartX();
+
+        //Invert y to measure from the bottom up (like a typical graph)
+        p.y = graph.getHeight() - p.y;
+
+        //Then convert pixels to standard units
+        p.x = p.x * (ENVIRONMENT_WIDTH/graph.getWidth());
+        p.y = p.y * (ENVIRONMENT_HEIGHT/graph.getHeight());
+
+        return p;
+    }
+
 }

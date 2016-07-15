@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
@@ -31,6 +32,9 @@ public class NIndex extends Activity {
     final int NINDEX_TWO = 4;   //Second lens choice with a crown glass composition
     final int NINDEX_THREE = 5; //Third lens with flint glass composition
 
+    final float ENVIRONMENT_WIDTH = 100;
+    final float ENVIRONMENT_HEIGHT = 100;
+
     //These three constant are used to determine where the
     //lasers will be drawn
     final int LASER_COUNT = 4;                //Number of lasers to be drawn
@@ -44,7 +48,7 @@ public class NIndex extends Activity {
 
     int answerIndex;    //The index of the correct answer
     User user;          //Reference to user object
-
+    private PointF lensCenterPoint; //Center point of the lens
     ArrayList<Laser> lasers;//Array of lasers
     ImageView[] views;      //Array of references to photodetector views
 
@@ -63,10 +67,35 @@ public class NIndex extends Activity {
         spinner = (Button) findViewById(R.id.spinMaterial);
         spinner.setText(R.string.spinMaterialText);
 
+        DrawingView materialLens = (DrawingView) findViewById(R.id.materialLen);
+        materialLens.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                AlertDialog alertDialog = new AlertDialog.Builder(NIndex.this).create();
+                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setMessage("(" +
+                        Math.round(lensCenterPoint.x)
+                        +","+
+                        Math.round(lensCenterPoint.y)+
+                        ")");
+                alertDialog.show();
+                return false;
+            }
+        });
+
+        String[] array = {
+                "Convex: N Index " + LensCraftMenu.lensArrayList.get(NINDEX_ONE).getNIndex() + " (Radius " +
+                                        LensCraftMenu.lensArrayList.get(NINDEX_ONE).getRadius() + ")",
+                "Convex: N Index " + LensCraftMenu.lensArrayList.get(NINDEX_TWO).getNIndex() + " (Radius " +
+                        LensCraftMenu.lensArrayList.get(NINDEX_TWO).getRadius() + ")",
+                "Convex: N Index " + LensCraftMenu.lensArrayList.get(NINDEX_THREE).getNIndex() + " (Radius " +
+                        LensCraftMenu.lensArrayList.get(NINDEX_THREE).getRadius() + ")"
+        };
+
         //Creates Adapter for reading the array materials into spinMaterials
         //spinMaterial > {"Acetone Low N","Crown Glass Med N","Flint Glass High N"}
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.materials, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, array);
 
         //Assigns dropdown behaviour
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -211,6 +240,7 @@ public class NIndex extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -228,6 +258,7 @@ public class NIndex extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -274,6 +305,58 @@ public class NIndex extends Activity {
                     new Point(drawingview.getWidth(), drawingview.getHeight()));
             lasers.add(laser);
         }
+    }
+
+    /**
+     * Turn on the grid at runtime to ensure all objects are drawn and
+     * dimensioned
+     */
+    protected void setGrid() {
+        //Make all necessary reference calls
+        DrawingView view = (DrawingView) findViewById(R.id.materialLen);
+        DrawingView canvas = (DrawingView) findViewById(R.id.view);
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+
+        //Activate the grid on the main view, and assign a starting x point
+        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+
+        canvas.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                PointF p  = new PointF(event.getX(),event.getY());
+
+                System.out.println(p);
+
+                p.x = p.x - ((DrawingView) v).getStartX();
+
+                System.out.println(p.x);
+
+                //Translate y coordinate from screen plot scheme to standard plot scheme
+                p.y = v.getHeight() - p.y;
+
+                System.out.println(p.y);
+
+                //Convert pixels to standard units
+                p.x = p.x * (ENVIRONMENT_WIDTH/(v.getWidth()));
+                p.y = p.y * (ENVIRONMENT_HEIGHT/(v.getHeight()));
+
+                System.out.println(p);
+
+                new AlertDialog.Builder(NIndex.this)
+                        .setTitle("Location") //Title of the dialogue
+                        .setMessage("("+
+                                Math.round(p.x)+
+                                ","+
+                                Math.round(p.y)+")") //Where the user touched
+                        //Creates OK button for user interaction (Dismisses Dialogue)
+                        .show(); //Shows created dialogue
+                return false;
+            }
+        });
+
+        //Find the len's center point
+        lensCenterPoint = viewCenter_toGraph(view, canvas);
     }
 
     /**
@@ -542,5 +625,21 @@ public class NIndex extends Activity {
 
             user.saveUser("default.dat",getApplicationContext());
         }
+    }
+
+    public PointF viewCenter_toGraph(View v, View graph){
+        //Create a new PointF located at the center of the view
+        PointF p = new PointF((v.getX()*2 + v.getWidth())/2f, (v.getY()*2 + v.getHeight())/2f );
+
+        p.x = p.x - ((DrawingView) graph).getStartX();
+
+        //Invert y to measure from the bottom up (like a typical graph)
+        p.y = graph.getHeight() - p.y;
+
+        //Then convert pixels to standard units
+        p.x = p.x * (ENVIRONMENT_WIDTH/graph.getWidth());
+        p.y = p.y * (ENVIRONMENT_HEIGHT/graph.getHeight());
+
+        return p;
     }
 }

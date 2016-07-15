@@ -31,7 +31,7 @@ public class ConcaveConvex extends Activity {
     final int CONCAVE_LENS = 6; //Index of the concave lens
 
     final float ENVIRONMENT_WIDTH = 100;
-    final float ENVIRONMENT_HEIGHT = 65;
+    final float ENVIRONMENT_HEIGHT = 100;
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -79,7 +79,6 @@ public class ConcaveConvex extends Activity {
                 return false;
             }
         });
-
 
         String[] array = {
                 "Concave: Focal Length " + LensCraftMenu.lensArrayList.get(CONCAVE_LENS).getfLen(),
@@ -156,6 +155,8 @@ public class ConcaveConvex extends Activity {
     protected void onStart() {
         super.onStart(); //Always start with the super constructor
 
+        //If the processed was stopped during mid run
+        //don't re-run processes
         if(processStopped){
             processStopped = false;
             return;
@@ -195,7 +196,8 @@ public class ConcaveConvex extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(ConcaveConvex.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Pick the lens type, concave or convex, to direct the laser to the photodetectors.") //Sets the Message
+                        .setMessage("Use the lens's focal length to calculate which lens will refract the laser on" +
+                                "to the photodetectors.") //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -221,6 +223,7 @@ public class ConcaveConvex extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -280,7 +283,6 @@ public class ConcaveConvex extends Activity {
 
         //Activate the grid on the main view, and assign a starting x point
         canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
-
 
         canvas.setOnTouchListener(new View.OnTouchListener() {
             @Override

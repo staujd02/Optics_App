@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
@@ -27,10 +28,13 @@ import java.util.Random;
  */
 public class LensWidth extends Activity {
 
-    final int THIN_CONVEX = 0;     //First lens
-    final int THICK_CONVEX = 3;     //Second lens...
-    final int THIN_CONCAVE = 6;     //
-    final int THICK_CONCAVE = 9;    //
+    final int THIN_CONVEX = 1;     //First lens
+    final int THICK_CONVEX = 4;     //Second lens...
+    final int THIN_CONCAVE = 7;     //
+    final int THICK_CONCAVE = 10;    //
+
+    final float ENVIRONMENT_WIDTH = 100;
+    final float ENVIRONMENT_HEIGHT = 100;
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -40,9 +44,8 @@ public class LensWidth extends Activity {
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
     Button spinner; //Button which opens prompt for user selection of lens
-
+    private PointF lensCenterPoint; //Center point of the lens
     boolean processStopped; //keeps track of the activity's life cycle and responds accordingly
-
     int answerIndex;    //The index of the correct answer
     User user;          //Reference to user object
 
@@ -63,10 +66,37 @@ public class LensWidth extends Activity {
         spinner = (Button) findViewById(R.id.spinWidth);
         spinner.setText(R.string.spinWidthText);
 
+        DrawingView wLens = (DrawingView) findViewById(R.id.wLen);
+        wLens.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                AlertDialog alertDialog = new AlertDialog.Builder(LensWidth.this).create();
+                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setMessage("(" +
+                        Math.round(lensCenterPoint.x)
+                        +","+
+                        Math.round(lensCenterPoint.y)+
+                        ")");
+                alertDialog.show();
+                return false;
+            }
+        });
+
+        String[] array = {
+                "Convex: Radius " + LensCraftMenu.lensArrayList.get(THIN_CONVEX).getRadius() + ", N index" +
+                                    LensCraftMenu.lensArrayList.get(THIN_CONVEX).getNIndex(),
+                "Convex: Radius " + LensCraftMenu.lensArrayList.get(THICK_CONVEX).getRadius() + ", N index " +
+                                    LensCraftMenu.lensArrayList.get(THICK_CONVEX).getNIndex(),
+                "Concave: Radius " + LensCraftMenu.lensArrayList.get(THIN_CONCAVE).getRadius() + ", N index " +
+                                    LensCraftMenu.lensArrayList.get(THIN_CONCAVE).getNIndex(),
+                "Concave: Radius " + LensCraftMenu.lensArrayList.get(THICK_CONCAVE).getRadius() + ", N index " +
+                                    LensCraftMenu.lensArrayList.get(THICK_CONCAVE).getNIndex()
+        };
+
         //Creates adapter to load array lens_widths into the spinner
         //lens_widths > {"Thin","Normal"}
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.lens_widths, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, array);
 
         //Assigns dropdown behaviour to adapter
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -223,6 +253,7 @@ public class LensWidth extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -240,6 +271,7 @@ public class LensWidth extends Activity {
                                 setUpLasers();          //Assigns the laser's their origin point dynamically
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
+                                setGrid();
                             }
                         })
                         .setCancelable(false)
@@ -247,7 +279,6 @@ public class LensWidth extends Activity {
             }
         }
     }
-
 
     /**
      * Assigns the origin point to the lasers and initializes them
@@ -286,6 +317,58 @@ public class LensWidth extends Activity {
                     new Point(drawingview.getWidth(), drawingview.getHeight()));
             lasers.add(laser);
         }
+    }
+
+    /**
+     * Turn on the grid at runtime to ensure all objects are drawn and
+     * dimensioned
+     */
+    protected void setGrid() {
+        //Make all necessary reference calls
+        DrawingView view = (DrawingView) findViewById(R.id.wLen);
+        DrawingView canvas = (DrawingView) findViewById(R.id.view);
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+
+        //Activate the grid on the main view, and assign a starting x point
+        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+
+        canvas.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                PointF p  = new PointF(event.getX(),event.getY());
+
+                System.out.println(p);
+
+                p.x = p.x - ((DrawingView) v).getStartX();
+
+                System.out.println(p.x);
+
+                //Translate y coordinate from screen plot scheme to standard plot scheme
+                p.y = v.getHeight() - p.y;
+
+                System.out.println(p.y);
+
+                //Convert pixels to standard units
+                p.x = p.x * (ENVIRONMENT_WIDTH/(v.getWidth()));
+                p.y = p.y * (ENVIRONMENT_HEIGHT/(v.getHeight()));
+
+                System.out.println(p);
+
+                new AlertDialog.Builder(LensWidth.this)
+                        .setTitle("Location") //Title of the dialogue
+                        .setMessage("("+
+                                Math.round(p.x)+
+                                ","+
+                                Math.round(p.y)+")") //Where the user touched
+                        //Creates OK button for user interaction (Dismisses Dialogue)
+                        .show(); //Shows created dialogue
+                return false;
+            }
+        });
+
+        //Find the len's center point
+        lensCenterPoint = viewCenter_toGraph(view, canvas);
     }
 
     /**
@@ -558,5 +641,21 @@ public class LensWidth extends Activity {
 
             user.saveUser("default.dat", getApplicationContext());
         }
+    }
+
+    public PointF viewCenter_toGraph(View v, View graph){
+        //Create a new PointF located at the center of the view
+        PointF p = new PointF((v.getX()*2 + v.getWidth())/2f, (v.getY()*2 + v.getHeight())/2f );
+
+        p.x = p.x - ((DrawingView) graph).getStartX();
+
+        //Invert y to measure from the bottom up (like a typical graph)
+        p.y = graph.getHeight() - p.y;
+
+        //Then convert pixels to standard units
+        p.x = p.x * (ENVIRONMENT_WIDTH/graph.getWidth());
+        p.y = p.y * (ENVIRONMENT_HEIGHT/graph.getHeight());
+
+        return p;
     }
 }
