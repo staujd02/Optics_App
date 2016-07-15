@@ -12,20 +12,21 @@ import android.widget.Button;
  * This is the background activity for Lens Crafter Module
  *
  *  It provides the user a basic overview of the concepts
- *   involved with this module and its sub-modules
+ *   involved with this module and its sub-modules. The description is stored in strings.xml
  */
 public class BGLensCraft extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     //Call the super constructor
-        setContentView(R.layout.b_lenscraft);   //Set the content view to background lenscraft .xml
+        setContentView(R.layout.b_lenscraft);   //Set the content view to background b_lenscraft.xml
         setTitle("Background: Lens Crafter");   //Set the title
 
         //Continue button
         Button b = (Button) findViewById(R.id.btnLens_c);
 
         //Assign the continue button listener
+        //Sends the user to the Lens Crafter main menu
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
