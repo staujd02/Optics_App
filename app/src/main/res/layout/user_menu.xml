@@ -15,7 +15,7 @@
             android:layout_height="75dp"
             android:id="@+id/imgUser"
             android:background="@drawable/circle_border"
-            android:src="@android:drawable/ic_menu_view"
+            android:src="@mipmap/ic_prism"
             android:layout_marginLeft="22dp"
             android:scaleType="fitCenter"
             android:contentDescription="@string/userIconHint" />

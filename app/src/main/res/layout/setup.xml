@@ -10,7 +10,7 @@
         android:id="@+id/txtName"
         android:layout_below="@+id/imageButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:hint="@string/setupName" />
 
     <EditText
@@ -23,7 +23,8 @@
         android:layout_alignLeft="@+id/txtUsername"
         android:layout_alignStart="@+id/txtUsername"
         android:inputType="text"
-        android:hint="@string/schoolHint" />
+        android:hint="@string/schoolHint"
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton"
-        android:src="@android:drawable/sym_def_app_icon"
+        android:src="@mipmap/ic_prism"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
@@ -55,7 +56,8 @@
         android:layout_alignRight="@+id/txtName"
         android:layout_alignEnd="@+id/txtName"
         android:inputType="text"
-        android:hint="@string/userNameHint" />
+        android:hint="@string/userNameHint"
+        android:layout_marginTop="25dp" />
 
     <Button
         android:layout_width="wrap_content"

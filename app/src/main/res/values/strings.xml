@@ -28,7 +28,7 @@
     <string name="incWatt">Increase Wattage</string>
     <string name="decWatt">Decrease Wattage</string>
     <string name="credits_title">Acknowledgements</string>
-    <string name="credits_main">\tThis project was made possible by the National Science Foundation grant \"REU Site: Optics and photonics: Technologies, Systems, and Devices.\"\nGrant ID: 1560131.\n\n\tThis application was developed by Joel Stauffer under the direction of Professors Dr. Abdallah Khreishah and Dr. John Carpinelli.</string>
+    <string name="credits_main">\tThis project was made possible by the National Science Foundation grant \"REU Site: Optics and photonics: Technologies, Systems, and Devices.\"\nGrant ID: 1560131.\n\n\tThis application was developed by Joel Stauffer under the direction of Professors Dr. Abdallah Khreishah and Dr. John Carpinelli.\n\n\tThe application icon was created by Freepik located at www.flaticon.com</string>
     <string name="njit">NJIT Logo</string>
     <string name="nsf">NSF Logo</string>
     <string name="bg_lens">This is the Lens Crafter Module \n\n\tIn the following sub categories you will be quizzed on your ability to interpret lenses and their effect on a laser beam\'s path. You will have to utilize the Lens Maker Formula to properly calculate the laser\'s trajectory.\n\n\tEach sub category will test you on different variables associated with lenses such as width, distance from source, n index, and so forth. \n\nTouch a photodetector to see its center position.\n\nTouch anywhere on the graph to retrieve a points position.</string>
@@ -42,7 +42,7 @@
     <string name="spinMaterialText">Pick Lens Material</string>
     <string name="spinCCText">Pick Lens</string>
     <string name="spinLensNum">Pick the number of Lenses</string>
-    <string name="schoolHint">School ID</string>
+    <string name="schoolHint">School Name</string>
     <string name="userIconHint">User Setup</string>
     <string name="userNameHint">Username</string>
     <string name="ageGroup">Age Group</string>
