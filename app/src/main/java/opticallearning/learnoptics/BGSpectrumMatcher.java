@@ -31,7 +31,7 @@ public class BGSpectrumMatcher extends Activity {
             @Override
             public void onClick(View v) {
                 //Starts the Spectrum menu
-                startActivity(new Intent(BGSpectrumMatcher.this, SpectrumMenu.class));
+                startActivity(new Intent(BGSpectrumMatcher.this, MainActivity.class));
             }
         });
     }

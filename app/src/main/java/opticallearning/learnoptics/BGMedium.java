@@ -31,7 +31,7 @@ public class BGMedium extends Activity {
             @Override
             public void onClick(View v) {
                 //Sends the user to Medium.class --> Rank the Medium
-                startActivity(new Intent(BGMedium.this, Medium.class));
+                startActivity(new Intent(BGMedium.this, MainActivity.class));
             }
         });
     }

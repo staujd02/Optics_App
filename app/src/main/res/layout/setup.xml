@@ -6,23 +6,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
         android:id="@+id/txtName"
         android:layout_below="@+id/imageButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:hint="@string/setupName" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtSchool"
-        android:text="@string/schoolHint"
         android:layout_below="@+id/txtUsername"
         android:layout_alignRight="@+id/txtUsername"
         android:layout_alignEnd="@+id/txtUsername"
         android:layout_alignLeft="@+id/txtUsername"
-        android:layout_alignStart="@+id/txtUsername" />
+        android:layout_alignStart="@+id/txtUsername"
+        android:inputType="text"
+        android:hint="@string/schoolHint" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -53,13 +54,14 @@
         android:layout_alignStart="@+id/txtName"
         android:layout_alignRight="@+id/txtName"
         android:layout_alignEnd="@+id/txtName"
-        android:text="@string/userNameHint" />
+        android:inputType="text"
+        android:hint="@string/userNameHint" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btContinue"
-        android:id="@+id/button"
+        android:id="@+id/setupDone"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"

@@ -17,13 +17,14 @@
             android:background="@drawable/circle_border"
             android:src="@android:drawable/ic_menu_view"
             android:layout_marginLeft="22dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/userIconHint" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Username"
+            android:text="@string/userNameHint"
             android:id="@+id/txtName"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"

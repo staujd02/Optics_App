@@ -22,7 +22,8 @@ public class User implements Serializable{
 
     private String name;    //User's name
     private String school;  //String corresponding to user's school
-    private int icon_id;    //Resource id integer corresponding to user's icon
+    private String userName; //String used for storing the user's identification
+    //private int icon_id;    //Resource id integer corresponding to user's icon
     //private int viewCount //Tracks how many questions the user has viewed (not necessarily answered)
     private int score;      //User's score
     private int attempts;   //Question attempts
@@ -98,7 +99,7 @@ public class User implements Serializable{
      */
     public static User loadUser(String filename, Context c){
         ObjectInputStream ois;          //Create the input stream
-        File file; //Create file object
+        File file;          //Create file object
         User load;         //User object reference
 
         file = c.getFileStreamPath(filename);
@@ -175,7 +176,7 @@ public class User implements Serializable{
      * Calculates the user's score
      */
     private void calcScore(){
-        score = (int) ((correct * 1.35) - (incorrect * .25));
+        score = (int) (100 * (correct / (attempts * 1.0)));
         if(score < 0){
             score = 0;
         }
@@ -234,6 +235,11 @@ public class User implements Serializable{
     public void setSetupComplete(boolean setupComplete) {
         this.setupComplete = setupComplete;
     }
+
+    //Username: get and set
+    public String getUserName() {return userName;}
+
+    public void setUserName(String userName) {this.userName = userName;}
 
     //Name: get and set
     public String getName() {

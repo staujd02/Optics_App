@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
             user.saveUser("default.dat", this.getApplicationContext());
         }
 
-        //if(!user.isSetupComplete()){startActivity(new Intent(MainActivity.this, Setup.class));}
+        if(!user.isSetupComplete()){startActivity(new Intent(MainActivity.this, Setup.class));}
 
         //Create image buttons
         ImageButton[] buttons = {

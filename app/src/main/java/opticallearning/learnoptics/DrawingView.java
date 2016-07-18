@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.zip.CheckedOutputStream;
 
 /**
  * Created by Joel on 6/29/2016.
@@ -24,11 +25,11 @@ public class DrawingView extends View{
 
     //Create paint object for drawing graphics
     private Paint paint = new Paint();
+    private Paint font_paint;
     private ArrayList<Laser> lasers;//List of lasers to be rendered
     private Lens lens;              //Lens object to be rendered
     private Bitmap bm;              //Loaded bitmap of lenses
 
-    final private int LABEL_FREQUENCY = 25;     //Indicates how often a label is printed on graph
     final private int pixelOFFSET = 6;          //How much padding should be added to printed label
     final private int LINE_FREQUENCY = 20;
 
@@ -100,6 +101,9 @@ public class DrawingView extends View{
 
         lasers = new ArrayList<>();
 
+        font_paint = new Paint();
+        font_paint.setColor(Color.BLACK);
+
         //Creates a fuzzier, more attractive draw --> edges not as clean/clear
         paint.setAntiAlias(true);
     }
@@ -129,6 +133,8 @@ public class DrawingView extends View{
         //Use this for drawing lasers
         paint.setColor(Color.RED);
         paint.setStrokeWidth(3f);
+
+        font_paint.setTextSize((float) (getHeight()/(environment_height*0.25)));
 
         if(lasers != null){
             for(Laser l: lasers){
@@ -172,7 +178,7 @@ public class DrawingView extends View{
                 x_units = (int) Math.round((x-startX) * (environment_width/(1.0*width)));
 
                 if(label){
-                    canvas.drawText(x_units + "", x,(float) (height - pixelOFFSET),paint);
+                    canvas.drawText(x_units + "", x,(float) (height - pixelOFFSET),font_paint);
                 }
 
                 x += interval;
@@ -191,7 +197,7 @@ public class DrawingView extends View{
                 y_units = (int) Math.round((height - y) * (environment_height/(1.0*height)));
 
                 if(label){
-                    canvas.drawText(y_units + "", (float) (width - pixelOFFSET - 5 ),y,paint);
+                    canvas.drawText(y_units + "", (float) (width - pixelOFFSET - font_paint.getTextSize() ),y,font_paint);
                 }
 
                 y -= interval;
