@@ -48,7 +48,6 @@ public class NIndex extends Activity {
     private User user;              //Reference to user object
     private PointF lensCenterPoint; //Center point of the lens
     private ArrayList<Laser> lasers;//Array of lasers
-    private ImageView[] views;      //Array of references to photodetector views
 
     private Lens lens;              //Concave or convex lens
     private Boolean answered;       //Tracks whether the user has already answered
@@ -77,6 +76,63 @@ public class NIndex extends Activity {
                         +","+
                         Math.round(lensCenterPoint.y)+
                         ")");
+                alertDialog.show();
+                return false;
+            }
+        });
+
+        //OnTouch() Listener that displays where the laser are emanating from
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+        laserBox.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                DrawingView graph = (DrawingView) findViewById(R.id.view);
+
+                //Determines where lasers emanate from
+                int yBottom;
+                int yTop;
+                int ySegment;
+
+                //Use the midpoint of laserbox x for laser x
+                int x = (int) (v.getX() * 2 + v.getWidth()) / 2;
+
+                //Creates Ratio
+                yBottom = (LASER_APERTURE_BOTTOM * v.getMeasuredHeight())
+                        / ORIGINAL_SIZE;
+                yTop = (LASER_APERTURE_TOP * v.getMeasuredHeight())
+                        / ORIGINAL_SIZE;
+
+                //Divides equally between lasers
+                ySegment = (yTop - yBottom)
+                        / (LASER_COUNT + 1);
+
+                //Create empty message and Point
+                String msg = "";
+                PointF p;
+
+                for (int i = 1; i <= LASER_COUNT; i++) {
+                    //Calculates laser point
+                    p = new PointF(x, v.getY() + yBottom + ySegment * i);
+
+                    //Converts point to standard graph and units
+                    p = convertToGraph(p, graph);
+
+                    //Rounds point
+                    p.x = Math.round(p.x); p.y = Math.round(p.y);
+
+                    //This prevents the last point from placing a newLine character
+                    if(i != LASER_COUNT){
+                        msg = msg + "Point (" + p.x +","+p.y+") Exit angle: 0 degrees\n";
+                    }
+                    else {
+                        msg = msg + "Point (" + p.x +","+p.y+") Exit angle: 0 degrees";
+                    }
+                }
+
+                //Displays results of compiled message
+                AlertDialog alertDialog = new AlertDialog.Builder(NIndex.this).create();
+                alertDialog.setTitle("Laser Origin Points");
+                alertDialog.setMessage(msg);
                 alertDialog.show();
                 return false;
             }
@@ -195,11 +251,21 @@ public class NIndex extends Activity {
             return;
         }
 
+        init();
+    }
+
+    public void init(){
         int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
 
         //Initialize the laser array
         lasers = new ArrayList<>();
+
+        //Resets the drawing view and its respective objects
+        DrawingView graph = (DrawingView) findViewById(R.id.view);
+        DrawingView lens = (DrawingView) findViewById(R.id.materialLen);
+        lens.reset();
+        graph.reset();
 
         //Ensure button is clickable
         Button spin = (Button) findViewById(R.id.spinMaterial);
@@ -370,6 +436,8 @@ public class NIndex extends Activity {
      */
     private void setUpPhotoDetectors() {
 
+        ImageView[] views;      //Array of references to photodetector views
+
         views = new ImageView[4];
         TranslateAnimation animation;
         PointF end;
@@ -432,7 +500,7 @@ public class NIndex extends Activity {
     private void ClickHandler(boolean correct){
         if(!answered){
             //Records that the user has answered
-            answered = false;
+            answered = true;
 
             //Disable further interaction with button
             Button spin = (Button) findViewById(R.id.spinMaterial);
@@ -564,7 +632,7 @@ public class NIndex extends Activity {
         //User is correct
         if(right){
             //Correct Answer Alert Dialogue
-            //Ask if the user would like to play again
+            //Ask if the user would like to try again
             new AlertDialog.Builder(NIndex.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
                     .setMessage("You chose the correct lens. Would you like to " +
@@ -573,7 +641,7 @@ public class NIndex extends Activity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             //User pressed yes
-                            recreate();
+                            init();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener(){
@@ -586,7 +654,7 @@ public class NIndex extends Activity {
         //User is not correct
         else{
             //Incorrect Answer Alert Dialogue
-            //Ask if the user would like to play again
+            //Ask if the user would like to try again
             new AlertDialog.Builder(NIndex.this)
                     .setTitle("Nope") //Sets the title of the dialogue
                     .setMessage("Sorry, that is not the right lens. Would you like " +
@@ -595,7 +663,7 @@ public class NIndex extends Activity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             //User pressed yes
-                            recreate();
+                            init();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener(){
@@ -640,11 +708,36 @@ public class NIndex extends Activity {
         }
     }
 
-    public PointF viewCenter_toGraph(View v, View graph){
+    /**
+     * This class calculates the center point of a view and returns its center
+     * in standard units
+     *
+     * @param v     the view of which the centerpoint will be found
+     * @param graph the Drawing view containing the view
+     * @return      returns center point of view (standard units)
+     */
+    public PointF viewCenter_toGraph(View v, DrawingView graph){
         //Create a new PointF located at the center of the view
         PointF p = new PointF((v.getX()*2 + v.getWidth())/2f, (v.getY()*2 + v.getHeight())/2f );
 
-        p.x = p.x - ((DrawingView) graph).getStartX();
+        //Convert Point
+        p = convertToGraph(p,graph);
+
+        return p;
+    }
+
+    /**
+     * Converts a point in pixels to standard units and changes the y to represent a standard
+     * graph layout (y starts at the bottom instead of the top)
+     *
+     * @param point point to be converted
+     * @param graph view representative of the graph
+     * @return the converted point
+     */
+    public PointF convertToGraph(PointF point, DrawingView graph){
+        PointF p = new PointF(point.x,point.y);
+
+        p.x = p.x - graph.getStartX();
 
         //Invert y to measure from the bottom up (like a typical graph)
         p.y = graph.getHeight() - p.y;

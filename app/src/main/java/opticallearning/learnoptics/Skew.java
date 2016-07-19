@@ -48,9 +48,8 @@ public class Skew extends Activity {
     private int answerIndex;            //The index of the correct answer
     private int userHeight;             //User's Height selection
     private User user;                  //Reference to user object
-
+    private ArrayList<Integer> answerGroup;   //List of integers that have already been answers
     private ArrayList<Laser> lasers;    //Array of lasers
-    private ImageView[] views;          //Array of references to photodetector views
 
     private Lens lens;                  //Concave or convex lens
     private Boolean answered;           //Tracks whether the user has already answered
@@ -67,6 +66,7 @@ public class Skew extends Activity {
         spinner = (Button) findViewById(R.id.spinSkew);
         spinner.setText(R.string.spinSkewText);
 
+        //Sets the lens's onTouch() listener to display the center point of the lens
         DrawingView skewLens = (DrawingView) findViewById(R.id.skewLen);
         skewLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -78,6 +78,63 @@ public class Skew extends Activity {
                         +","+
                         Math.round(lensCenterPoint.y)+
                         ")");
+                alertDialog.show();
+                return false;
+            }
+        });
+
+        //OnTouch() Listener that displays where the laser are emanating from
+        ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
+        laserBox.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                DrawingView graph = (DrawingView) findViewById(R.id.view);
+
+                //Determines where lasers emanate from
+                int yBottom;
+                int yTop;
+                int ySegment;
+
+                //Use the midpoint of laserbox x for laser x
+                int x = (int) (v.getX() * 2 + v.getWidth()) / 2;
+
+                //Creates Ratio
+                yBottom = (LASER_APERTURE_BOTTOM * v.getMeasuredHeight())
+                        / ORIGINAL_SIZE;
+                yTop = (LASER_APERTURE_TOP * v.getMeasuredHeight())
+                        / ORIGINAL_SIZE;
+
+                //Divides equally between lasers
+                ySegment = (yTop - yBottom)
+                        / (LASER_COUNT + 1);
+
+                //Create empty message and Point
+                String msg = "";
+                PointF p;
+
+                for (int i = 1; i <= LASER_COUNT; i++) {
+                    //Calculates laser point
+                    p = new PointF(x, v.getY() + yBottom + ySegment * i);
+
+                    //Converts point to standard graph and units
+                    p = convertToGraph(p, graph);
+
+                    //Rounds point
+                    p.x = Math.round(p.x); p.y = Math.round(p.y);
+
+                    //This prevents the last point from placing a newLine character
+                    if(i != LASER_COUNT){
+                        msg = msg + "Point (" + p.x +","+p.y+") Exit angle: 0 degrees\n";
+                    }
+                    else {
+                        msg = msg + "Point (" + p.x +","+p.y+") Exit angle: 0 degrees";
+                    }
+                }
+
+                //Displays results of compiled message
+                AlertDialog alertDialog = new AlertDialog.Builder(Skew.this).create();
+                alertDialog.setTitle("Laser Origin Points");
+                alertDialog.setMessage(msg);
                 alertDialog.show();
                 return false;
             }
@@ -160,7 +217,9 @@ public class Skew extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(!answered)processStopped = true;
+        if(!answered){
+            processStopped = true;
+        }
     }
 
     /**
@@ -186,10 +245,23 @@ public class Skew extends Activity {
             return;
         }
 
+        init();
+    }
+
+    public void init(){
+
         answered = false;   //Set the answered state back to false
+
+        setAnswerIndex();   //Chooses the answer index
 
         //Initialize the laser array
         lasers = new ArrayList<>();
+
+        //Resets the drawing view and its respective objects
+        DrawingView graph = (DrawingView) findViewById(R.id.view);
+        DrawingView lens = (DrawingView) findViewById(R.id.skewLen);
+        lens.reset();
+        graph.reset();
 
         //Ensure button is clickable
         Button spin = (Button) findViewById(R.id.spinSkew);
@@ -198,11 +270,6 @@ public class Skew extends Activity {
         //Reset Photodetector Image
         LightPhotodetectors(false);
 
-        //Correct Index
-        Random rand = new Random(); //Create new random
-
-        answerIndex = rand.nextInt(3); //gets an integer 0-2 with equal chances for each
-
         //This directions dialog displays until the user opts out of
         //displaying the directions
         if (user != null) {
@@ -210,7 +277,7 @@ public class Skew extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(Skew.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct height to place the lens from the laser to focus the light on the photodetectors. " +
+                        .setMessage("Select the correct height to shift the lens to focus the light on the photodetectors. " +
                                 "The lens has a focal length of " + LensCraftMenu.lensArrayList.get(LENS).getfLen() + ".") //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -246,6 +313,47 @@ public class Skew extends Activity {
         }
     }
 
+    /**
+     * This class is intended to set the answer index based upon the previous answers
+     * so no answer is repeated
+     *
+     */
+    private void setAnswerIndex() {
+
+        //Check if answerGroup has been initialized
+        if(answerGroup == null){
+            //Initialize
+            answerGroup = new ArrayList<>();
+        }
+
+        //Check if answer pool is empty/exhausted
+        if(answerGroup.size() == 0){
+            answerGroup.add(0);answerGroup.add(1);answerGroup.add(2);
+            System.out.println("ANSWER GROUP RESET");
+        }
+
+        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
+
+        //Create random object
+        Random rand = new Random(); //Creates new random
+
+        //Sets chosenAnswer to an index of the available pool of answers
+        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
+
+        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
+        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
+
+        //Set answer index equal to the chosen answer
+        answerIndex = answerGroup.get(chosenAnswer);
+
+        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
+
+        //Remove that answer from the next pool
+        answerGroup.remove(chosenAnswer);
+
+        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
+        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
+    }
 
     /**
      * Assigns the origin point to the lasers and initializes them
@@ -350,6 +458,8 @@ public class Skew extends Activity {
      */
     private void setUpPhotoDetectors() {
 
+        ImageView[] views;//Array of references to photodetector views
+
         views = new ImageView[4];
         TranslateAnimation animation;
         PointF end;
@@ -423,7 +533,7 @@ public class Skew extends Activity {
     private void ClickHandler(boolean correct){
         if(!answered){
             //Records that the user has answered
-            answered = false;
+            answered = true;
 
             //Disable further interaction with button
             Button spin = (Button) findViewById(R.id.spinSkew);
@@ -580,7 +690,7 @@ public class Skew extends Activity {
         //User is correct
         if(right){
             //Correct Answer Alert Dialogue
-            //Ask if the user would like to play again
+            //Ask if the user would like to try again
             new AlertDialog.Builder(Skew.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
                     .setMessage("You chose the correct height. Would you like to " +
@@ -589,7 +699,7 @@ public class Skew extends Activity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             //User pressed yes
-                            recreate();
+                            init();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener(){
@@ -602,7 +712,7 @@ public class Skew extends Activity {
         //User is not correct
         else{
             //Incorrect Answer Alert Dialogue
-            //Ask if the user would like to play again
+            //Ask if the user would like to try again
             new AlertDialog.Builder(Skew.this)
                     .setTitle("Nope") //Sets the title of the dialogue
                     .setMessage("Sorry, that is not the right height. Would you like " +
@@ -611,7 +721,7 @@ public class Skew extends Activity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             //User pressed yes
-                            recreate();
+                            init();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener(){
@@ -655,11 +765,36 @@ public class Skew extends Activity {
         }
     }
 
-    public PointF viewCenter_toGraph(View v, View graph){
+    /**
+     * This class calculates the center point of a view and returns its center
+     * in standard units
+     *
+     * @param v     the view of which the centerpoint will be found
+     * @param graph the Drawing view containing the view
+     * @return      returns center point of view (standard units)
+     */
+    public PointF viewCenter_toGraph(View v, DrawingView graph){
         //Create a new PointF located at the center of the view
         PointF p = new PointF((v.getX()*2 + v.getWidth())/2f, (v.getY()*2 + v.getHeight())/2f );
 
-        p.x = p.x - ((DrawingView) graph).getStartX();
+        //Convert Point
+        p = convertToGraph(p,graph);
+
+        return p;
+    }
+
+    /**
+     * Converts a point in pixels to standard units and changes the y to represent a standard
+     * graph layout (y starts at the bottom instead of the top)
+     *
+     * @param point point to be converted
+     * @param graph view representative of the graph
+     * @return the converted point
+     */
+    public PointF convertToGraph(PointF point, DrawingView graph){
+        PointF p = new PointF(point.x,point.y);
+
+        p.x = p.x - graph.getStartX();
 
         //Invert y to measure from the bottom up (like a typical graph)
         p.y = graph.getHeight() - p.y;

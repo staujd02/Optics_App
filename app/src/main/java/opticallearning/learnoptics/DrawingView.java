@@ -6,12 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-
 import java.util.ArrayList;
-import java.util.zip.CheckedOutputStream;
 
 /**
  * Created by Joel on 6/29/2016.
@@ -30,8 +26,8 @@ public class DrawingView extends View{
     private Lens lens;              //Lens object to be rendered
     private Bitmap bm;              //Loaded bitmap of lenses
 
-    final private int pixelOFFSET = 6;          //How much padding should be added to printed label
-    final private int LINE_FREQUENCY = 20;
+    final protected int pixelOFFSET = 6;          //How much padding should be added to printed label
+    final protected int LINE_FREQUENCY = 20;
 
     private int environment_height = -1; //Used for calculating label output
     private int environment_width = -1;  //Used for calculating label output
@@ -84,7 +80,7 @@ public class DrawingView extends View{
      * All constructors are directed here to ensure
      * all objects are loaded and all tasks are completed
      */
-    public void init(){
+    private void init(){
         setFocusable(true);             //Must be true for user interaction
         setFocusableInTouchMode(true);  //Must be true for user interaction
         setWillNotDraw(false);          //Must be false to drawn on view
@@ -106,6 +102,10 @@ public class DrawingView extends View{
 
         //Creates a fuzzier, more attractive draw --> edges not as clean/clear
         paint.setAntiAlias(true);
+    }
+
+    public void reset(){
+        init();
     }
 
     public void drawLens(Lens lens){
@@ -230,9 +230,7 @@ public class DrawingView extends View{
         invalidate();
     }
 
-    public float getStartY() {
-        return startY;
-    }
+    //public float getStartY() {return startY;}
 
     public void setEHeight(int height){ this.environment_height = height;}
     public void setEWidth(int width){ this.environment_width = width;}
