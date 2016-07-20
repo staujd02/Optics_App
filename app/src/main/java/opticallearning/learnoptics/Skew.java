@@ -223,6 +223,43 @@ public class Skew extends Activity {
     }
 
     /**
+     * This sub routine is intended to clear the screen of any latent
+     * content that persisted from a previous question-answer cycle
+     */
+    public void reset(){
+        //Initialize the laser array
+        lasers = new ArrayList<>();
+
+        //Array of image views
+        ImageView[] views = new ImageView[4];
+
+        //Assign view references
+        views[0] = (ImageView) findViewById(R.id.skDect1);
+        views[1] = (ImageView) findViewById(R.id.skDect2);
+        views[2] = (ImageView) findViewById(R.id.skDect3);
+        views[3] = (ImageView) findViewById(R.id.skDect4);
+
+        //Clears the animation
+        for(ImageView v: views){
+            v.clearAnimation();
+        }
+
+        //Resets the drawing view and its respective objects
+        DrawingView graph = (DrawingView) findViewById(R.id.view);
+        DrawingView lens = (DrawingView) findViewById(R.id.skewLen);
+        lens.reset();
+        graph.reset();
+
+        //Ensure button is clickable
+        Button spin = (Button) findViewById(R.id.spinSkew);
+        spin.setClickable(true);
+        spin.setText(R.string.spinSkewText);
+
+        //Reset Photodetector Image
+        LightPhotodetectors(false);
+    }
+
+    /**
      * This is the android onStart() method called
      * every time the activity is restarted
      *
@@ -248,27 +285,17 @@ public class Skew extends Activity {
         init();
     }
 
+    /**
+     * This sub routine runs the majority of the content and is repeated when
+     * the user indicates they would like to attempt another question
+     */
     public void init(){
 
         answered = false;   //Set the answered state back to false
 
         setAnswerIndex();   //Chooses the answer index
 
-        //Initialize the laser array
-        lasers = new ArrayList<>();
-
-        //Resets the drawing view and its respective objects
-        DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.skewLen);
-        lens.reset();
-        graph.reset();
-
-        //Ensure button is clickable
-        Button spin = (Button) findViewById(R.id.spinSkew);
-        spin.setClickable(true);
-
-        //Reset Photodetector Image
-        LightPhotodetectors(false);
+        reset();
 
         //This directions dialog displays until the user opts out of
         //displaying the directions

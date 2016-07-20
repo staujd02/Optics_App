@@ -105,7 +105,11 @@ public class DrawingView extends View{
     }
 
     public void reset(){
-        init();
+        lens = null;
+        lasers = new ArrayList<>();
+        rect = new Rect();
+        scr = new Rect();
+        invalidate();
     }
 
     public void drawLens(Lens lens){
@@ -156,9 +160,6 @@ public class DrawingView extends View{
 
         if(drawGrid){
             interval = getWidth() / LINE_FREQUENCY;
-
-            System.out.println("Interval: " + interval);
-            System.out.println("Width: " + getWidth());
 
             paint.setColor(Color.BLACK);
             paint.setStrokeWidth(1f);

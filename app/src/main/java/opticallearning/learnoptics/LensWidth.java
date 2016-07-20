@@ -46,10 +46,10 @@ public class LensWidth extends Activity {
     private Button spinner;         //Button which opens prompt for user selection of lens
     private PointF lensCenterPoint; //Center point of the lens
     boolean processStopped;         //keeps track of the activity's life cycle and responds accordingly
-    int answerIndex;                //The index of the correct answer
+    private int answerIndex;                //The index of the correct answer
     private User user;              //Reference to user object
     private ArrayList<Laser> lasers;//Array of lasers
-
+    private ArrayList<Integer> answerGroup; //List of answer indexes
     private Lens lens;              //Concave or convex lens
     private Boolean answered;       //Tracks whether the user has already answered
 
@@ -57,8 +57,6 @@ public class LensWidth extends Activity {
         super.onCreate(savedInstanceState);     //call the super constructor
         setContentView(R.layout.lens_width);    //sets the view
         setTitle("Lens Width");                 //Assigns a descriptive title
-
-        System.out.println("YOUYU");
 
         user = LensCraftMenu.user;  //Grabs user reference from menu
 
@@ -267,12 +265,27 @@ public class LensWidth extends Activity {
         init();
     }
 
-    public void init(){
-        int options;    //Picks the correct answer > later is translated to index
-        answered = false;   //Set the answered state back to false
-
+    /**
+     * This sub routine is intended to clear the screen of any latent
+     * content that persisted from a previous question-answer cycle
+     */
+    public void reset(){
         //Initialize the laser array
         lasers = new ArrayList<>();
+
+        //Array of image views
+        ImageView[] views = new ImageView[4];
+
+        //Assign view references
+        views[0] = (ImageView) findViewById(R.id.wDect1);
+        views[1] = (ImageView) findViewById(R.id.wDect2);
+        views[2] = (ImageView) findViewById(R.id.wDect3);
+        views[3] = (ImageView) findViewById(R.id.wDect4);
+
+        //Clears the animation
+        for(ImageView v: views){
+            v.clearAnimation();
+        }
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
@@ -283,29 +296,22 @@ public class LensWidth extends Activity {
         //Ensure button is clickable
         Button spin = (Button) findViewById(R.id.spinWidth);
         spin.setClickable(true);
+        spin.setText(R.string.spinWidthText);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
 
-        //Correct Index
-        Random rand = new Random(); //Create new random
+    }
 
-        options = rand.nextInt(4); //gets an integer 0-3 with equal chances for each
 
-        if(options == 0){
-            //Correct index corresponds to first thickness and width
-            answerIndex = THIN_CONVEX;
-        }
-        else if(options == 1){
-            answerIndex = THICK_CONVEX;
-        }
-        else if(options == 2){
-            answerIndex = THIN_CONCAVE;
-        }
-        else{
-            //Correct index corresponds to last thickness type and width
-            answerIndex = THICK_CONCAVE;
-        }
+    public void init(){
+        int options;    //Picks the correct answer > later is translated to index
+        answered = false;   //Set the answered state back to false
+
+        reset(); //Clear any latent content and prep for run
+
+        //Assigns an index as the right choice
+        setAnswerIndex();
 
         //This directions dialog displays until the user opts out of
         //displaying the directions
@@ -347,6 +353,49 @@ public class LensWidth extends Activity {
                         .show(); //Shows created dialogue
             }
         }
+    }
+
+    /**
+     * This class is intended to set the answer index based upon the previous answers
+     * so no answer is repeated
+     *
+     */
+    private void setAnswerIndex() {
+
+        //Check if answerGroup has been initialized
+        if(answerGroup == null){
+            //Initialize
+            answerGroup = new ArrayList<>();
+        }
+
+        //Check if answer pool is empty/exhausted
+        if(answerGroup.size() == 0){
+            answerGroup.add(THIN_CONVEX);answerGroup.add(THICK_CONVEX);
+            answerGroup.add(THIN_CONCAVE); answerGroup.add(THICK_CONCAVE);
+            System.out.println("ANSWER GROUP RESET");
+        }
+
+        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
+
+        //Create random object
+        Random rand = new Random(); //Creates new random
+
+        //Sets chosenAnswer to an index of the available pool of answers
+        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
+
+        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
+        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
+
+        //Set answer index equal to the chosen answer
+        answerIndex = answerGroup.get(chosenAnswer);
+
+        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
+
+        //Remove that answer from the next pool
+        answerGroup.remove(chosenAnswer);
+
+        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
+        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
     }
 
     /**
@@ -412,22 +461,14 @@ public class LensWidth extends Activity {
 
                 PointF p  = new PointF(event.getX(),event.getY());
 
-                System.out.println(p);
-
                 p.x = p.x - ((DrawingView) v).getStartX();
-
-                System.out.println(p.x);
 
                 //Translate y coordinate from screen plot scheme to standard plot scheme
                 p.y = v.getHeight() - p.y;
 
-                System.out.println(p.y);
-
                 //Convert pixels to standard units
                 p.x = p.x * (ENVIRONMENT_WIDTH/(v.getWidth()));
                 p.y = p.y * (ENVIRONMENT_HEIGHT/(v.getHeight()));
-
-                System.out.println(p);
 
                 new AlertDialog.Builder(LensWidth.this)
                         .setTitle("Location") //Title of the dialogue
@@ -483,8 +524,6 @@ public class LensWidth extends Activity {
             lasers.get(i).calculate();
             end = new PointF(lasers.get(i).getEnd().x, lasers.get(i).getEnd().y);
 
-            System.out.println("Endpoint: " + end.toString());
-
             //Compensate for offset of end point and origin of
             //photodetector view
             end.y = end.y - (views[0].getHeight() / 2);
@@ -529,7 +568,6 @@ public class LensWidth extends Activity {
 
             //Sends user's score to be recorded
             recordAnswer(user,correct);
-            System.out.println("Sent " + correct + " to be logged.");
 
             DrawLens();
             DrawLasers();
@@ -706,14 +744,12 @@ public class LensWidth extends Activity {
         //This is a good place to double check for a bad reference
 
         //if the user's answer == correct index
-        System.out.print(user);
         if (user != null) {
             if(correct){
                 //Increment the user's correct count
                 user.incCorrect();
                 if(user.getLensLVL() < 6) {
                     user.setLensLVL(6);
-                    System.out.println("Lens Level was set to six");
                 }
             }
             else{

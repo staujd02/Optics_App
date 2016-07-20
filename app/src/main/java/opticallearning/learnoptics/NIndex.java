@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -48,7 +49,7 @@ public class NIndex extends Activity {
     private User user;              //Reference to user object
     private PointF lensCenterPoint; //Center point of the lens
     private ArrayList<Laser> lasers;//Array of lasers
-
+    private ArrayList<Integer> answerGroup; //List of available index answers
     private Lens lens;              //Concave or convex lens
     private Boolean answered;       //Tracks whether the user has already answered
 
@@ -254,12 +255,27 @@ public class NIndex extends Activity {
         init();
     }
 
-    public void init(){
-        int options;    //Picks the correct answer > later is translated to index
-        answered = false;   //Set the answered state back to false
-
+    /**
+     * This sub routine is intended to clear the screen of any latent
+     * content that persisted from a previous question-answer cycle
+     */
+    public void reset(){
         //Initialize the laser array
         lasers = new ArrayList<>();
+
+        //Array of image views
+        ImageView[] views = new ImageView[4];
+
+        //Assign view references
+        views[0] = (ImageView) findViewById(R.id.rxDect1);
+        views[1] = (ImageView) findViewById(R.id.rxDect2);
+        views[2] = (ImageView) findViewById(R.id.rxDect3);
+        views[3] = (ImageView) findViewById(R.id.rxDect4);
+
+        //Clears the animation
+        for(ImageView v: views){
+            v.clearAnimation();
+        }
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
@@ -270,9 +286,20 @@ public class NIndex extends Activity {
         //Ensure button is clickable
         Button spin = (Button) findViewById(R.id.spinMaterial);
         spin.setClickable(true);
+        spin.setText(R.string.spinMaterialText);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
+    }
+
+    public void init(){
+        int options;    //Picks the correct answer > later is translated to index
+        answered = false;   //Set the answered state back to false
+
+        reset();//Clear any latent content and prep for another run
+
+        //Sets the answer index from the answer group
+        setAnswerIndex();
 
         //Correct Index
         Random rand = new Random(); //Create new random
@@ -331,6 +358,48 @@ public class NIndex extends Activity {
                         .show(); //Shows created dialogue
             }
         }
+    }
+
+    /**
+     * This class is intended to set the answer index based upon the previous answers
+     * so no answer is repeated
+     *
+     */
+    private void setAnswerIndex() {
+
+        //Check if answerGroup has been initialized
+        if(answerGroup == null){
+            //Initialize
+            answerGroup = new ArrayList<>();
+        }
+
+        //Check if answer pool is empty/exhausted
+        if(answerGroup.size() == 0){
+            answerGroup.add(NINDEX_ONE);answerGroup.add(NINDEX_TWO);answerGroup.add(NINDEX_THREE);
+            System.out.println("ANSWER GROUP RESET");
+        }
+
+        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
+
+        //Create random object
+        Random rand = new Random(); //Creates new random
+
+        //Sets chosenAnswer to an index of the available pool of answers
+        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
+
+        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
+        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
+
+        //Set answer index equal to the chosen answer
+        answerIndex = answerGroup.get(chosenAnswer);
+
+        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
+
+        //Remove that answer from the next pool
+        answerGroup.remove(chosenAnswer);
+
+        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
+        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
     }
 
 
@@ -397,22 +466,14 @@ public class NIndex extends Activity {
 
                 PointF p  = new PointF(event.getX(),event.getY());
 
-                System.out.println(p);
-
                 p.x = p.x - ((DrawingView) v).getStartX();
-
-                System.out.println(p.x);
 
                 //Translate y coordinate from screen plot scheme to standard plot scheme
                 p.y = v.getHeight() - p.y;
 
-                System.out.println(p.y);
-
                 //Convert pixels to standard units
                 p.x = p.x * (ENVIRONMENT_WIDTH/(v.getWidth()));
                 p.y = p.y * (ENVIRONMENT_HEIGHT/(v.getHeight()));
-
-                System.out.println(p);
 
                 new AlertDialog.Builder(NIndex.this)
                         .setTitle("Location") //Title of the dialogue
@@ -511,7 +572,6 @@ public class NIndex extends Activity {
 
             //Sends user's score to be recorded
             recordAnswer(user,correct);
-            System.out.println("Sent " + correct + " to be logged.");
 
             DrawLens();
             DrawLasers();
@@ -688,14 +748,12 @@ public class NIndex extends Activity {
         //This is a good place to double check for a bad reference
 
         //if the user's answer == correct index
-         System.out.print(user);
         if (user != null) {
             if(correct){
                 //Increment the user's correct count
                 user.incCorrect();
                 if(user.getLensLVL() < 3) {
                     user.setLensLVL(3);
-                    System.out.println("Lens Level was set to three");
                 }
             }
             else{

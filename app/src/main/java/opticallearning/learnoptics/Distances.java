@@ -42,6 +42,7 @@ public class Distances extends Activity {
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
     private Button spinner;             //Button which opens prompt for user selection of lens
+    private ArrayList<Integer> answerGroup;   //List of integers that have already been answers
     private PointF lensCenterPoint;     //Center point of the lens
     private int answerIndex;            //The index of the correct answer
     private int userHeight;
@@ -247,12 +248,27 @@ public class Distances extends Activity {
         init();
     }
 
-    public void init(){
-
-        answered = false;   //Set the answered state back to false
-
+    /**
+     * This sub routine is intended to clear the screen of any latent
+     * content that persisted from a previous question-answer cycle
+     */
+    public void reset(){
         //Initialize the laser array
         lasers = new ArrayList<>();
+
+        //Array of image views
+        ImageView[] views = new ImageView[4];
+
+        //Assign view references
+        views[0] = (ImageView) findViewById(R.id.dDect1);
+        views[1] = (ImageView) findViewById(R.id.dDect2);
+        views[2] = (ImageView) findViewById(R.id.dDect3);
+        views[3] = (ImageView) findViewById(R.id.dDect4);
+
+        //Clears the animation
+        for(ImageView v: views){
+            v.clearAnimation();
+        }
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
@@ -263,14 +279,21 @@ public class Distances extends Activity {
         //Ensure button is clickable
         Button spin = (Button) findViewById(R.id.spinDistance);
         spin.setClickable(true);
+        spin.setText(R.string.spinDistanceText);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
+    }
 
-        //Correct Index
-        Random rand = new Random(); //Create new random
 
-        answerIndex = rand.nextInt(3); //gets an integer 0-2 with equal chances for each
+    public void init(){
+
+        answered = false;   //Set the answered state back to false
+
+        reset(); //Clear any previous content
+
+        //Picks answer index
+        setAnswerIndex();
 
         //This directions dialog displays until the user opts out of
         //displaying the directions
@@ -313,6 +336,48 @@ public class Distances extends Activity {
                         .show(); //Shows created dialogue
             }
         }
+    }
+
+    /**
+     * This class is intended to set the answer index based upon the previous answers
+     * so no answer is repeated
+     *
+     */
+    private void setAnswerIndex() {
+
+        //Check if answerGroup has been initialized
+        if(answerGroup == null){
+            //Initialize
+            answerGroup = new ArrayList<>();
+        }
+
+        //Check if answer pool is empty/exhausted
+        if(answerGroup.size() == 0){
+            answerGroup.add(0);answerGroup.add(1);answerGroup.add(2);
+            System.out.println("ANSWER GROUP RESET");
+        }
+
+        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
+
+        //Create random object
+        Random rand = new Random(); //Creates new random
+
+        //Sets chosenAnswer to an index of the available pool of answers
+        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
+
+        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
+        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
+
+        //Set answer index equal to the chosen answer
+        answerIndex = answerGroup.get(chosenAnswer);
+
+        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
+
+        //Remove that answer from the next pool
+        answerGroup.remove(chosenAnswer);
+
+        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
+        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
     }
 
 
@@ -372,8 +437,6 @@ public class Distances extends Activity {
 
         //Activate the grid on the main view, and assign a starting x point
         canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
-
-        System.out.println(laserBox.getX() + laserBox.getWidth());
 
         canvas.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -498,7 +561,6 @@ public class Distances extends Activity {
 
             //Sends user's score to be recorded
             recordAnswer(user,correct);
-            System.out.println("Sent " + correct + " to be logged.");
 
             DrawLens();
             DrawLasers();
@@ -705,14 +767,12 @@ public class Distances extends Activity {
     private void recordAnswer(User user, boolean correct) {
 
         //if the user's answer == correct index
-        System.out.print(user);
         if (user != null) {
             if (correct) {
                 //Increment the user's correct count
                 user.incCorrect();
                 if (user.getLensLVL() < 5) {
                     user.setLensLVL(5);
-                    System.out.println("Lens Level was set to Five");
                 }
             } else {
                 //User is wrong

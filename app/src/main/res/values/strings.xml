@@ -42,7 +42,7 @@
     <string name="spinMaterialText">Pick Lens Material</string>
     <string name="spinCCText">Pick Lens</string>
     <string name="spinLensNum">Pick the number of Lenses</string>
-    <string name="schoolHint">School Name</string>
+    <string name="schoolHint">School Name (Optional)</string>
     <string name="userIconHint">User Setup</string>
     <string name="userNameHint">Username</string>
     <string name="ageGroup">Age Group</string>
