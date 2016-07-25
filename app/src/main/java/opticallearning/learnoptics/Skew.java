@@ -1,20 +1,14 @@
 package opticallearning.learnoptics;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.app.*;
+import android.content.*;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
+import android.os.*;
+import android.view.*;
 import android.view.animation.TranslateAnimation;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-
+import android.widget.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,11 +23,14 @@ import java.util.Random;
  */
 public class Skew extends Activity {
 
-    final int LENS = 6; //Constant lens index
-    final int ADJUSTMENT = 10; //Constant adjustment for lens height
+    final int LENS = 8; //Constant lens index
+    int adjustment; //Constant adjustment for lens height
 
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
+
+    final int MULTIPLIER = 5; //Unit multiplier used to translate slider value to unit value
+    final int OFF_SET = -10;     //The slider value's offset from 0
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -42,14 +39,11 @@ public class Skew extends Activity {
     final int LASER_APERTURE_TOP = 78;    //The height at which the laser aperture stops (in px)
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
-    private Button spinner;             //Button which opens prompt for user selection of lens
     private PointF lensCenterPoint;     //Center point of the lens
     private boolean processStopped;     //keeps track of the activity's life cycle and responds accordingly
     private int answerIndex;            //The index of the correct answer
-    private int userHeight;             //User's Height selection
     private User user;                  //Reference to user object
-    private ArrayList<Integer> answerGroup;   //List of integers that have already been answers
-    private ArrayList<Laser> lasers;    //Array of lasers
+     private ArrayList<Laser> lasers;    //Array of lasers
 
     private Lens lens;                  //Concave or convex lens
     private Boolean answered;           //Tracks whether the user has already answered
@@ -62,15 +56,13 @@ public class Skew extends Activity {
 
         user = LensCraftMenu.user; //Grab user reference from menu
 
-        //Creates spinner object and assigns it to spinSkew in skew.xml
-        spinner = (Button) findViewById(R.id.spinSkew);
-        spinner.setText(R.string.spinSkewText);
-
-        //Sets the lens's onTouch() listener to display the center point of the lens
         DrawingView skewLens = (DrawingView) findViewById(R.id.skewLen);
         skewLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
+                lensCenterPoint = lensCenterPoint();
+
                 AlertDialog alertDialog = new AlertDialog.Builder(Skew.this).create();
                 alertDialog.setTitle("Lens Center-point");
                 alertDialog.setMessage("(" +
@@ -140,69 +132,65 @@ public class Skew extends Activity {
             }
         });
 
-        String[] array = {
-                "Move the lens up " + ADJUSTMENT + " units",
-                "Do not move the lens",
-                "Move the lens down " + ADJUSTMENT + " units"
-        };
+        SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-        //Creates array adapter for reading skew[] into spinSkew
-        //skew > {"Above Median", "At Median", "Below Median"}
-        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, array);
-        //Assigns dropdown behaviour of adapter
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                DrawingView dv = (DrawingView) findViewById(R.id.view);
+                DrawingView dl = (DrawingView) findViewById(R.id.skewLen);
+                TranslateAnimation animation;
 
-        //Create onClickListener
-        spinner.setOnClickListener(new View.OnClickListener() {
+                adjustment = progress * MULTIPLIER + OFF_SET;
+
+                float pixelAdjustment = adjustment * (dv.getHeight()/ENVIRONMENT_HEIGHT);
+
+                animation = new TranslateAnimation(0, 0, 0, (int) pixelAdjustment);
+
+                animation.setDuration(0);
+                animation.setFillAfter(true);
+                dl.startAnimation(animation);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
+        Button laserON = (Button) findViewById(R.id.btnActivate);
+        laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create Dialog for the user to pick a lens
-                new AlertDialog.Builder(Skew.this)
-                        //Set title and the adapter created above
-                        .setTitle("Pick Lens Height")
-                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Grabs array of choices
-                                String[] s = getResources().getStringArray(R.array.skew);
-                                //Sets the user's choice as the button's text
-                                spinner.setText(s[which]);
+                //Create lens from user value
+                SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+                DrawingView dl = (DrawingView) findViewById(R.id.skewLen);
+                DrawingView dv = (DrawingView) findViewById(R.id.view);
 
-                                //Set the lens
-                                lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
+                float value = MULTIPLIER * bar.getProgress() + OFF_SET;
 
-                                //Save the user's height choice
-                                userHeight = which;
+                value = value * (dv.getHeight()/ENVIRONMENT_HEIGHT);
 
-                                //Determines User Correctness
-                                //User's choice => Correct Choice
-                                switch (which){
-                                    case 0:
-                                        if(answerIndex == 0)
-                                            ClickHandler(true); //Runs a correct answer dialog
-                                        else
-                                            ClickHandler(false);//Runs an incorrect answer dialog
-                                        break;
-                                    case 1:
-                                        if(answerIndex == 1)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                    case 2:
-                                        if(answerIndex == 2)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                }
+                //Calculate Distance Draw
+                lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
 
-                                //Ends the dialog
-                                dialog.dismiss();
-                            }
-                            //creates dialog object and displays it
-                        }).create().show();
+                lens.setLocation((int)dl.getX(),(int) (dl.getY() + value),dl.getHeight(),dl.getWidth());
+
+                //Determine Correctness
+                if(bar.getProgress() == answerIndex){
+                    //Run Handler with correct answer given
+                    ClickHandler(true);
+                }
+                else{
+                    //Run Handler with incorrect answer given
+                    ClickHandler(false);
+                }
             }
         });
     }
@@ -250,10 +238,12 @@ public class Skew extends Activity {
         lens.reset();
         graph.reset();
 
-        //Ensure button is clickable
-        Button spin = (Button) findViewById(R.id.spinSkew);
-        spin.setClickable(true);
-        spin.setText(R.string.spinSkewText);
+        //Ensure button is clickable and slider can change
+        Button ON = (Button) findViewById(R.id.btnActivate);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+        bar.setEnabled(true);
+        bar.setProgress(2);
+        ON.setClickable(true);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
@@ -293,9 +283,9 @@ public class Skew extends Activity {
 
         answered = false;   //Set the answered state back to false
 
-        setAnswerIndex();   //Chooses the answer index
+        reset(); //Resets all the previous values from the previous run
 
-        reset();
+        setAnswerIndex();   //Chooses the answer index
 
         //This directions dialog displays until the user opts out of
         //displaying the directions
@@ -304,8 +294,7 @@ public class Skew extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(Skew.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct height to shift the lens to focus the light on the photodetectors. " +
-                                "The lens has a focal length of " + LensCraftMenu.lensArrayList.get(LENS).getfLen() + ".") //Sets the Message
+                        .setMessage("Select the correct height to shift the lens to focus the light on the photodetectors.") //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -314,6 +303,7 @@ public class Skew extends Activity {
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
                                 setGrid();
+                                updateBar();
                             }
                         })
                         .setCancelable(false)
@@ -332,6 +322,7 @@ public class Skew extends Activity {
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
                                 setGrid();
+                                updateBar();
                             }
                         })
                         .setCancelable(false)
@@ -341,45 +332,60 @@ public class Skew extends Activity {
     }
 
     /**
+     * This function updates the button displays to the correct values set by the user
+     *
+     */
+    public void updateBar(){
+        Button shape = (Button) findViewById(R.id.indShape);
+        Button nIndex = (Button) findViewById(R.id.indNindex);
+        Button length = (Button) findViewById(R.id.indFocalLength);
+        Button radius = (Button) findViewById(R.id.indRadius);
+
+        String msg;
+
+        DecimalFormat f = new DecimalFormat("#.###");
+
+        //Set the text of the N Index (Constant in this case)
+        msg = getResources().getString(R.string.indPreIndex) + " " +f.format(lens.getNIndex()) ;
+        nIndex.setText(msg);
+
+        float width = lens.getWidth();
+
+        //Set Radius
+        msg = getResources().getString(R.string.indPreRadius) + " " + width;
+        radius.setText(msg);
+
+        //Calculate Focal Length using width
+        width = 1/width + 1/width;
+        width = (lens.getNIndex() - 1) * width;
+        width = 1/width;
+
+        //Set the Shape tag Concave
+        msg = getResources().getString(R.string.indPreShape) + " Convex";
+        shape.setText(msg);
+
+        //Set the text of the length
+        msg = getResources().getString(R.string.indPreFocal) + " " + f.format(width);
+        length.setText(msg);
+    }
+
+    /**
      * This class is intended to set the answer index based upon the previous answers
      * so no answer is repeated
      *
      */
     private void setAnswerIndex() {
 
-        //Check if answerGroup has been initialized
-        if(answerGroup == null){
-            //Initialize
-            answerGroup = new ArrayList<>();
-        }
+        SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
 
-        //Check if answer pool is empty/exhausted
-        if(answerGroup.size() == 0){
-            answerGroup.add(0);answerGroup.add(1);answerGroup.add(2);
-            System.out.println("ANSWER GROUP RESET");
-        }
+        //Correct Index
+        Random rand = new Random(); //Create new random
 
-        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
+        //Determines the correct slider position at random
+        answerIndex = rand.nextInt(bar.getMax()); //Gets a number from a set determined by the number of slider positions
 
-        //Create random object
-        Random rand = new Random(); //Creates new random
-
-        //Sets chosenAnswer to an index of the available pool of answers
-        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
-
-        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
-        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
-
-        //Set answer index equal to the chosen answer
-        answerIndex = answerGroup.get(chosenAnswer);
-
-        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
-
-        //Remove that answer from the next pool
-        answerGroup.remove(chosenAnswer);
-
-        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
-        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
+        //Assign Lens object
+        lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
     }
 
     /**
@@ -507,18 +513,12 @@ public class Skew extends Activity {
         //Get the Lens holder from n_index.xml for measurments
         DrawingView skewLen = (DrawingView) findViewById(R.id.skewLen);
 
-        float pixelAdjustment = ADJUSTMENT * (dv.getHeight()/ENVIRONMENT_HEIGHT);
+        adjustment = answerIndex * MULTIPLIER + OFF_SET;
+
+        float pixelAdjustment = adjustment * (dv.getHeight()/ENVIRONMENT_HEIGHT);
 
         //Adjust the height based on correct answer
-        if(answerIndex == 0){
-            lens.setLocation((int) skewLen.getX(), (int) (skewLen.getY() - pixelAdjustment),skewLen.getHeight(), skewLen.getWidth());
-        }
-        else if(answerIndex == 1){
-            lens.setLocation((int) skewLen.getX(), (int) skewLen.getY(),skewLen.getHeight(), skewLen.getWidth());
-        }
-        else{
-            lens.setLocation((int) skewLen.getX(), (int) (skewLen.getY() + pixelAdjustment),skewLen.getHeight(), skewLen.getWidth());
-        }
+        lens.setLocation((int) skewLen.getX(), (int) (skewLen.getY() + pixelAdjustment),skewLen.getHeight(), skewLen.getWidth());
 
         for(int i = 0; i < views.length; i++) {
             //Adjust the focal length from units to pixels
@@ -563,15 +563,16 @@ public class Skew extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button spin = (Button) findViewById(R.id.spinSkew);
-            spin.setClickable(false);
+            Button ON = (Button) findViewById(R.id.btnActivate);
+            SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+            bar.setEnabled(false);
+            ON.setClickable(false);
 
             //Create handler object to call runables after a delay
             Handler dialogEngine = new Handler();
 
             //Sends user's score to be recorded
             recordAnswer(user,correct);
-            System.out.println("Sent " + correct + " to be logged.");
 
             DrawLens();
             DrawLasers();
@@ -596,33 +597,6 @@ public class Skew extends Activity {
     private void DrawLasers() {
         //Capture drawing view
         DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.skewLen);
-        TranslateAnimation animation;
-
-        float pixelAdjustment = ADJUSTMENT * (dv.getHeight()/ENVIRONMENT_HEIGHT);
-
-        switch (userHeight){
-            case 0:
-                lens.setLocation((int)dl.getX(),(int) (dl.getY() - pixelAdjustment),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, 0, 0,(int) -pixelAdjustment);
-                break;
-            case 1:
-                lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, 0, 0, 0);
-                break;
-            case 2:
-                lens.setLocation((int)dl.getX(),(int) (dl.getY() + pixelAdjustment),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, 0, 0, (int) pixelAdjustment);
-                break;
-            default:
-                lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, 0, 0, dl.getY());
-                break;
-        }
-
-        animation.setDuration(100);
-        animation.setFillAfter(true);
-        dl.startAnimation(animation);
 
         //New laser list
         lasers = new ArrayList<>();
@@ -777,7 +751,7 @@ public class Skew extends Activity {
         if (user != null) {
             if (correct) {
                 //Increment the user's correct count
-                user.incCorrect();
+                user.incCorrect(User.HEIGHT_QUESTION);
                 if (user.getLensLVL() < 4) {
                     user.setLensLVL(4);
                     System.out.println("Lens Level was set to Four");
@@ -785,7 +759,7 @@ public class Skew extends Activity {
             } else {
                 //User is wrong
                 //Increment user's incorrect count
-                user.incIncorrect();
+                user.incIncorrect(User.HEIGHT_QUESTION);
             }
 
             user.saveUser("default.dat", getApplicationContext());
@@ -806,6 +780,33 @@ public class Skew extends Activity {
 
         //Convert Point
         p = convertToGraph(p,graph);
+
+        return p;
+    }
+
+    /**
+     * This class computes where the center of the lens holder is located
+     * in reference to the seek bar's progress
+     *
+     * @return the center point of the lens (in standard coordinates)
+     */
+    public PointF lensCenterPoint(){
+
+        PointF p = new PointF();
+        float adjust;
+
+        DrawingView lens = (DrawingView) findViewById(R.id.skewLen);
+        DrawingView graph = (DrawingView) findViewById(R.id.view);
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekHeight);
+
+        adjust = seekBar.getProgress() * MULTIPLIER + OFF_SET;
+
+        p.x = lens.getX();
+        p.y = lens.getY();
+
+        p = convertToGraph(p,graph);
+
+        p.y = p.y + adjust;
 
         return p;
     }

@@ -18,7 +18,7 @@
         android:src="@drawable/laser_front"
         android:scaleType="fitXY"
         android:contentDescription="@string/laser"
-        android:layout_centerVertical="true"
+        android:layout_alignBottom="@+id/wLen"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -71,13 +71,82 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/lens" />
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="15dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/divider" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinWidth"
-        android:background="@drawable/border"
-        android:layout_alignParentTop="true"
+        android:text="@string/activate"
+        android:id="@+id/btnActivate"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="5sp" />
+        android:layout_marginBottom="5dp" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indShape"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:text="@string/indPreShape"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/indNindex"
+        android:layout_toStartOf="@+id/indNindex"
+        android:layout_marginRight="5dp" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indNindex"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:text="@string/indPreIndex"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/indRadius"
+        android:layout_toStartOf="@+id/indRadius"
+        android:layout_marginRight="2dp" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indRadius"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:text="@string/indPreRadius"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/divider"
+        android:layout_toEndOf="@+id/divider"
+        android:layout_marginLeft="2dp" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indFocalLength"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:text="@string/indPreFocal"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/indRadius"
+        android:layout_toEndOf="@+id/indRadius"
+        android:layout_marginLeft="5dp" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekRadius"
+        android:max="9"
+        android:progress="0"
+        android:visibility="visible"
+        android:layout_below="@+id/indRadius"
+        android:layout_alignRight="@+id/indRadius"
+        android:layout_alignEnd="@+id/indRadius"
+        android:layout_alignLeft="@+id/indRadius"
+        android:layout_alignStart="@+id/indRadius" />
 
 </RelativeLayout>

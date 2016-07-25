@@ -1,10 +1,12 @@
 package opticallearning.learnoptics;
 
 import android.content.Context;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,6 +24,9 @@ public class User implements Serializable{
 
     private String name;    //User's name
     private String school;  //String corresponding to user's school
+    private int standing;   //Indicates the student's standing (freshman: 0,sophomore: 1,junior: 3, senior: 4)
+                                //-1 for this value means unknown or not applicable
+    private boolean HS;     //Indicates whether the listed school is a high school
     private String userName; //String used for storing the user's identification
     //private int icon_id;    //Resource id integer corresponding to user's icon
     //private int viewCount //Tracks how many questions the user has viewed (not necessarily answered)
@@ -29,6 +34,35 @@ public class User implements Serializable{
     private int attempts;   //Question attempts
     private int correct;    //Questions answered correctly
     private int incorrect;  //Questions answered incorrectly
+
+    //Database Fields - Specific data correlated particular questions
+    private int lensShapeAtmp;
+    private int lensShapeCor;
+    final static protected int SHAPE_QUESTION = 0;
+
+    private int indexAtmp;
+    private int indexCor;
+    final static protected int INDEX_QUESTION = 1;
+
+    private int widthAtmp;
+    private int widthCor;
+    final static protected int WIDTH_QUESTION = 2;
+
+    private int fLenAtmp;
+    private int fLenCor;
+    final static protected int FOCAL_QUESTION = 3;
+
+    private int distanceAtmp;
+    private int distanceCor;
+    final static protected int DISTANCE_QUESTION = 4;
+
+    private int heightAtmp;
+    private int heightCor;
+    final static protected int HEIGHT_QUESTION = 5;
+
+    private int moveDetectorAtmp;
+    private int moveDetectorCor;
+    final static protected int DETECTOR_QUESTION = 6;
 
     private int lensLVL;    //Number of unlocked levels in Lens Crafter sub menu
     private int specLVL;    // "                        "  Spectrum matcher sub menu
@@ -149,6 +183,7 @@ public class User implements Serializable{
         //Create file object using filename
         File file = c.getFileStreamPath(filename);
 
+        //Save user information locally
         try {
             //Initialize object output stream, boolean for append is false
             oos = new ObjectOutputStream(new FileOutputStream(file, false));
@@ -166,6 +201,65 @@ public class User implements Serializable{
             //If catch is trigger the save failed
             success = false;
             e.printStackTrace();
+        }
+
+        //Create .json file
+        File json = c.getFileStreamPath("temp.json");
+
+        //Save User data to .json for server upload
+        try{
+
+            //Create filewriter object
+            FileWriter f = new FileWriter(json);
+
+            //Create json object to hold information
+            JSONObject obj = new JSONObject();
+            obj.put("UserID", userName);
+            obj.put("School", school);
+            obj.put("High School", HS);
+            obj.put("Standing",standing);
+            obj.put("Total Cor", correct);
+            obj.put("Total InCor", incorrect);
+            obj.put("Lens Shape Atmp",lensShapeAtmp);
+            obj.put("Lens Shape Cor", lensShapeCor);
+            obj.put("N Index Atmp", indexAtmp);
+            obj.put("N Index Cor", indexCor);
+            obj.put("Lens Widths Atmp", widthAtmp);
+            obj.put("Lens Widths Cor", widthCor);
+            obj.put("Focal Length Atmp", fLenAtmp);
+            obj.put("Focal Length Cor", fLenCor);
+            obj.put("Distance Atmp", distanceAtmp);
+            obj.put("Distance Cor", distanceCor);
+            obj.put("Height Atmp", heightAtmp);
+            obj.put("Height Cor", heightCor);
+            obj.put("Move Dect Atmp", moveDetectorAtmp);
+            obj.put("Move Dect Cor", moveDetectorCor);
+
+            //Writes the json to the file
+            f.write(obj.toString());
+
+            System.out.println(obj.toString());
+
+            //Close the file
+            f.flush();
+            f.close();
+
+            //Rename to original after successful write
+            File original = c.getFileStreamPath("userDat.json");
+
+            //Ensure both files exist
+            if(json.exists()) {
+                if (original.exists()){
+                    //Rename the temp json to overwrite original file
+                    json.renameTo(original);
+                }
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.out.println("Json Exception");
         }
 
         //Return result of the save attempt
@@ -199,9 +293,33 @@ public class User implements Serializable{
      *
      * This method then increments attempts
      */
-    public void incIncorrect(){
+    public void incIncorrect(int question_type){
         incorrect++;
         incAttempt();
+
+        switch (question_type){
+            case SHAPE_QUESTION:
+                lensShapeAtmp++;
+                break;
+            case INDEX_QUESTION:
+                indexAtmp++;
+                break;
+            case WIDTH_QUESTION:
+                widthAtmp++;
+                break;
+            case FOCAL_QUESTION:
+                fLenAtmp++;
+                break;
+            case DISTANCE_QUESTION:
+                distanceAtmp++;
+                break;
+            case HEIGHT_QUESTION:
+                heightAtmp++;
+                break;
+            case DETECTOR_QUESTION:
+                moveDetectorAtmp++;
+                break;
+        }
     }
 
     /**
@@ -211,9 +329,41 @@ public class User implements Serializable{
      *
      * The method then increments attempts
      */
-    public void incCorrect(){
+    public void incCorrect(int question_type){
         correct++;
         incAttempt();
+
+        switch (question_type){
+            case SHAPE_QUESTION:
+                lensShapeAtmp++;
+                lensShapeCor++;
+                break;
+            case INDEX_QUESTION:
+                indexAtmp++;
+                indexCor++;
+                break;
+            case WIDTH_QUESTION:
+                widthAtmp++;
+                widthCor++;
+                break;
+            case FOCAL_QUESTION:
+                fLenAtmp++;
+                fLenCor++;
+                break;
+            case DISTANCE_QUESTION:
+                distanceAtmp++;
+                distanceCor++;
+                break;
+            case HEIGHT_QUESTION:
+                heightAtmp++;
+                heightCor++;
+                break;
+            case DETECTOR_QUESTION:
+                moveDetectorAtmp++;
+                moveDetectorCor++;
+                break;
+        }
+
     }
 
     //Getters and Setters
@@ -226,6 +376,16 @@ public class User implements Serializable{
     public void setSchool(String school) {
         this.school = school;
     }
+
+    //Standing: get and set
+    public int getStanding() {return standing;}
+
+    public void setStanding(int standing) {this.standing = standing;}
+
+    //High School: get and set
+    public boolean isHS() {return HS;}
+
+    public void setHS(boolean HS) {this.HS = HS;}
 
     //Setup Indicator: Get and set
     public boolean isSetupComplete() {

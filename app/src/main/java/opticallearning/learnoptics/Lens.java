@@ -57,6 +57,8 @@ public class Lens {
         this.graphic_Reference = l.getGraphic_Reference();
         this.fLen = l.getfLen();
         this.concave = l.isConcave();
+        this.radius = l.getRadius();
+        this.nIdex = l.getNIndex();
     }
 
     /**

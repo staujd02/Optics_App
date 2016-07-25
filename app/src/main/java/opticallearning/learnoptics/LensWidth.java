@@ -11,10 +11,10 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-
+import android.widget.SeekBar;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,13 +28,14 @@ import java.util.Random;
  */
 public class LensWidth extends Activity {
 
-    final int THIN_CONVEX = 1;     //First lens
+    //final int THIN_CONVEX = 1;     //First lens
     final int THICK_CONVEX = 4;     //Second lens...
-    final int THIN_CONCAVE = 7;     //
-    final int THICK_CONCAVE = 10;    //
 
-    final float ENVIRONMENT_WIDTH = 100;
+    final float ENVIRONMENT_WIDTH = 100;    //Simulated environment constants
     final float ENVIRONMENT_HEIGHT = 100;
+
+    final float MULTIPLIER = 4; //Unit multiplier used to translate slider value to unit value
+    final int OFF_SET = 5;     //The slider value's offset from 0
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -43,13 +44,11 @@ public class LensWidth extends Activity {
     final int LASER_APERTURE_TOP = 78;      //The height at which the laser aperture stops (in px)
     final int ORIGINAL_SIZE = 107;          //The original height of the measured image
 
-    private Button spinner;         //Button which opens prompt for user selection of lens
     private PointF lensCenterPoint; //Center point of the lens
     boolean processStopped;         //keeps track of the activity's life cycle and responds accordingly
     private int answerIndex;                //The index of the correct answer
     private User user;              //Reference to user object
     private ArrayList<Laser> lasers;//Array of lasers
-    private ArrayList<Integer> answerGroup; //List of answer indexes
     private Lens lens;              //Concave or convex lens
     private Boolean answered;       //Tracks whether the user has already answered
 
@@ -59,10 +58,6 @@ public class LensWidth extends Activity {
         setTitle("Lens Width");                 //Assigns a descriptive title
 
         user = LensCraftMenu.user;  //Grabs user reference from menu
-
-        //Creates a spinner object and references spinWidth in lens_width.xml
-        spinner = (Button) findViewById(R.id.spinWidth);
-        spinner.setText(R.string.spinWidthText);
 
         //Sets onTouch() event of lens holder to display lens holder's center location
         DrawingView wLens = (DrawingView) findViewById(R.id.wLen);
@@ -138,90 +133,51 @@ public class LensWidth extends Activity {
             }
         });
 
-        //Dynamically create string array of user options
-        String[] array = {
-                "Convex: Radius " + LensCraftMenu.lensArrayList.get(THIN_CONVEX).getRadius() + ", N index" +
-                                    LensCraftMenu.lensArrayList.get(THIN_CONVEX).getNIndex(),
-                "Convex: Radius " + LensCraftMenu.lensArrayList.get(THICK_CONVEX).getRadius() + ", N index " +
-                                    LensCraftMenu.lensArrayList.get(THICK_CONVEX).getNIndex(),
-                "Concave: Radius " + LensCraftMenu.lensArrayList.get(THIN_CONCAVE).getRadius() + ", N index " +
-                                    LensCraftMenu.lensArrayList.get(THIN_CONCAVE).getNIndex(),
-                "Concave: Radius " + LensCraftMenu.lensArrayList.get(THICK_CONCAVE).getRadius() + ", N index " +
-                                    LensCraftMenu.lensArrayList.get(THICK_CONCAVE).getNIndex()
-        };
+        SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateBar(progress);
+            }
 
-        //Creates adapter to load array lens_widths into the spinner
-        //lens_widths > {"Thin","Normal"}
-        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, array);
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-        //Assigns dropdown behaviour to adapter
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            }
 
-        //Create onClickListener
-        spinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        Button laserON = (Button) findViewById(R.id.btnActivate);
+
+        laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create Dialog for the user to pick a lens
-                new AlertDialog.Builder(LensWidth.this)
-                        //Set title and the adapter created above
-                        .setTitle("Pick Lens Width")
-                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Grabs array of choices
-                                String[] s = getResources().getStringArray(R.array.lens_widths);
-                                //Sets the user's choice as the button's text
-                                spinner.setText(s[which]);
+                //Create lens from user value
+                SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
 
-                                //This sets the lens according to the user's selection
-                                if(which == 0){
-                                    lens = new Lens(LensCraftMenu.lensArrayList.get(THIN_CONVEX));
-                                }
-                                else if(which == 1){
-                                    lens = new Lens(LensCraftMenu.lensArrayList.get(THICK_CONVEX));
-                                }
-                                else if(which == 2){
-                                    lens = new Lens(LensCraftMenu.lensArrayList.get(THIN_CONCAVE));
-                                }
-                                else{
-                                    lens = new Lens(LensCraftMenu.lensArrayList.get(THICK_CONCAVE));
-                                }
+                float value = MULTIPLIER * bar.getProgress() + OFF_SET;
 
-                                //Determines User Correctness
-                                //User's choice => Correct Choice
-                                switch (which){
-                                    case 0:
-                                        if(answerIndex == THIN_CONVEX)
-                                            ClickHandler(true); //Runs a correct answer dialog
-                                        else
-                                            ClickHandler(false);//Runs an incorrect answer dialog
-                                        break;
-                                    case 1:
-                                        if(answerIndex == THICK_CONVEX)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                    case 2:
-                                        if(answerIndex == THIN_CONCAVE)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                    case 3:
-                                        if(answerIndex == THICK_CONCAVE)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                }
+                value = 1/value + 1/value;
+                value *=  (lens.getNIndex() - 1);
+                value = 1 / value;
 
-                                //Ends the dialog
-                                dialog.dismiss();
-                            }
-                            //creates dialog object and displays it
-                        }).create().show();
+                //Assign length to lens
+                //String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex
+                lens = new Lens(lens.getId(),lens.getMaterial(),lens.getGraphic_Reference(),value,lens.isConcave(),lens.getRadius(),lens.getNIndex());
+
+                //Determine Correctness
+                if(bar.getProgress() == answerIndex){
+                    //Run Handler with correct answer given
+                    ClickHandler(true);
+                }
+                else{
+                    //Run Handler with incorrect answer given
+                    ClickHandler(false);
+                }
             }
         });
     }
@@ -293,10 +249,11 @@ public class LensWidth extends Activity {
         lens.reset();
         graph.reset();
 
-        //Ensure button is clickable
-        Button spin = (Button) findViewById(R.id.spinWidth);
-        spin.setClickable(true);
-        spin.setText(R.string.spinWidthText);
+        //Ensure button is clickable and slider can change
+        Button ON = (Button) findViewById(R.id.btnActivate);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
+        bar.setEnabled(true);
+        ON.setClickable(true);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
@@ -305,7 +262,6 @@ public class LensWidth extends Activity {
 
 
     public void init(){
-        int options;    //Picks the correct answer > later is translated to index
         answered = false;   //Set the answered state back to false
 
         reset(); //Clear any latent content and prep for run
@@ -329,6 +285,7 @@ public class LensWidth extends Activity {
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
                                 setGrid();
+                                updateBar( ((SeekBar) findViewById(R.id.seekRadius)).getProgress());
                             }
                         })
                         .setCancelable(false)
@@ -347,6 +304,7 @@ public class LensWidth extends Activity {
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
                                 setGrid();
+                                updateBar( ((SeekBar) findViewById(R.id.seekRadius)).getProgress());
                             }
                         })
                         .setCancelable(false)
@@ -356,46 +314,60 @@ public class LensWidth extends Activity {
     }
 
     /**
+     * This function updates the button displays to the correct values set by the user
+     *
+     * @param value progress of the seekBar
+     */
+    public void updateBar(int value){
+        Button shape = (Button) findViewById(R.id.indShape);
+        Button nIndex = (Button) findViewById(R.id.indNindex);
+        Button length = (Button) findViewById(R.id.indFocalLength);
+        Button radius = (Button) findViewById(R.id.indRadius);
+
+        String msg;
+
+        DecimalFormat f = new DecimalFormat("#.###");
+
+        //Set the text of the N Index (Constant in this case)
+        msg = getResources().getString(R.string.indPreIndex) + " " +f.format(lens.getNIndex()) ;
+        nIndex.setText(msg);
+
+        float width = value * MULTIPLIER + OFF_SET;
+
+        //Set Radius
+        msg = getResources().getString(R.string.indPreRadius) + " " + width;
+        radius.setText(msg);
+
+        //Calculate Focal Length using width
+        width = 1/width + 1/width;
+        width = (lens.getNIndex() - 1) * width;
+        width = 1/width;
+
+        //Set the Shape tag Concave
+        msg = getResources().getString(R.string.indPreShape) + " Convex";
+        shape.setText(msg);
+
+        //Set the text of the length
+        msg = getResources().getString(R.string.indPreFocal) + " " + f.format(width);
+        length.setText(msg);
+    }
+
+    /**
      * This class is intended to set the answer index based upon the previous answers
      * so no answer is repeated
      *
      */
     private void setAnswerIndex() {
+        SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
 
-        //Check if answerGroup has been initialized
-        if(answerGroup == null){
-            //Initialize
-            answerGroup = new ArrayList<>();
-        }
+        //Correct Index
+        Random rand = new Random(); //Create new random
 
-        //Check if answer pool is empty/exhausted
-        if(answerGroup.size() == 0){
-            answerGroup.add(THIN_CONVEX);answerGroup.add(THICK_CONVEX);
-            answerGroup.add(THIN_CONCAVE); answerGroup.add(THICK_CONCAVE);
-            System.out.println("ANSWER GROUP RESET");
-        }
+        //Determines the correct slider position at random
+        answerIndex = rand.nextInt(bar.getMax()); //Gets a number from a set determined by the number of slider positions
 
-        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
-
-        //Create random object
-        Random rand = new Random(); //Creates new random
-
-        //Sets chosenAnswer to an index of the available pool of answers
-        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
-
-        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
-        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
-
-        //Set answer index equal to the chosen answer
-        answerIndex = answerGroup.get(chosenAnswer);
-
-        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
-
-        //Remove that answer from the next pool
-        answerGroup.remove(chosenAnswer);
-
-        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
-        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
+        //Assign Lens object
+        lens = new Lens(LensCraftMenu.lensArrayList.get(THICK_CONVEX));
     }
 
     /**
@@ -497,8 +469,9 @@ public class LensWidth extends Activity {
         views = new ImageView[4];       //An array for the photodetector ImageViews
         TranslateAnimation animation;   //Animation that will translate the views
         PointF end;                     //End destination of the views
-        Float xDelta;                   //Change in X position
-        Float yDelta;                   //Change in Y position
+        float xDelta;                   //Change in X position
+        float yDelta;                   //Change in Y position
+        float value;
 
         //Connect array to views
         views[0] = (ImageView) findViewById(R.id.wDect1);
@@ -506,8 +479,19 @@ public class LensWidth extends Activity {
         views[2] = (ImageView) findViewById(R.id.wDect3);
         views[3] = (ImageView) findViewById(R.id.wDect4);
 
-        //Initialize the lens object
-        lens = new Lens(LensCraftMenu.lensArrayList.get(answerIndex));
+        //Get correct focal length
+        value = MULTIPLIER * answerIndex + OFF_SET;
+
+        value = 1/value + 1/value;
+        value *=  (lens.getNIndex() - 1);
+        value = 1 / value;
+
+        System.out.println("I KNOW THE ANSWER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("Its position " + answerIndex);
+
+        //Assign length to lens
+        //String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex
+        lens = new Lens(lens.getId(),lens.getMaterial(),lens.getGraphic_Reference(),value,lens.isConcave(),lens.getRadius(),lens.getNIndex());
 
         //Get the Lens holder from n_index.xml for measurments
         DrawingView widthLens = (DrawingView) findViewById(R.id.wLen);
@@ -560,8 +544,10 @@ public class LensWidth extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button spin = (Button) findViewById(R.id.spinWidth);
-            spin.setClickable(false);
+            Button ON = (Button) findViewById(R.id.btnActivate);
+            SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
+            bar.setEnabled(false);
+            ON.setClickable(false);
 
             //Create handler object to call runables after a delay
             Handler dialogEngine = new Handler();
@@ -747,7 +733,7 @@ public class LensWidth extends Activity {
         if (user != null) {
             if(correct){
                 //Increment the user's correct count
-                user.incCorrect();
+                user.incCorrect(User.WIDTH_QUESTION);
                 if(user.getLensLVL() < 6) {
                     user.setLensLVL(6);
                 }
@@ -755,7 +741,7 @@ public class LensWidth extends Activity {
             else{
                 //User is wrong
                 //Increment user's incorrect count
-                user.incIncorrect();
+                user.incIncorrect(User.WIDTH_QUESTION);
             }
 
             user.saveUser("default.dat", getApplicationContext());

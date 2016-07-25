@@ -11,10 +11,10 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-
+import android.widget.SeekBar;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,11 +28,14 @@ import java.util.Random;
  */
 public class Distances extends Activity {
 
-    final int LENS = 10; //Constant lens index
-    final int ADJUST_FACTOR = 25; //Variable adjustment for lens distance
+    final int LENS = 10;    //Constant lens index
+    int adjustment;         //Variable adjustment for lens distance
 
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
+
+    final int MULTIPLIER = 12; //Unit multiplier used to translate slider value to unit value
+    final int OFF_SET = -24;     //The slider value's offset from 0
 
     //These three constant are used to determine where the
     //lasers will be drawn
@@ -41,15 +44,11 @@ public class Distances extends Activity {
     final int LASER_APERTURE_TOP = 78;    //The height at which the laser aperture stops (in px)
     final int ORIGINAL_SIZE = 107;        //The original height of the measured image
 
-    private Button spinner;             //Button which opens prompt for user selection of lens
-    private ArrayList<Integer> answerGroup;   //List of integers that have already been answers
     private PointF lensCenterPoint;     //Center point of the lens
     private int answerIndex;            //The index of the correct answer
-    private int userHeight;
     private boolean processStopped;     //keeps track of the activity's life cycle and responds accordingly
     private User user;                  //Reference to user object
     private ArrayList<Laser> lasers;    //Array of lasers
-
     private Lens lens;                  //Concave or convex lens
     private Boolean answered;           //Tracks whether the user has already answered
 
@@ -66,14 +65,13 @@ public class Distances extends Activity {
 
         user = LensCraftMenu.user; //Grabs user reference from menu
 
-        //Creates spinner object and sets the reference to spinner spinDistance in distance.xml
-        spinner = (Button) findViewById(R.id.spinDistance);
-        spinner.setText(R.string.spinDistanceText);
-
         DrawingView dLens = (DrawingView) findViewById(R.id.dLen);
         dLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
+                lensCenterPoint = lensCenterPoint();
+
                 AlertDialog alertDialog = new AlertDialog.Builder(Distances.this).create();
                 alertDialog.setTitle("Lens Center-point");
                 alertDialog.setMessage("(" +
@@ -143,68 +141,65 @@ public class Distances extends Activity {
             }
         });
 
-        String[] array = {
-                ADJUST_FACTOR + " units closer to laser",
-                "Do not move lens",
-                ADJUST_FACTOR + " units farther from laser",
-        };
+        //Seek Bar onChange() listener, used for moving the lens holder to the appropriate location
+        SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //Grabs the view references
+                DrawingView dv = (DrawingView) findViewById(R.id.view);
+                DrawingView dl = (DrawingView) findViewById(R.id.dLen);
+                TranslateAnimation animation;
 
-        final ArrayAdapter<CharSequence> adapter =  new ArrayAdapter(this,
-                android.R.layout.simple_spinner_item, array);
+                //Calculates the distance adjustment based on seek bar's progress value
+                adjustment = progress * MULTIPLIER + OFF_SET;
 
-        //Assign drop down behaviour
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                //Converts the unit value of the adjustment to a pixel value
+                float pixelAdjustment = adjustment * (dv.getWidth()/ENVIRONMENT_WIDTH);
 
-        //Create onClickListener
-        spinner.setOnClickListener(new View.OnClickListener() {
+                //Creates an animation to display the adjustment
+                animation = new TranslateAnimation(0, (int) pixelAdjustment,0, 0);
+
+                //Sets the animation properties
+                animation.setDuration(0);
+                animation.setFillAfter(true);
+                dl.startAnimation(animation);
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        //Active Laser Button, determines correctness and sets prerequisites for laser/lens render
+        Button laserON = (Button) findViewById(R.id.btnActivate);
+        laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create Dialog for the user to pick a lens
-                new AlertDialog.Builder(Distances.this)
-                        //Set title and the adapter created above
-                        .setTitle("Pick Distance")
-                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Grabs array of choices
-                                String[] s = getResources().getStringArray(R.array.distances);
-                                //Sets the user's choice as the button's text
-                                spinner.setText(s[which]);
+                //Create lens from user value
+                SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+                DrawingView dl = (DrawingView) findViewById(R.id.dLen);
+                DrawingView dv = (DrawingView) findViewById(R.id.view);
 
-                                //Set the lens
-                                lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
+                //Calculates value of the seek bar
+                float value = MULTIPLIER * bar.getProgress() + OFF_SET;
 
-                                //Save the user's height choice
-                                userHeight = which;
+                //Converts the seek bar value to a pixel value
+                value = value * (dv.getWidth()/ENVIRONMENT_WIDTH);
 
-                                //Determines User Correctness
-                                //User's choice => Correct Choice
-                                switch (which){
-                                    case 0:
-                                        if(answerIndex == 0)
-                                            ClickHandler(true); //Runs a correct answer dialog
-                                        else
-                                            ClickHandler(false);//Runs an incorrect answer dialog
-                                        break;
-                                    case 1:
-                                        if(answerIndex == 1)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                    case 2:
-                                        if(answerIndex == 2)
-                                            ClickHandler(true);
-                                        else
-                                            ClickHandler(false);
-                                        break;
-                                }
+                //Calculates Distance Draw
+                lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
 
-                                //Ends the dialog
-                                dialog.dismiss();
-                            }
-                            //creates dialog object and displays it
-                        }).create().show();
+                //Sets the location of the lens for the laser render process
+                lens.setLocation((int) (dl.getX() + value),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+
+                //Determine Correctness
+                if(bar.getProgress() == answerIndex){
+                    //Run Handler with correct answer given
+                    ClickHandler(true);
+                }
+                else{
+                    //Run Handler with incorrect answer given
+                    ClickHandler(false);
+                }
             }
         });
     }
@@ -276,10 +271,12 @@ public class Distances extends Activity {
         lens.reset();
         graph.reset();
 
-        //Ensure button is clickable
-        Button spin = (Button) findViewById(R.id.spinDistance);
-        spin.setClickable(true);
-        spin.setText(R.string.spinDistanceText);
+        //Ensure button is clickable and slider can change
+        Button ON = (Button) findViewById(R.id.btnActivate);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+        bar.setEnabled(true);
+        bar.setProgress(2);
+        ON.setClickable(true);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
@@ -302,8 +299,7 @@ public class Distances extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(Distances.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct distance to place the lens from the laser to focus the light on the photodetectors. " +
-                                "The lens has a focal length of " + LensCraftMenu.lensArrayList.get(LENS).getfLen() + ".") //Sets the Message
+                        .setMessage("Select the correct distance to place the lens from the laser to focus the light on the photodetectors.") //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -312,10 +308,9 @@ public class Distances extends Activity {
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
                                 setGrid();
+                                updateBar();
                             }
-                        })
-                        .setCancelable(false)
-                        .show(); //Shows created dialogue
+                        }).setCancelable(false).show(); //Shows created dialogue
             }
             else{
                 //Start Alert Dialogue
@@ -330,12 +325,50 @@ public class Distances extends Activity {
                                 setUpPhotoDetectors();  //Assigns the correct lens to the lasers for calculation of the
                                 //the photodetectors location (does not render lasers)
                                 setGrid();
+                                updateBar();
                             }
-                        })
-                        .setCancelable(false)
-                        .show(); //Shows created dialogue
+                        }).setCancelable(false).show(); //Shows created dialogue
             }
         }
+    }
+
+    /**
+     * This function updates the button displays to the correct values set by the user
+     *
+     */
+    public void updateBar(){
+        Button shape = (Button) findViewById(R.id.indShape);
+        Button nIndex = (Button) findViewById(R.id.indNindex);
+        Button length = (Button) findViewById(R.id.indFocalLength);
+        Button radius = (Button) findViewById(R.id.indRadius);
+
+        String msg;
+
+        DecimalFormat f = new DecimalFormat("#.###");
+
+        //Set the text of the N Index (Constant in this case)
+        msg = getResources().getString(R.string.indPreIndex) + " " +f.format(lens.getNIndex()) ;
+        nIndex.setText(msg);
+
+        //Copy the lens width for focal length calculation
+        float width = lens.getWidth();
+
+        //Set Radius
+        msg = getResources().getString(R.string.indPreRadius) + " " + width;
+        radius.setText(msg);
+
+        //Calculate Focal Length using width
+        width = 1/width + 1/width;
+        width = (lens.getNIndex() - 1) * width;
+        width = 1/width;
+
+        //Set the Shape tag Concave
+        msg = getResources().getString(R.string.indPreShape) + " Convex";
+        shape.setText(msg);
+
+        //Set the text of the length
+        msg = getResources().getString(R.string.indPreFocal) + " " + f.format(width);
+        length.setText(msg);
     }
 
     /**
@@ -344,40 +377,16 @@ public class Distances extends Activity {
      *
      */
     private void setAnswerIndex() {
+        SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
 
-        //Check if answerGroup has been initialized
-        if(answerGroup == null){
-            //Initialize
-            answerGroup = new ArrayList<>();
-        }
+        //Correct Index
+        Random rand = new Random(); //Create new random
 
-        //Check if answer pool is empty/exhausted
-        if(answerGroup.size() == 0){
-            answerGroup.add(0);answerGroup.add(1);answerGroup.add(2);
-            System.out.println("ANSWER GROUP RESET");
-        }
+        //Determines the correct slider position at random
+        answerIndex = rand.nextInt(bar.getMax()); //Gets a number from a set determined by the number of slider positions
 
-        System.out.println("ANSWER GROUP CONTAINS:" + answerGroup.toString());
-
-        //Create random object
-        Random rand = new Random(); //Creates new random
-
-        //Sets chosenAnswer to an index of the available pool of answers
-        int chosenAnswer = rand.nextInt(answerGroup.size()); //gets an integer 0-2 with equal chances for each
-
-        System.out.println("THE CHOSEN INDEX IS " + chosenAnswer);
-        System.out.println("WHICH CORRESPONDS TO " + answerGroup.get(chosenAnswer));
-
-        //Set answer index equal to the chosen answer
-        answerIndex = answerGroup.get(chosenAnswer);
-
-        System.out.println("REMOVING " + answerGroup.get(chosenAnswer));
-
-        //Remove that answer from the next pool
-        answerGroup.remove(chosenAnswer);
-
-        System.out.println("THE ANSWER GROUP IS NOW " +  answerGroup.toString());
-        System.out.println("THE ANSWER GROUP SIZE IS NOW " + answerGroup.size());
+        //Assign Lens object
+        lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
     }
 
 
@@ -496,19 +505,14 @@ public class Distances extends Activity {
         //Get the Lens holder from distance.xml for measurements
         DrawingView dLens = (DrawingView) findViewById(R.id.dLen);
 
-        //Adjust standard units into a pixel value
-        float pixelFactor = ADJUST_FACTOR * (dv.getWidth()/ENVIRONMENT_WIDTH);
+        //Calculate an adjustment factor (in units) based on the random
+        //answer index
+        adjustment = answerIndex * MULTIPLIER + OFF_SET;
 
-        //Adjust the distance based on correct answer
-        if(answerIndex == 0){
-            lens.setLocation((int) (dLens.getX() - pixelFactor), ((int) dLens.getY()),dLens.getHeight(), dLens.getWidth());
-        }
-        else if(answerIndex == 1){
-            lens.setLocation((int) dLens.getX(), (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
-        }
-        else{
-            lens.setLocation((int) (dLens.getX() + pixelFactor), (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
-        }
+        float pixelAdjustment = adjustment * (dv.getHeight()/ENVIRONMENT_HEIGHT);
+
+        //Adjust the height based on correct answer
+        lens.setLocation((int) (dLens.getX() + pixelAdjustment), (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
 
         for(int i = 0; i < views.length; i++) {
             //Adjust the focal length from units to pixels
@@ -553,8 +557,10 @@ public class Distances extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button spin = (Button) findViewById(R.id.spinDistance);
-            spin.setClickable(false);
+            Button ON = (Button) findViewById(R.id.btnActivate);
+            SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+            bar.setEnabled(false);
+            ON.setClickable(false);
 
             //Create handler object to call runables after a delay
             Handler dialogEngine = new Handler();
@@ -585,40 +591,6 @@ public class Distances extends Activity {
     private void DrawLasers() {
         //Capture drawing view
         DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.dLen);
-        TranslateAnimation animation;
-
-        //Adjust standard units into a pixel value
-        float pixelFactor = ADJUST_FACTOR * (dv.getWidth()/ENVIRONMENT_WIDTH);
-
-        //Translate the lens location according to the user's preference
-        switch (userHeight){
-            case 0:
-                //Move lens backwards
-                lens.setLocation((int)(dl.getX() - pixelFactor),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0,(int) -pixelFactor,0,0);
-                break;
-            case 1:
-                //Don't move the lens at all
-                lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, 0, 0, 0);
-                break;
-            case 2:
-                //Move the lens forward
-                lens.setLocation((int)(dl.getX() + pixelFactor),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, (int) pixelFactor, 0, 0);
-                break;
-            default:
-                //Don't move the lens as default
-                lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
-                animation = new TranslateAnimation(0, 0, 0, dl.getY());
-                break;
-        }
-
-        //Set animation prefences
-        animation.setDuration(100);
-        animation.setFillAfter(true);   //Lens remains where drawing finished
-        dl.startAnimation(animation);   //Start the animation
 
         //New laser list
         lasers = new ArrayList<>();
@@ -770,18 +742,49 @@ public class Distances extends Activity {
         if (user != null) {
             if (correct) {
                 //Increment the user's correct count
-                user.incCorrect();
+                user.incCorrect(User.DISTANCE_QUESTION);
                 if (user.getLensLVL() < 5) {
                     user.setLensLVL(5);
                 }
             } else {
                 //User is wrong
                 //Increment user's incorrect count
-                user.incIncorrect();
+                user.incIncorrect(User.DISTANCE_QUESTION);
             }
 
             user.saveUser("default.dat", getApplicationContext());
         }
+    }
+
+    /**
+     * This class computes where the center of the lens holder is located
+     * in reference to the seek bar's progress
+     *
+     * @return the center point of the lens (in standard coordinates)
+     */
+    public PointF lensCenterPoint(){
+
+        PointF p = new PointF();
+        float adjust;
+
+        DrawingView lens = (DrawingView) findViewById(R.id.dLen);
+        DrawingView graph = (DrawingView) findViewById(R.id.view);
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekDistance);
+
+        //Calculate the adjustment amount by the seek bar progress
+        adjust = seekBar.getProgress() * MULTIPLIER + OFF_SET;
+
+        //Copy the lens coordinates
+        p.x = lens.getX();
+        p.y = lens.getY();
+
+        //Convert the pixel coordinates to units
+        p = convertToGraph(p,graph);
+
+        //Add the adjustment factor
+        p.x = p.x + adjust;
+
+        return p;
     }
 
     /**

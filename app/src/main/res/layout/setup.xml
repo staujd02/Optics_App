@@ -69,4 +69,25 @@
         android:layout_marginBottom="10dp"
         android:textSize="20sp" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chkHS"
+        android:id="@+id/chkHS"
+        android:layout_below="@+id/txtSchool"
+        android:layout_alignRight="@+id/txtSchool"
+        android:layout_alignEnd="@+id/txtSchool"
+        android:enabled="false"
+        android:layout_marginTop="2dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinStanding"
+        android:layout_toLeftOf="@+id/chkHS"
+        android:layout_alignLeft="@+id/txtSchool"
+        android:layout_alignStart="@+id/txtSchool"
+        android:layout_below="@+id/txtSchool"
+        android:layout_marginTop="2dp" />
+
 </RelativeLayout>
