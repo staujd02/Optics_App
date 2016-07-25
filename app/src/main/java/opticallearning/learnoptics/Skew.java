@@ -43,8 +43,8 @@ public class Skew extends Activity {
     private boolean processStopped;     //keeps track of the activity's life cycle and responds accordingly
     private int answerIndex;            //The index of the correct answer
     private User user;                  //Reference to user object
-     private ArrayList<Laser> lasers;    //Array of lasers
-
+    private ArrayList<Laser> lasers;    //Array of lasers
+    private int prev_progress = -1;     //Previous seek bar progress (used in animation)
     private Lens lens;                  //Concave or convex lens
     private Boolean answered;           //Tracks whether the user has already answered
 
@@ -136,18 +136,37 @@ public class Skew extends Activity {
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                //Grabs the view references
                 DrawingView dv = (DrawingView) findViewById(R.id.view);
                 DrawingView dl = (DrawingView) findViewById(R.id.skewLen);
                 TranslateAnimation animation;
 
+                //Calculates the distance height adjustment based on seek bar's progress value
                 adjustment = progress * MULTIPLIER + OFF_SET;
 
+                //Converts the unit value of the adjustment to a pixel value
                 float pixelAdjustment = adjustment * (dv.getHeight()/ENVIRONMENT_HEIGHT);
+                float prevAdjust;
 
-                animation = new TranslateAnimation(0, 0, 0, (int) pixelAdjustment);
+                //The default value for prev_progress is -1, assign prev to current if prev = to default
+                if(prev_progress == -1){
+                    prev_progress = progress;
+                }
 
-                animation.setDuration(0);
+                //Calculates the adjustment
+                prevAdjust = prev_progress * MULTIPLIER + OFF_SET;
+
+                //Converts to pixels from units
+                prevAdjust = prevAdjust * (dv.getHeight()/ENVIRONMENT_HEIGHT);
+
+                //Set animation properties (from prev to current)
+                animation = new TranslateAnimation(0, 0, (int) prevAdjust, (int) pixelAdjustment);
+
+                //Assign current progress as the new previous progress
+                prev_progress = progress;
+
+                //Animation properties
+                animation.setDuration(250);
                 animation.setFillAfter(true);
                 dl.startAnimation(animation);
             }

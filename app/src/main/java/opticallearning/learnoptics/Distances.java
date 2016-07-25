@@ -51,6 +51,7 @@ public class Distances extends Activity {
     private ArrayList<Laser> lasers;    //Array of lasers
     private Lens lens;                  //Concave or convex lens
     private Boolean answered;           //Tracks whether the user has already answered
+    private int prev_progress = -1;          //previous progress value (used in animation)
 
     /**
      *
@@ -156,12 +157,27 @@ public class Distances extends Activity {
 
                 //Converts the unit value of the adjustment to a pixel value
                 float pixelAdjustment = adjustment * (dv.getWidth()/ENVIRONMENT_WIDTH);
+                float prevAdjust;
 
-                //Creates an animation to display the adjustment
-                animation = new TranslateAnimation(0, (int) pixelAdjustment,0, 0);
+                //The default value for prev_progress is -1, assign prev to current if prev = to default
+                if(prev_progress == -1){
+                    prev_progress = progress;
+                }
+
+                //Calculate the adjustment
+                prevAdjust = prev_progress * MULTIPLIER + OFF_SET;
+
+                //Convert to pixels
+                prevAdjust = prevAdjust * (dv.getWidth()/ENVIRONMENT_WIDTH);
+
+                //Creates an animation to display the adjustment (from prev to current)
+                animation = new TranslateAnimation((int) prevAdjust, (int) pixelAdjustment,0, 0);
+
+                //Assigns current progress as the new previous progress
+                prev_progress = progress;
 
                 //Sets the animation properties
-                animation.setDuration(0);
+                animation.setDuration(250);
                 animation.setFillAfter(true);
                 dl.startAnimation(animation);
             }
