@@ -26,7 +26,7 @@ import java.util.ArrayList;
  *
  * ConcaveConvex.java,      Distances.java,
  * LensWidth.java,          NIndex.java
- * Skew.java, and           NumberOfLens.java
+ * Skew.java
  *
  */
 public class LensCraftMenu extends ListActivity{
@@ -193,15 +193,15 @@ public class LensCraftMenu extends ListActivity{
 
         switch (position){
             case 0:
-                //Starts the background activity, b_lenscraft.xml
+                //Starts the background activity, backgroundxml
                 startActivity(new Intent(LensCraftMenu.this, BGLensCraft.class));
                 break;
             case 1:
-                //Starts the ConcaveConvex sub module, concaveconvex.xml
+                //Starts the ConcaveConvex sub module, with the lenscraft.xml layout
                 startActivity(new Intent(LensCraftMenu.this, ConcaveConvex.class));
                 break;
             case 2:
-                //Starts the N index module, n_index.xml
+                //Starts the N index module, with the lenscraft.xml layout
                 startActivity(new Intent(LensCraftMenu.this, NIndex.class));
                 break;
             case 3:
@@ -209,11 +209,11 @@ public class LensCraftMenu extends ListActivity{
                 startActivity(new Intent(LensCraftMenu.this, Skew.class));
                 break;
             case 4:
-                //Starts the (Lens) Distances module, distance.xml
+                //Starts the (Lens) Distances module, with the lenscraft.xml layout
                 startActivity(new Intent(LensCraftMenu.this, Distances.class));
                 break;
             case 5:
-                //Starts the LensWidth module, lens_width.xml
+                //Starts the LensWidth module, with the lenscraft.xml layout
                 startActivity(new Intent(LensCraftMenu.this, LensWidth.class));
                 break;
         }

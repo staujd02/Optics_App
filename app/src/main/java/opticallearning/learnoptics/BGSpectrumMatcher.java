@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Created by Joel on 7/1/2016.
@@ -19,12 +20,15 @@ public class BGSpectrumMatcher extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); //super constructor
-        setContentView(R.layout.b_spectrummatcher); //Set the view
-        setTitle("Background: Spectrum Matcher");   //Assign a title
+        super.onCreate(savedInstanceState);         //calls super constructor
+        setContentView(R.layout.background); //Sets the view
+        setTitle("Background: Spectrum Matcher");   //Assigns a title
 
         //Continue Button
-        Button b = (Button) findViewById(R.id.btnSpec_c);
+        Button b = (Button) findViewById(R.id.btnContinue);
+        TextView text = (TextView) findViewById(R.id.txtDescription);
+
+        text.setText(getResources().getString(R.string.bg_spec));
 
         //Sends the user on to the menu
         b.setOnClickListener(new View.OnClickListener() {

@@ -29,6 +29,9 @@ public class Skew extends Activity {
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
 
+    final int ProgressMax = 4;
+    final int ProgressDefault = 2;
+
     final int MULTIPLIER = 5; //Unit multiplier used to translate slider value to unit value
     final int OFF_SET = -10;     //The slider value's offset from 0
 
@@ -51,12 +54,12 @@ public class Skew extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //call super constructor
-        setContentView(R.layout.skew);      //sets the view
+        setContentView(R.layout.lenscraft);      //sets the view
         setTitle("Lens Height");            //assigns descriptive title
 
         user = LensCraftMenu.user; //Grab user reference from menu
 
-        DrawingView skewLens = (DrawingView) findViewById(R.id.skewLen);
+        DrawingView skewLens = (DrawingView) findViewById(R.id.orginalLens);
         skewLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -132,13 +135,16 @@ public class Skew extends Activity {
             }
         });
 
-        SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
+        bar.setVisibility(View.VISIBLE);
+        bar.setMax(ProgressMax);
+        bar.setProgress(ProgressDefault);
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Grabs the view references
                 DrawingView dv = (DrawingView) findViewById(R.id.view);
-                DrawingView dl = (DrawingView) findViewById(R.id.skewLen);
+                DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
                 TranslateAnimation animation;
 
                 //Calculates the distance height adjustment based on seek bar's progress value
@@ -183,13 +189,13 @@ public class Skew extends Activity {
         });
 
 
-        Button laserON = (Button) findViewById(R.id.btnActivate);
+        Button laserON = (Button) findViewById(R.id.btnLaserActivate);
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Create lens from user value
-                SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
-                DrawingView dl = (DrawingView) findViewById(R.id.skewLen);
+                SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
+                DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
                 DrawingView dv = (DrawingView) findViewById(R.id.view);
 
                 float value = MULTIPLIER * bar.getProgress() + OFF_SET;
@@ -241,10 +247,10 @@ public class Skew extends Activity {
         ImageView[] views = new ImageView[4];
 
         //Assign view references
-        views[0] = (ImageView) findViewById(R.id.skDect1);
-        views[1] = (ImageView) findViewById(R.id.skDect2);
-        views[2] = (ImageView) findViewById(R.id.skDect3);
-        views[3] = (ImageView) findViewById(R.id.skDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Clears the animation
         for(ImageView v: views){
@@ -253,13 +259,13 @@ public class Skew extends Activity {
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.skewLen);
+        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
         lens.reset();
         graph.reset();
 
         //Ensure button is clickable and slider can change
-        Button ON = (Button) findViewById(R.id.btnActivate);
-        SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+        Button ON = (Button) findViewById(R.id.btnLaserActivate);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
         bar.setEnabled(true);
         bar.setProgress(2);
         ON.setClickable(true);
@@ -395,7 +401,7 @@ public class Skew extends Activity {
      */
     private void setAnswerIndex() {
 
-        SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
 
         //Correct Index
         Random rand = new Random(); //Create new random
@@ -453,7 +459,7 @@ public class Skew extends Activity {
      */
     protected void setGrid() {
         //Make all necessary reference calls
-        DrawingView view = (DrawingView) findViewById(R.id.skewLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
@@ -518,10 +524,10 @@ public class Skew extends Activity {
         Float xDelta;
         Float yDelta;
 
-        views[0] = (ImageView) findViewById(R.id.skDect1);
-        views[1] = (ImageView) findViewById(R.id.skDect2);
-        views[2] = (ImageView) findViewById(R.id.skDect3);
-        views[3] = (ImageView) findViewById(R.id.skDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Initialize the lens object
         lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
@@ -529,8 +535,8 @@ public class Skew extends Activity {
         //Get object for the graph height
         DrawingView dv = (DrawingView) findViewById(R.id.view);
 
-        //Get the Lens holder from n_index.xml for measurments
-        DrawingView skewLen = (DrawingView) findViewById(R.id.skewLen);
+        //Get the Lens holder from the layout for measurements
+        DrawingView skewLen = (DrawingView) findViewById(R.id.orginalLens);
 
         adjustment = answerIndex * MULTIPLIER + OFF_SET;
 
@@ -582,8 +588,8 @@ public class Skew extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnActivate);
-            SeekBar bar = (SeekBar) findViewById(R.id.seekHeight);
+            Button ON = (Button) findViewById(R.id.btnLaserActivate);
+            SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
             bar.setEnabled(false);
             ON.setClickable(false);
 
@@ -642,7 +648,7 @@ public class Skew extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.skewLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         view.drawLens(lens);
     }
 
@@ -683,10 +689,10 @@ public class Skew extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.skDect1);
-        views[1] = (ImageView) findViewById(R.id.skDect2);
-        views[2] = (ImageView) findViewById(R.id.skDect3);
-        views[3] = (ImageView) findViewById(R.id.skDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         if(lit){
             for(ImageView i: views){
@@ -814,9 +820,9 @@ public class Skew extends Activity {
         PointF p = new PointF();
         float adjust;
 
-        DrawingView lens = (DrawingView) findViewById(R.id.skewLen);
+        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView graph = (DrawingView) findViewById(R.id.view);
-        SeekBar seekBar = (SeekBar) findViewById(R.id.seekHeight);
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekMove);
 
         adjust = seekBar.getProgress() * MULTIPLIER + OFF_SET;
 

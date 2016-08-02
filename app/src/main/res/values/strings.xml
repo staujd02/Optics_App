@@ -54,36 +54,11 @@
     <string name="indPreShape">Shape: </string>
     <string name="activate">Activate Laser</string>
     <string name="chkHS">High School</string>
-    <string-array name="lensTypes">
-        <item>Concave</item>
-        <item>Convex</item>
-    </string-array>
     <string-array name="standings">
         <item>Freshman</item>
         <item>Sophomore</item>
         <item>Junior</item>
         <item>Senior</item>
-    </string-array>
-    <string-array name="materials">
-        <item>Acetone Low N</item>
-        <item>Crown Glass Med N</item>
-        <item>Flint Glass High N</item>
-    </string-array>
-    <string-array name="skew">
-        <item>Above Median</item>
-        <item>At Median</item>
-        <item>Below Median</item>
-    </string-array>
-    <string-array name="distances">
-        <item>Closer</item>
-        <item>Medium</item>
-        <item>Farther</item>
-    </string-array>
-    <string-array name="lens_widths">
-        <item>Thin Convex</item>
-        <item>Normal Convex</item>
-        <item>Thin Concave</item>
-        <item>Normal Concave</item>
     </string-array>
     <string-array name="lens_Nums">
         <item>1</item>

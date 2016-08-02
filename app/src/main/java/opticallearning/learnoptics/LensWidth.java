@@ -34,6 +34,9 @@ public class LensWidth extends Activity {
     final float ENVIRONMENT_WIDTH = 100;    //Simulated environment constants
     final float ENVIRONMENT_HEIGHT = 100;
 
+    final int ProgressMax = 9;
+    final int ProgressDefault = 0;
+
     final float MULTIPLIER = 4; //Unit multiplier used to translate slider value to unit value
     final int OFF_SET = 5;     //The slider value's offset from 0
 
@@ -54,13 +57,13 @@ public class LensWidth extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     //call the super constructor
-        setContentView(R.layout.lens_width);    //sets the view
+        setContentView(R.layout.lenscraft);    //sets the view
         setTitle("Lens Width");                 //Assigns a descriptive title
 
         user = LensCraftMenu.user;  //Grabs user reference from menu
 
         //Sets onTouch() event of lens holder to display lens holder's center location
-        DrawingView wLens = (DrawingView) findViewById(R.id.wLen);
+        DrawingView wLens = (DrawingView) findViewById(R.id.orginalLens);
         wLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -134,6 +137,9 @@ public class LensWidth extends Activity {
         });
 
         SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
+        bar.setVisibility(View.VISIBLE);
+        bar.setMax(ProgressMax);
+        bar.setProgress(ProgressDefault);
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -151,7 +157,7 @@ public class LensWidth extends Activity {
             }
         });
 
-        Button laserON = (Button) findViewById(R.id.btnActivate);
+        Button laserON = (Button) findViewById(R.id.btnLaserActivate);
 
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,10 +239,10 @@ public class LensWidth extends Activity {
         ImageView[] views = new ImageView[4];
 
         //Assign view references
-        views[0] = (ImageView) findViewById(R.id.wDect1);
-        views[1] = (ImageView) findViewById(R.id.wDect2);
-        views[2] = (ImageView) findViewById(R.id.wDect3);
-        views[3] = (ImageView) findViewById(R.id.wDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Clears the animation
         for(ImageView v: views){
@@ -245,12 +251,12 @@ public class LensWidth extends Activity {
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.wLen);
+        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
         lens.reset();
         graph.reset();
 
         //Ensure button is clickable and slider can change
-        Button ON = (Button) findViewById(R.id.btnActivate);
+        Button ON = (Button) findViewById(R.id.btnLaserActivate);
         SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
         bar.setEnabled(true);
         ON.setClickable(true);
@@ -415,7 +421,7 @@ public class LensWidth extends Activity {
      */
     protected void setGrid() {
         //Make all necessary reference calls
-        DrawingView view = (DrawingView) findViewById(R.id.wLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
@@ -474,10 +480,10 @@ public class LensWidth extends Activity {
         float value;
 
         //Connect array to views
-        views[0] = (ImageView) findViewById(R.id.wDect1);
-        views[1] = (ImageView) findViewById(R.id.wDect2);
-        views[2] = (ImageView) findViewById(R.id.wDect3);
-        views[3] = (ImageView) findViewById(R.id.wDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Get correct focal length
         value = MULTIPLIER * answerIndex + OFF_SET;
@@ -486,15 +492,12 @@ public class LensWidth extends Activity {
         value *=  (lens.getNIndex() - 1);
         value = 1 / value;
 
-        System.out.println("I KNOW THE ANSWER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("Its position " + answerIndex);
-
         //Assign length to lens
         //String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex
         lens = new Lens(lens.getId(),lens.getMaterial(),lens.getGraphic_Reference(),value,lens.isConcave(),lens.getRadius(),lens.getNIndex());
 
-        //Get the Lens holder from n_index.xml for measurments
-        DrawingView widthLens = (DrawingView) findViewById(R.id.wLen);
+        //Get the Lens holder from the layout for measurements
+        DrawingView widthLens = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView dv = (DrawingView) findViewById(R.id.view);
 
         //Assign the lens holder location to lens object
@@ -544,7 +547,7 @@ public class LensWidth extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnActivate);
+            Button ON = (Button) findViewById(R.id.btnLaserActivate);
             SeekBar bar = (SeekBar) findViewById(R.id.seekRadius);
             bar.setEnabled(false);
             ON.setClickable(false);
@@ -578,7 +581,7 @@ public class LensWidth extends Activity {
     private void DrawLasers() {
         //Capture drawing view
         DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.wLen);
+        DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
 
         lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
 
@@ -606,7 +609,7 @@ public class LensWidth extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.wLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         view.drawLens(lens);
     }
 
@@ -647,10 +650,10 @@ public class LensWidth extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.wDect1);
-        views[1] = (ImageView) findViewById(R.id.wDect2);
-        views[2] = (ImageView) findViewById(R.id.wDect3);
-        views[3] = (ImageView) findViewById(R.id.wDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         if(lit){
             for(ImageView i: views){

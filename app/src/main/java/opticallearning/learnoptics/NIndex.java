@@ -35,6 +35,9 @@ public class NIndex extends Activity {
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
 
+    final int ProgressMax = 9;
+    final int ProgressDefault = 0;
+
     final float MULTIPLIER = .15f; //Unit multiplier used to translate slider value to unit value
     final float OFF_SET = 1.2f;     //The slider value's offset from 0
 
@@ -55,13 +58,13 @@ public class NIndex extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls super constructor
-        setContentView(R.layout.n_index);   //sets the view
+        setContentView(R.layout.lenscraft);   //sets the view
         setTitle("Index of Refraction");    //assigns descriptive title
 
         user = LensCraftMenu.user; //Grab user reference from menu
 
         //Sets the lens holder onTouch() event to display the center location of the lens holder
-        DrawingView materialLens = (DrawingView) findViewById(R.id.materialLen);
+        DrawingView materialLens = (DrawingView) findViewById(R.id.orginalLens);
         materialLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -135,6 +138,9 @@ public class NIndex extends Activity {
         });
 
         SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
+        bar.setVisibility(View.VISIBLE);
+        bar.setMax(ProgressMax);
+        bar.setProgress(ProgressDefault);
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -152,7 +158,7 @@ public class NIndex extends Activity {
             }
         });
 
-        Button laserON = (Button) findViewById(R.id.btnActivate);
+        Button laserON = (Button) findViewById(R.id.btnLaserActivate);
 
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,10 +239,10 @@ public class NIndex extends Activity {
         ImageView[] views = new ImageView[4];
 
         //Assign view references
-        views[0] = (ImageView) findViewById(R.id.rxDect1);
-        views[1] = (ImageView) findViewById(R.id.rxDect2);
-        views[2] = (ImageView) findViewById(R.id.rxDect3);
-        views[3] = (ImageView) findViewById(R.id.rxDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Clears the animation
         for(ImageView v: views){
@@ -245,12 +251,12 @@ public class NIndex extends Activity {
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.materialLen);
+        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
         lens.reset();
         graph.reset();
 
         //Ensure button is clickable and slider can change
-        Button ON = (Button) findViewById(R.id.btnActivate);
+        Button ON = (Button) findViewById(R.id.btnLaserActivate);
         SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
         bar.setEnabled(true);
         ON.setClickable(true);
@@ -414,7 +420,7 @@ public class NIndex extends Activity {
      */
     protected void setGrid() {
         //Make all necessary reference calls
-        DrawingView view = (DrawingView) findViewById(R.id.materialLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
@@ -472,10 +478,10 @@ public class NIndex extends Activity {
         float yDelta;
         float value;
 
-        views[0] = (ImageView) findViewById(R.id.rxDect1);
-        views[1] = (ImageView) findViewById(R.id.rxDect2);
-        views[2] = (ImageView) findViewById(R.id.rxDect3);
-        views[3] = (ImageView) findViewById(R.id.rxDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Get correct focal length
         value = MULTIPLIER * answerIndex + OFF_SET;
@@ -490,8 +496,8 @@ public class NIndex extends Activity {
         //String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex
         lens = new Lens(lens.getId(),lens.getMaterial(),lens.getGraphic_Reference(),value,lens.isConcave(),lens.getRadius(),lens.getNIndex());
 
-        //Get the Lens holder from n_index.xml for measurments
-        DrawingView materialLen = (DrawingView) findViewById(R.id.materialLen);
+        //Get the Lens holder from from the layout for measurements
+        DrawingView materialLen = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView dv = (DrawingView) findViewById(R.id.view);
 
         //Assign the lens holder location to lens object
@@ -541,7 +547,7 @@ public class NIndex extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnActivate);
+            Button ON = (Button) findViewById(R.id.btnLaserActivate);
             SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
             bar.setEnabled(false);
             ON.setClickable(false);
@@ -575,7 +581,7 @@ public class NIndex extends Activity {
     private void DrawLasers() {
         //Capture drawing view
         DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.materialLen);
+        DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
 
         lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
 
@@ -603,7 +609,7 @@ public class NIndex extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.materialLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         view.drawLens(lens);
     }
 
@@ -644,10 +650,10 @@ public class NIndex extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.rxDect1);
-        views[1] = (ImageView) findViewById(R.id.rxDect2);
-        views[2] = (ImageView) findViewById(R.id.rxDect3);
-        views[3] = (ImageView) findViewById(R.id.rxDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         if(lit){
             for(ImageView i: views){

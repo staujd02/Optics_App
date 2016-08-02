@@ -27,7 +27,7 @@
         android:layout_width="30sp"
         android:layout_height="100sp"
         android:id="@+id/orginalLens"
-        android:background="@drawable/border"
+        android:background="@drawable/lens_edging"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
@@ -80,7 +80,7 @@
         android:id="@+id/divider" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/indShape"
         android:background="@drawable/border"
@@ -92,7 +92,7 @@
         android:text="@string/indPreShape" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/indNindex"
         android:background="@drawable/border"
@@ -104,7 +104,7 @@
         android:text="@string/indPreIndex" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/indRadius"
         android:background="@drawable/border"
@@ -116,7 +116,7 @@
         android:layout_toEndOf="@+id/divider" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/indFocalLength"
         android:background="@drawable/border"
@@ -188,5 +188,16 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekMove"
+        android:layout_below="@+id/orginalLens"
+        android:layout_alignRight="@+id/seekRadius"
+        android:layout_alignEnd="@+id/seekRadius"
+        android:layout_alignLeft="@+id/seekMaterial"
+        android:layout_alignStart="@+id/seekMaterial"
+        android:visibility="invisible" />
 
 </RelativeLayout>

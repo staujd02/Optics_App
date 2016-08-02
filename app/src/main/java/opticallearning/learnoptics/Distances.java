@@ -34,6 +34,9 @@ public class Distances extends Activity {
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
 
+    final int ProgressMax = 4;      //Max progress of the seekBar; set onCreate()
+    final int ProgressDefault = 2;  //default progress of the seekBar; set onCreate()
+
     final int MULTIPLIER = 12; //Unit multiplier used to translate slider value to unit value
     final int OFF_SET = -24;     //The slider value's offset from 0
 
@@ -61,12 +64,12 @@ public class Distances extends Activity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls super constructor
-        setContentView(R.layout.distance);  //sets the content view
+        setContentView(R.layout.lenscraft);  //sets the content view
         setTitle("Lens Distance");          //Assigns specific title over default
 
         user = LensCraftMenu.user; //Grabs user reference from menu
 
-        DrawingView dLens = (DrawingView) findViewById(R.id.dLen);
+        DrawingView dLens = (DrawingView) findViewById(R.id.orginalLens);
         dLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -143,13 +146,16 @@ public class Distances extends Activity {
         });
 
         //Seek Bar onChange() listener, used for moving the lens holder to the appropriate location
-        SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
+        bar.setVisibility(View.VISIBLE);
+        bar.setMax(ProgressMax);
+        bar.setProgress(ProgressDefault);
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Grabs the view references
                 DrawingView dv = (DrawingView) findViewById(R.id.view);
-                DrawingView dl = (DrawingView) findViewById(R.id.dLen);
+                DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
                 TranslateAnimation animation;
 
                 //Calculates the distance adjustment based on seek bar's progress value
@@ -186,13 +192,13 @@ public class Distances extends Activity {
         });
 
         //Active Laser Button, determines correctness and sets prerequisites for laser/lens render
-        Button laserON = (Button) findViewById(R.id.btnActivate);
+        Button laserON = (Button) findViewById(R.id.btnLaserActivate);
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Create lens from user value
-                SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
-                DrawingView dl = (DrawingView) findViewById(R.id.dLen);
+                SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
+                DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
                 DrawingView dv = (DrawingView) findViewById(R.id.view);
 
                 //Calculates value of the seek bar
@@ -271,10 +277,10 @@ public class Distances extends Activity {
         ImageView[] views = new ImageView[4];
 
         //Assign view references
-        views[0] = (ImageView) findViewById(R.id.dDect1);
-        views[1] = (ImageView) findViewById(R.id.dDect2);
-        views[2] = (ImageView) findViewById(R.id.dDect3);
-        views[3] = (ImageView) findViewById(R.id.dDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Clears the animation
         for(ImageView v: views){
@@ -283,13 +289,13 @@ public class Distances extends Activity {
 
         //Resets the drawing view and its respective objects
         DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.dLen);
+        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
         lens.reset();
         graph.reset();
 
         //Ensure button is clickable and slider can change
-        Button ON = (Button) findViewById(R.id.btnActivate);
-        SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+        Button ON = (Button) findViewById(R.id.btnLaserActivate);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
         bar.setEnabled(true);
         bar.setProgress(2);
         ON.setClickable(true);
@@ -393,7 +399,7 @@ public class Distances extends Activity {
      *
      */
     private void setAnswerIndex() {
-        SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
 
         //Correct Index
         Random rand = new Random(); //Create new random
@@ -451,7 +457,7 @@ public class Distances extends Activity {
      */
     protected void setGrid() {
         //Make all necessary reference calls
-        DrawingView view = (DrawingView) findViewById(R.id.dLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
@@ -508,18 +514,18 @@ public class Distances extends Activity {
         Float xDelta;
         Float yDelta;
 
-        views[0] = (ImageView) findViewById(R.id.dDect1);
-        views[1] = (ImageView) findViewById(R.id.dDect2);
-        views[2] = (ImageView) findViewById(R.id.dDect3);
-        views[3] = (ImageView) findViewById(R.id.dDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         DrawingView dv = (DrawingView) findViewById(R.id.view);
 
         //Initialize the lens object
         lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
 
-        //Get the Lens holder from distance.xml for measurements
-        DrawingView dLens = (DrawingView) findViewById(R.id.dLen);
+        //Get the Lens holder from the layout for measurements
+        DrawingView dLens = (DrawingView) findViewById(R.id.orginalLens);
 
         //Calculate an adjustment factor (in units) based on the random
         //answer index
@@ -573,8 +579,8 @@ public class Distances extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnActivate);
-            SeekBar bar = (SeekBar) findViewById(R.id.seekDistance);
+            Button ON = (Button) findViewById(R.id.btnLaserActivate);
+            SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
             bar.setEnabled(false);
             ON.setClickable(false);
 
@@ -633,7 +639,7 @@ public class Distances extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.dLen);
+        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
         view.drawLens(lens);
     }
 
@@ -674,10 +680,10 @@ public class Distances extends Activity {
      */
     private void LightPhotodetectors(boolean lit){
         ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.dDect1);
-        views[1] = (ImageView) findViewById(R.id.dDect2);
-        views[2] = (ImageView) findViewById(R.id.dDect3);
-        views[3] = (ImageView) findViewById(R.id.dDect4);
+        views[0] = (ImageView) findViewById(R.id.dectOne);
+        views[1] = (ImageView) findViewById(R.id.dectTwo);
+        views[2] = (ImageView) findViewById(R.id.dectThree);
+        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         if(lit){
             for(ImageView i: views){
@@ -783,9 +789,9 @@ public class Distances extends Activity {
         PointF p = new PointF();
         float adjust;
 
-        DrawingView lens = (DrawingView) findViewById(R.id.dLen);
+        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
         DrawingView graph = (DrawingView) findViewById(R.id.view);
-        SeekBar seekBar = (SeekBar) findViewById(R.id.seekDistance);
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekMove);
 
         //Calculate the adjustment amount by the seek bar progress
         adjust = seekBar.getProgress() * MULTIPLIER + OFF_SET;

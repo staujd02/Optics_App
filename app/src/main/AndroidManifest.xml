@@ -32,8 +32,6 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".NIndex"
             android:screenOrientation="landscape"/>
-        <activity android:name=".NumberOfLens"
-            android:screenOrientation="landscape"/>
         <activity android:name=".LensWidth"
             android:screenOrientation="landscape"/>
         <activity android:name=".LensCraftMenu"/>
