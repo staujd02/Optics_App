@@ -59,6 +59,12 @@ public class ConcaveConvex extends Activity {
     private Lens lens;          //Concave or convex lens
     private boolean answered;   //Tracks whether the user has already answered
 
+    private DrawingView lensView; //Reference to the lens view
+    private DrawingView graph;    //Reference to the background drawing view
+    private Button btnLaser;      //Reference to the button to activate the laser
+    private SeekBar bar;          //References the seekBar
+    private ImageView[] photoDects;    //References of the photodectectors
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     //calls super constructor
@@ -67,9 +73,18 @@ public class ConcaveConvex extends Activity {
 
         user = LensCraftMenu.user; //Grabs user object reference from LensCraft menu
 
+        graph = (DrawingView) findViewById(R.id.view);
+
+        photoDects = new ImageView[4];
+        photoDects[0] = (ImageView) findViewById(R.id.dectOne);
+        photoDects[1] = (ImageView) findViewById(R.id.dectTwo);
+        photoDects[2] = (ImageView) findViewById(R.id.dectThree);
+        photoDects[3] = (ImageView) findViewById(R.id.dectFour);
+
         //Sets the onTouch() Listener for the lens holder
         //Creates a dialog box indicating the lens's center position
         DrawingView ccLens = (DrawingView) findViewById(R.id.orginalLens);
+        lensView = ccLens;
         ccLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -143,6 +158,7 @@ public class ConcaveConvex extends Activity {
         });
 
         SeekBar bar = (SeekBar) findViewById(R.id.seekLength);
+        this.bar = bar;
         bar.setVisibility(View.VISIBLE);
         bar.setProgress(ProgressDefault);
         bar.setMax(ProgressMax);
@@ -159,7 +175,7 @@ public class ConcaveConvex extends Activity {
         });
 
         Button laserON = (Button) findViewById(R.id.btnLaserActivate);
-
+        btnLaser = laserON;
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,32 +257,19 @@ public class ConcaveConvex extends Activity {
         //Initialize the laser array
         lasers = new ArrayList<>();
 
-        //Array of image views
-        ImageView[] views = new ImageView[4];
-
-        //Assign view references
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         //Clears the animation
-        for(ImageView v: views){
+        for(ImageView v: photoDects){
             v.clearAnimation();
         }
 
         //Resets the drawing view and its respective objects
-        DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
-        lens.drawLens(null);
-        lens.reset();
+        lensView.drawLens(null);
+        lensView.reset();
         graph.reset();
 
         //Ensure button is clickable
-        Button ON = (Button) findViewById(R.id.btnLaserActivate);
-        SeekBar bar = (SeekBar) findViewById(R.id.seekLength);
         bar.setEnabled(true);
-        ON.setClickable(true);
+        btnLaser.setClickable(true);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
@@ -281,8 +284,6 @@ public class ConcaveConvex extends Activity {
 
         //Removes latent content from previous answer
         reset();
-
-        SeekBar bar = (SeekBar) findViewById(R.id.seekLength);
 
         //Correct Index
         Random rand = new Random(); //Create new random
@@ -403,11 +404,10 @@ public class ConcaveConvex extends Activity {
     public void setUpLasers(){
         //Grabs appropriate view references
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
-        DrawingView drawingview = (DrawingView) findViewById(R.id.view);
 
-        //Measures the views
+        //Measures the graph
         laserBox.measure(laserBox.getWidth(), laserBox.getHeight());
-        drawingview.measure(drawingview.getWidth(), drawingview.getHeight());
+        graph.measure(graph.getWidth(), graph.getHeight());
 
         //Determine where to draw lasers
         int yBottom; int yTop; int ySegment;
@@ -431,7 +431,7 @@ public class ConcaveConvex extends Activity {
             //Creates the laser objects (start Point, Area's maximum point)
             laser = new Laser(new PointF(x,
                     laserBox.getY() + yBottom + ySegment*i),
-                    new Point(drawingview.getWidth(),drawingview.getHeight()));
+                    new Point(graph.getWidth(),graph.getHeight()));
             lasers.add(laser);  //Add new laser to the list
         }
     }
@@ -443,20 +443,18 @@ public class ConcaveConvex extends Activity {
      */
     protected void setGrid() {
         //Grabs the necessary view references
-        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
-        DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
         //Synchronizes environment constants with drawing view
         //necessary for labels to be drawn
-        canvas.setEHeight((int)ENVIRONMENT_HEIGHT);
-        canvas.setEWidth((int)ENVIRONMENT_WIDTH);
+        graph.setEHeight((int)ENVIRONMENT_HEIGHT);
+        graph.setEWidth((int)ENVIRONMENT_WIDTH);
 
         //Activates the grid on the main view, and assign a starting x point
-        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+        graph.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), graph.getHeight());
 
         //Sets the canvas onTouch() event to display where the user touched
-        canvas.setOnTouchListener(new View.OnTouchListener() {
+        graph.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -488,7 +486,7 @@ public class ConcaveConvex extends Activity {
         });
 
         //Find the len's center point
-        lensCenterPoint = viewCenter_toGraph(view, canvas);
+        lensCenterPoint = viewCenter_toGraph(lensView, graph);
     }
 
     /**
@@ -496,27 +494,14 @@ public class ConcaveConvex extends Activity {
      * moves the photodetectors at that location
      */
     private void setUpPhotoDetectors() {
-
-        //Array of image views
-        ImageView[] views = new ImageView[4];
-
         TranslateAnimation animation;   //Animation that moves the photodetectors
         PointF end;                     //End point of the animation
         float xDelta;                   //Change in x to go from current location to end point x
         float yDelta;                   //Change in y to go from current location to end point y
         float value;                    //Calculated value using slider index and multiplier
 
-        //Assign view references
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         //Get correct focal length
         value = MULTIPLIER * answerIndex;
-
-        System.out.println("I KNOW THE ANSWER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("Its position " + answerIndex);
 
         //Concave lens has negative fLength, Convex Lens has positive fLength
         if(lens.isConcave()){
@@ -530,15 +515,11 @@ public class ConcaveConvex extends Activity {
         //String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex
         lens = new Lens(lens.getId(),lens.getMaterial(),lens.getGraphic_Reference(),value,lens.isConcave(),lens.getRadius(),lens.getNIndex());
 
-        //Get the Lens holder from the layout for measurments
-        DrawingView lencc = (DrawingView) findViewById(R.id.orginalLens);
-        DrawingView graph = (DrawingView) findViewById(R.id.view);
-
         //Assign the lens holder location to lens object
-        lens.setLocation((int) lencc.getX(), (int) lencc.getY(),lencc.getHeight(), lencc.getWidth());
+        lens.setLocation((int) lensView.getX(), (int) lensView.getY(),lensView.getHeight(), lensView.getWidth());
 
-        //Loop through views
-        for(int i = 0; i < views.length; i++){
+        //Loop through dectectors
+        for(int i = 0; i < photoDects.length; i++){
 
             //Adjust the focal length from units to pixels
             float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
@@ -549,30 +530,30 @@ public class ConcaveConvex extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (views[0].getHeight() / 2);
-            end.x = end.x - (float) (views[0].getWidth() * .75);
+            end.y = end.y - (photoDects[0].getHeight() / 2);
+            end.x = end.x - (float) (photoDects[0].getWidth() * .75);
 
             //Calculate x Delta
-            if(end.x > views[i].getX()){
-                xDelta = end.x - views[i].getX();
+            if(end.x > photoDects[i].getX()){
+                xDelta = end.x - photoDects[i].getX();
             }
             else{
-                xDelta = -(views[i].getX() - end.x);
+                xDelta = -(photoDects[i].getX() - end.x);
             }
 
             //Calculate y delta
-            if(end.y > views[i].getY()){
-                yDelta = end.y - views[i].getY();
+            if(end.y > photoDects[i].getY()){
+                yDelta = end.y - photoDects[i].getY();
             }
             else{
-                yDelta = -(views[i].getY() - end.y);
+                yDelta = -(photoDects[i].getY() - end.y);
             }
 
             //Create animation
             animation = new TranslateAnimation(0, xDelta, 0, yDelta);
             animation.setDuration(500); //Set duration
             animation.setFillAfter(true);   //Tell the view to remain after translation
-            views[i].startAnimation(animation); //Run animation
+            photoDects[i].startAnimation(animation); //Run animation
         }
     }
 
@@ -587,10 +568,8 @@ public class ConcaveConvex extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnLaserActivate);
-            SeekBar bar = (SeekBar) findViewById(R.id.seekLength);
             bar.setEnabled(false);
-            ON.setClickable(false);
+            btnLaser.setClickable(false);
 
             //Create handler object to call runables after a delay
             Handler dialogEngine = new Handler();
@@ -622,12 +601,8 @@ public class ConcaveConvex extends Activity {
      * rendered
      */
     private void DrawLasers() {
-        //Capture drawing view
-        DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
-
         //Set the lens location in the laser's space based on lens holder view
-        lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+        lens.setLocation((int)lensView.getX(),(int) lensView.getY(), lensView.getHeight(),lensView.getWidth());
 
         //New laser list
         lasers = new ArrayList<>();
@@ -640,7 +615,7 @@ public class ConcaveConvex extends Activity {
         for(Laser l: lasers){
 
             //Adjust the focal length from units to pixels
-            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+            float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
 
             //Sends the lens to the laser for interaction
             l.setLens(lens,focalLength);
@@ -649,7 +624,7 @@ public class ConcaveConvex extends Activity {
         }
 
         //Request the drawing view to render lasers
-        dv.drawLasers(lasers);
+        graph.drawLasers(lasers);
     }
 
     /**
@@ -657,8 +632,7 @@ public class ConcaveConvex extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
-        view.drawLens(lens);
+        lensView.drawLens(lens);
     }
 
     /**
@@ -697,23 +671,14 @@ public class ConcaveConvex extends Activity {
      * @param lit boolean whether to assign lit image or unlit image
      */
     private void LightPhotodetectors(boolean lit){
-        //Create view array
-        ImageView[] views = new ImageView[4];
-
-        //Populate with view references
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         //Sets image to all ImageViews
         if(lit){
-            for(ImageView i: views){
+            for(ImageView i: photoDects){
                 i.setImageResource(R.drawable.detector_lit);
             }
         }
         else{
-            for(ImageView i: views){
+            for(ImageView i: photoDects){
                 i.setImageResource(R.drawable.detector);
             }
         }

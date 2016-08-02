@@ -123,6 +123,7 @@ public class Setup extends Activity {
                                     user.setSchool("Missing");
                                     user.setUserName(txUsername.getText().toString());
                                     user.setStanding(-1); user.setHS(false);
+                                    user.setUUID(getApplicationContext());
 
                                     //Flips boolean indicating user has completed setup process
                                     user.setSetupComplete(true);
@@ -173,6 +174,7 @@ public class Setup extends Activity {
             user.setUserName(txUsername.getText().toString());
             user.setHS(ckHS.isChecked());
             user.setStanding(standing.getSelectedItemPosition());
+            user.setUUID(getApplicationContext());
 
             return COMPLETE;
         }

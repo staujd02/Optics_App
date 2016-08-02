@@ -41,7 +41,6 @@ public class Laser {
     public Laser(PointF start,Point maxPoint ){
         this.start = start;
         MAX_POINT = maxPoint;
-        System.out.println(MAX_POINT.toString());
 
         lenses = new ArrayList<>();
         //decoratedLenses = new ArrayList<>();
@@ -169,8 +168,6 @@ public class Laser {
             impact.y = (float) (impact.x * m + b);
         }
 
-        System.out.println("Laser traced;");
-
         End = impact;
 
         newLaserLine(start, impact);
@@ -210,7 +207,6 @@ public class Laser {
         //If the laser's y falls within the lens window
         if(y > low_Y && y < high_Y){
             //return point of impact
-            System.out.println("IMPACT REGISTERED");
             impactCount++;
             return new PointF( (float) midpoint_X, (float) y);
         }

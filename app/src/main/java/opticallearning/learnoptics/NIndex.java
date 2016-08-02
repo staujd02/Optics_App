@@ -56,6 +56,12 @@ public class NIndex extends Activity {
     private Lens lens;              //Concave or convex lens
     private Boolean answered;       //Tracks whether the user has already answered
 
+    private DrawingView lensView; //Reference to the lens view
+    private DrawingView graph;    //Reference to the background drawing view
+    private Button btnLaser;      //Reference to the button to activate the laser
+    private SeekBar bar;          //References the seekBar
+    private ImageView[] photoDects;    //References of the photodectectors
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); //Calls super constructor
         setContentView(R.layout.lenscraft);   //sets the view
@@ -63,8 +69,17 @@ public class NIndex extends Activity {
 
         user = LensCraftMenu.user; //Grab user reference from menu
 
+        graph = (DrawingView) findViewById(R.id.view);
+
+        photoDects = new ImageView[4];
+        photoDects[0] = (ImageView) findViewById(R.id.dectOne);
+        photoDects[1] = (ImageView) findViewById(R.id.dectTwo);
+        photoDects[2] = (ImageView) findViewById(R.id.dectThree);
+        photoDects[3] = (ImageView) findViewById(R.id.dectFour);
+
         //Sets the lens holder onTouch() event to display the center location of the lens holder
         DrawingView materialLens = (DrawingView) findViewById(R.id.orginalLens);
+        lensView = materialLens;
         materialLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -138,6 +153,7 @@ public class NIndex extends Activity {
         });
 
         SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
+        this.bar = bar;
         bar.setVisibility(View.VISIBLE);
         bar.setMax(ProgressMax);
         bar.setProgress(ProgressDefault);
@@ -159,7 +175,7 @@ public class NIndex extends Activity {
         });
 
         Button laserON = (Button) findViewById(R.id.btnLaserActivate);
-
+        btnLaser = laserON;
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,31 +251,18 @@ public class NIndex extends Activity {
         //Initialize the laser array
         lasers = new ArrayList<>();
 
-        //Array of image views
-        ImageView[] views = new ImageView[4];
-
-        //Assign view references
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         //Clears the animation
-        for(ImageView v: views){
+        for(ImageView v: photoDects){
             v.clearAnimation();
         }
 
         //Resets the drawing view and its respective objects
-        DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
-        lens.reset();
+        lensView.reset();
         graph.reset();
 
         //Ensure button is clickable and slider can change
-        Button ON = (Button) findViewById(R.id.btnLaserActivate);
-        SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
         bar.setEnabled(true);
-        ON.setClickable(true);
+        btnLaser.setClickable(true);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
@@ -361,9 +364,6 @@ public class NIndex extends Activity {
      *
      */
     private void setAnswerIndex() {
-
-        SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
-
         //Correct Index
         Random rand = new Random(); //Create new random
 
@@ -381,10 +381,9 @@ public class NIndex extends Activity {
      */
     public void setUpLasers() {
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
-        DrawingView drawingview = (DrawingView) findViewById(R.id.view);
 
         laserBox.measure(laserBox.getWidth(), laserBox.getHeight());
-        drawingview.measure(drawingview.getWidth(), drawingview.getHeight());
+        graph.measure(graph.getWidth(), graph.getHeight());
 
         //Determine where to draw lasers
         int yBottom;
@@ -409,7 +408,7 @@ public class NIndex extends Activity {
         for (int i = 1; i <= LASER_COUNT; i++) {
             laser = new Laser(new PointF(x,
                     laserBox.getY() + yBottom + ySegment * i),
-                    new Point(drawingview.getWidth(), drawingview.getHeight()));
+                    new Point(graph.getWidth(), graph.getHeight()));
             lasers.add(laser);
         }
     }
@@ -420,19 +419,17 @@ public class NIndex extends Activity {
      */
     protected void setGrid() {
         //Make all necessary reference calls
-        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
-        DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
         //Synchronizes environment constants with drawing view
         //necessary for labels to be drawn
-        canvas.setEHeight((int)ENVIRONMENT_HEIGHT);
-        canvas.setEWidth((int)ENVIRONMENT_WIDTH);
+        graph.setEHeight((int)ENVIRONMENT_HEIGHT);
+        graph.setEWidth((int)ENVIRONMENT_WIDTH);
 
         //Activate the grid on the main view, and assign a starting x point
-        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+        graph.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), graph.getHeight());
 
-        canvas.setOnTouchListener(new View.OnTouchListener() {
+        graph.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -460,7 +457,7 @@ public class NIndex extends Activity {
         });
 
         //Find the len's center point
-        lensCenterPoint = viewCenter_toGraph(view, canvas);
+        lensCenterPoint = viewCenter_toGraph(lensView, graph);
     }
 
     /**
@@ -468,20 +465,11 @@ public class NIndex extends Activity {
      * moves the photodetectors at that location
      */
     private void setUpPhotoDetectors() {
-
-        ImageView[] views;      //Array of references to photodetector views
-
-        views = new ImageView[4];
         TranslateAnimation animation;
         PointF end;
         float xDelta;
         float yDelta;
         float value;
-
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
 
         //Get correct focal length
         value = MULTIPLIER * answerIndex + OFF_SET;
@@ -489,24 +477,17 @@ public class NIndex extends Activity {
         value =  (value - 1) * (1/lens.getRadius() + 1/lens.getRadius()) ;
         value = 1 / value;
 
-        System.out.println("I KNOW THE ANSWER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("Its position " + answerIndex);
-
         //Assign length to lens
         //String id, String material, Rect graphic_Reference, double fLen, boolean concave, float radius, float nIndex
         lens = new Lens(lens.getId(),lens.getMaterial(),lens.getGraphic_Reference(),value,lens.isConcave(),lens.getRadius(),lens.getNIndex());
 
-        //Get the Lens holder from from the layout for measurements
-        DrawingView materialLen = (DrawingView) findViewById(R.id.orginalLens);
-        DrawingView dv = (DrawingView) findViewById(R.id.view);
-
         //Assign the lens holder location to lens object
-        lens.setLocation((int) materialLen.getX(), (int) materialLen.getY(),materialLen.getHeight(), materialLen.getWidth());
+        lens.setLocation((int) lensView.getX(), (int) lensView.getY(), lensView.getHeight(), lensView.getWidth());
 
-        for(int i = 0; i < views.length; i++) {
+        for(int i = 0; i < photoDects.length; i++) {
 
             //Adjust the focal length from units to pixels
-            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+            float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
 
             lasers.get(i).setLens(lens, focalLength); //Grab matching laser
             lasers.get(i).calculate();
@@ -514,25 +495,25 @@ public class NIndex extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (views[0].getHeight() / 2);
-            end.x = end.x - (float) (views[0].getWidth() * .75);
+            end.y = end.y - (photoDects[0].getHeight() / 2);
+            end.x = end.x - (float) (photoDects[0].getWidth() * .75);
 
-            if (end.x > views[i].getX()) {
-                xDelta = end.x - views[i].getX();
+            if (end.x > photoDects[i].getX()) {
+                xDelta = end.x - photoDects[i].getX();
             } else {
-                xDelta = -(views[i].getX() - end.x);
+                xDelta = -(photoDects[i].getX() - end.x);
             }
 
-            if (end.y > views[i].getY()) {
-                yDelta = end.y - views[i].getY();
+            if (end.y > photoDects[i].getY()) {
+                yDelta = end.y - photoDects[i].getY();
             } else {
-                yDelta = -(views[i].getY() - end.y);
+                yDelta = -(photoDects[i].getY() - end.y);
             }
 
             animation = new TranslateAnimation(0, xDelta, 0, yDelta);
             animation.setDuration(500);
             animation.setFillAfter(true);
-            views[i].startAnimation(animation);
+            photoDects[i].startAnimation(animation);
         }
     }
 
@@ -547,10 +528,8 @@ public class NIndex extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnLaserActivate);
-            SeekBar bar = (SeekBar) findViewById(R.id.seekMaterial);
             bar.setEnabled(false);
-            ON.setClickable(false);
+            btnLaser.setClickable(false);
 
             //Create handler object to call runables after a delay
             Handler dialogEngine = new Handler();
@@ -579,11 +558,8 @@ public class NIndex extends Activity {
      * rendered
       */
     private void DrawLasers() {
-        //Capture drawing view
-        DrawingView dv = (DrawingView) findViewById(R.id.view);
-        DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
-
-        lens.setLocation((int)dl.getX(),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+        //Set the location of the lens
+        lens.setLocation((int)lensView.getX(),(int) lensView.getY(), lensView.getHeight(), lensView.getWidth());
 
         //New laser list
         lasers = new ArrayList<>();
@@ -595,13 +571,13 @@ public class NIndex extends Activity {
         for(Laser l: lasers){
 
             //Adjust the focal length from units to pixels
-            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+            float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
             l.setLens(lens, focalLength);
             l.calculate();
         }
 
         //Request the drawing view to render lasers
-        dv.drawLasers(lasers);
+        graph.drawLasers(lasers);
     }
 
     /**
@@ -609,8 +585,7 @@ public class NIndex extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
-        view.drawLens(lens);
+        lensView.drawLens(lens);
     }
 
     /**
@@ -649,19 +624,13 @@ public class NIndex extends Activity {
      * @param lit whether or not the photodectors should be lit
      */
     private void LightPhotodetectors(boolean lit){
-        ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         if(lit){
-            for(ImageView i: views){
+            for(ImageView i: photoDects){
                 i.setImageResource(R.drawable.detector_lit);
             }
         }
         else{
-            for(ImageView i: views){
+            for(ImageView i: photoDects){
                 i.setImageResource(R.drawable.detector);
             }
         }

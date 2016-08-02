@@ -56,6 +56,12 @@ public class Distances extends Activity {
     private Boolean answered;           //Tracks whether the user has already answered
     private int prev_progress = -1;          //previous progress value (used in animation)
 
+    private DrawingView lensView; //Reference to the lens view
+    private DrawingView graph;    //Reference to the background drawing view
+    private Button btnLaser;      //Reference to the button to activate the laser
+    private SeekBar bar;          //References the seekBar
+    private ImageView[] photoDects;    //References of the photodectectors
+
     /**
      *
      * Creates the Activity and loads initial objects
@@ -69,7 +75,16 @@ public class Distances extends Activity {
 
         user = LensCraftMenu.user; //Grabs user reference from menu
 
+        graph = (DrawingView) findViewById(R.id.view);
+
+        photoDects = new ImageView[4];
+        photoDects[0] = (ImageView) findViewById(R.id.dectOne);
+        photoDects[1] = (ImageView) findViewById(R.id.dectTwo);
+        photoDects[2] = (ImageView) findViewById(R.id.dectThree);
+        photoDects[3] = (ImageView) findViewById(R.id.dectFour);
+
         DrawingView dLens = (DrawingView) findViewById(R.id.orginalLens);
+        lensView = dLens;
         dLens.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -147,6 +162,7 @@ public class Distances extends Activity {
 
         //Seek Bar onChange() listener, used for moving the lens holder to the appropriate location
         SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
+        this.bar = bar;
         bar.setVisibility(View.VISIBLE);
         bar.setMax(ProgressMax);
         bar.setProgress(ProgressDefault);
@@ -154,15 +170,13 @@ public class Distances extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Grabs the view references
-                DrawingView dv = (DrawingView) findViewById(R.id.view);
-                DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
                 TranslateAnimation animation;
 
                 //Calculates the distance adjustment based on seek bar's progress value
                 adjustment = progress * MULTIPLIER + OFF_SET;
 
                 //Converts the unit value of the adjustment to a pixel value
-                float pixelAdjustment = adjustment * (dv.getWidth()/ENVIRONMENT_WIDTH);
+                float pixelAdjustment = adjustment * (graph.getWidth()/ENVIRONMENT_WIDTH);
                 float prevAdjust;
 
                 //The default value for prev_progress is -1, assign prev to current if prev = to default
@@ -174,7 +188,7 @@ public class Distances extends Activity {
                 prevAdjust = prev_progress * MULTIPLIER + OFF_SET;
 
                 //Convert to pixels
-                prevAdjust = prevAdjust * (dv.getWidth()/ENVIRONMENT_WIDTH);
+                prevAdjust = prevAdjust * (graph.getWidth()/ENVIRONMENT_WIDTH);
 
                 //Creates an animation to display the adjustment (from prev to current)
                 animation = new TranslateAnimation((int) prevAdjust, (int) pixelAdjustment,0, 0);
@@ -185,7 +199,7 @@ public class Distances extends Activity {
                 //Sets the animation properties
                 animation.setDuration(250);
                 animation.setFillAfter(true);
-                dl.startAnimation(animation);
+                lensView.startAnimation(animation);
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
@@ -193,25 +207,24 @@ public class Distances extends Activity {
 
         //Active Laser Button, determines correctness and sets prerequisites for laser/lens render
         Button laserON = (Button) findViewById(R.id.btnLaserActivate);
+        btnLaser = laserON;
         laserON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Create lens from user value
                 SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
-                DrawingView dl = (DrawingView) findViewById(R.id.orginalLens);
-                DrawingView dv = (DrawingView) findViewById(R.id.view);
 
                 //Calculates value of the seek bar
                 float value = MULTIPLIER * bar.getProgress() + OFF_SET;
 
                 //Converts the seek bar value to a pixel value
-                value = value * (dv.getWidth()/ENVIRONMENT_WIDTH);
+                value = value * (graph.getWidth()/ENVIRONMENT_WIDTH);
 
                 //Calculates Distance Draw
                 lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
 
                 //Sets the location of the lens for the laser render process
-                lens.setLocation((int) (dl.getX() + value),(int) dl.getY(),dl.getHeight(),dl.getWidth());
+                lens.setLocation((int) (lensView.getX() + value),(int) lensView.getY(), lensView.getHeight(),lensView.getWidth());
 
                 //Determine Correctness
                 if(bar.getProgress() == answerIndex){
@@ -273,32 +286,19 @@ public class Distances extends Activity {
         //Initialize the laser array
         lasers = new ArrayList<>();
 
-        //Array of image views
-        ImageView[] views = new ImageView[4];
-
-        //Assign view references
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         //Clears the animation
-        for(ImageView v: views){
+        for(ImageView v: photoDects){
             v.clearAnimation();
         }
 
         //Resets the drawing view and its respective objects
-        DrawingView graph = (DrawingView) findViewById(R.id.view);
-        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
-        lens.reset();
+        lensView.reset();
         graph.reset();
 
         //Ensure button is clickable and slider can change
-        Button ON = (Button) findViewById(R.id.btnLaserActivate);
-        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
         bar.setEnabled(true);
         bar.setProgress(2);
-        ON.setClickable(true);
+        btnLaser.setClickable(true);
 
         //Reset Photodetector Image
         LightPhotodetectors(false);
@@ -399,8 +399,6 @@ public class Distances extends Activity {
      *
      */
     private void setAnswerIndex() {
-        SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
-
         //Correct Index
         Random rand = new Random(); //Create new random
 
@@ -418,10 +416,9 @@ public class Distances extends Activity {
      */
     public void setUpLasers() {
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
-        DrawingView drawingview = (DrawingView) findViewById(R.id.view);
 
         laserBox.measure(laserBox.getWidth(), laserBox.getHeight());
-        drawingview.measure(drawingview.getWidth(), drawingview.getHeight());
+        graph.measure(graph.getWidth(), graph.getHeight());
 
         //Determine where to draw lasers
         int yBottom;
@@ -446,7 +443,7 @@ public class Distances extends Activity {
         for (int i = 1; i <= LASER_COUNT; i++) {
             laser = new Laser(new PointF(x,
                     laserBox.getY() + yBottom + ySegment * i),
-                    new Point(drawingview.getWidth(), drawingview.getHeight()));
+                    new Point(graph.getWidth(), graph.getHeight()));
             lasers.add(laser);
         }
     }
@@ -457,19 +454,17 @@ public class Distances extends Activity {
      */
     protected void setGrid() {
         //Make all necessary reference calls
-        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
-        DrawingView canvas = (DrawingView) findViewById(R.id.view);
         ImageView laserBox = (ImageView) findViewById(R.id.imgLaser);
 
         //Synchronizes environment constants with drawing view
         //necessary for labels to be drawn
-        canvas.setEHeight((int)ENVIRONMENT_HEIGHT);
-        canvas.setEWidth((int)ENVIRONMENT_WIDTH);
+        graph.setEHeight((int)ENVIRONMENT_HEIGHT);
+        graph.setEWidth((int)ENVIRONMENT_WIDTH);
 
         //Activate the grid on the main view, and assign a starting x point
-        canvas.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), canvas.getHeight());
+        graph.setDrawGrid(true, laserBox.getX() + laserBox.getWidth(), graph.getHeight());
 
-        canvas.setOnTouchListener(new View.OnTouchListener() {
+        graph.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -497,7 +492,7 @@ public class Distances extends Activity {
         });
 
         //Find the len's center point
-        lensCenterPoint = viewCenter_toGraph(view, canvas);
+        lensCenterPoint = viewCenter_toGraph(lensView, graph);
     }
 
     /**
@@ -505,40 +500,26 @@ public class Distances extends Activity {
      * moves the photodetectors at that location
      */
     private void setUpPhotoDetectors() {
-
-        ImageView[] views;//Array of references to photodetector views
-
-        views = new ImageView[4];
         TranslateAnimation animation;
         PointF end;
         Float xDelta;
         Float yDelta;
 
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
-        DrawingView dv = (DrawingView) findViewById(R.id.view);
-
         //Initialize the lens object
         lens = new Lens(LensCraftMenu.lensArrayList.get(LENS));
-
-        //Get the Lens holder from the layout for measurements
-        DrawingView dLens = (DrawingView) findViewById(R.id.orginalLens);
 
         //Calculate an adjustment factor (in units) based on the random
         //answer index
         adjustment = answerIndex * MULTIPLIER + OFF_SET;
 
-        float pixelAdjustment = adjustment * (dv.getHeight()/ENVIRONMENT_HEIGHT);
+        float pixelAdjustment = adjustment * (graph.getWidth()/ENVIRONMENT_WIDTH);
 
         //Adjust the height based on correct answer
-        lens.setLocation((int) (dLens.getX() + pixelAdjustment), (int) dLens.getY(),dLens.getHeight(), dLens.getWidth());
+        lens.setLocation((int) (lensView.getX() + pixelAdjustment), (int) lensView.getY(),lensView.getHeight(), lensView.getWidth());
 
-        for(int i = 0; i < views.length; i++) {
+        for(int i = 0; i < photoDects.length; i++) {
             //Adjust the focal length from units to pixels
-            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+            float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
 
             lasers.get(i).setLens(lens, focalLength); //Grab matching laser
             lasers.get(i).calculate();
@@ -546,25 +527,25 @@ public class Distances extends Activity {
 
             //Compensate for offset of end point and origin of
             //photodetector view
-            end.y = end.y - (views[0].getHeight() / 2);
-            end.x = end.x - (float) (views[0].getWidth() * .75);
+            end.y = end.y - (photoDects[0].getHeight() / 2);
+            end.x = end.x - (float) (photoDects[0].getWidth() * .75);
 
-            if (end.x > views[i].getX()) {
-                xDelta = end.x - views[i].getX();
+            if (end.x > photoDects[i].getX()) {
+                xDelta = end.x - photoDects[i].getX();
             } else {
-                xDelta = -(views[i].getX() - end.x);
+                xDelta = -(photoDects[i].getX() - end.x);
             }
 
-            if (end.y > views[i].getY()) {
-                yDelta = end.y - views[i].getY();
+            if (end.y > photoDects[i].getY()) {
+                yDelta = end.y - photoDects[i].getY();
             } else {
-                yDelta = -(views[i].getY() - end.y);
+                yDelta = -(photoDects[i].getY() - end.y);
             }
 
             animation = new TranslateAnimation(0, xDelta, 0, yDelta);
             animation.setDuration(500);
             animation.setFillAfter(true);
-            views[i].startAnimation(animation);
+            photoDects[i].startAnimation(animation);
         }
     }
 
@@ -579,10 +560,8 @@ public class Distances extends Activity {
             answered = true;
 
             //Disable further interaction with button
-            Button ON = (Button) findViewById(R.id.btnLaserActivate);
-            SeekBar bar = (SeekBar) findViewById(R.id.seekMove);
             bar.setEnabled(false);
-            ON.setClickable(false);
+            btnLaser.setClickable(false);
 
             //Create handler object to call runables after a delay
             Handler dialogEngine = new Handler();
@@ -611,9 +590,6 @@ public class Distances extends Activity {
      * rendered
      */
     private void DrawLasers() {
-        //Capture drawing view
-        DrawingView dv = (DrawingView) findViewById(R.id.view);
-
         //New laser list
         lasers = new ArrayList<>();
 
@@ -624,14 +600,14 @@ public class Distances extends Activity {
         for(Laser l: lasers){
 
             //Adjust the focal length from units to pixels
-            float focalLength = (float) (lens.getfLen() * (dv.getWidth()/ENVIRONMENT_WIDTH));
+            float focalLength = (float) (lens.getfLen() * (graph.getWidth()/ENVIRONMENT_WIDTH));
 
             l.setLens(lens, focalLength);
             l.calculate();
         }
 
         //Request the drawing view to render lasers
-        dv.drawLasers(lasers);
+        graph.drawLasers(lasers);
     }
 
     /**
@@ -639,8 +615,7 @@ public class Distances extends Activity {
      * lens function
      */
     private void DrawLens() {
-        DrawingView view = (DrawingView) findViewById(R.id.orginalLens);
-        view.drawLens(lens);
+        lensView.drawLens(lens);
     }
 
     /**
@@ -679,19 +654,13 @@ public class Distances extends Activity {
      * @param lit whether or not the photodectors should be lit
      */
     private void LightPhotodetectors(boolean lit){
-        ImageView[] views = new ImageView[4];
-        views[0] = (ImageView) findViewById(R.id.dectOne);
-        views[1] = (ImageView) findViewById(R.id.dectTwo);
-        views[2] = (ImageView) findViewById(R.id.dectThree);
-        views[3] = (ImageView) findViewById(R.id.dectFour);
-
         if(lit){
-            for(ImageView i: views){
+            for(ImageView i: photoDects){
                 i.setImageResource(R.drawable.detector_lit);
             }
         }
         else{
-            for(ImageView i: views){
+            for(ImageView i: photoDects){
                 i.setImageResource(R.drawable.detector);
             }
         }
@@ -785,20 +754,15 @@ public class Distances extends Activity {
      * @return the center point of the lens (in standard coordinates)
      */
     public PointF lensCenterPoint(){
-
         PointF p = new PointF();
         float adjust;
 
-        DrawingView lens = (DrawingView) findViewById(R.id.orginalLens);
-        DrawingView graph = (DrawingView) findViewById(R.id.view);
-        SeekBar seekBar = (SeekBar) findViewById(R.id.seekMove);
-
         //Calculate the adjustment amount by the seek bar progress
-        adjust = seekBar.getProgress() * MULTIPLIER + OFF_SET;
+        adjust = bar.getProgress() * MULTIPLIER + OFF_SET;
 
         //Copy the lens coordinates
-        p.x = lens.getX();
-        p.y = lens.getY();
+        p.x = lensView.getX();
+        p.y = lensView.getY();
 
         //Convert the pixel coordinates to units
         p = convertToGraph(p,graph);

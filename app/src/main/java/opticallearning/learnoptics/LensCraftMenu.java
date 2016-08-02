@@ -134,7 +134,6 @@ public class LensCraftMenu extends ListActivity{
                 //*The lens shape is more descriptive than what is currently captured
                 //Character at 3 index is either 'c' or 'v' -> con:C:ave or con:V:ex
                 concave = (lens.get("Lens Shape").toString().charAt(3) == 'c');
-                System.out.println(concave);
 
                 //Cast rect integer array to json array
                 rectArray = (JSONArray) lens.get("rect");

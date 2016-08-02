@@ -26,6 +26,8 @@ public class User implements Serializable{
     private String school;  //String corresponding to user's school
     private int standing;   //Indicates the student's standing (freshman: 0,sophomore: 1,junior: 3, senior: 4)
                                 //-1 for this value means unknown or not applicable
+
+    private String uuid;    //Unique identifier for the installed device
     private boolean HS;     //Indicates whether the listed school is a high school
     private String userName; //String used for storing the user's identification
     //private int icon_id;    //Resource id integer corresponding to user's icon
@@ -214,7 +216,7 @@ public class User implements Serializable{
 
             //Create json object to hold information
             JSONObject obj = new JSONObject();
-            obj.put("UserID", userName);
+            obj.put("UserID", uuid);
             obj.put("School", school);
             obj.put("High School", HS);
             obj.put("Standing",standing);
@@ -461,6 +463,11 @@ public class User implements Serializable{
     //Score: get
     public int getScore() {
         return score;
+    }
+
+    protected void setUUID(Context c){
+        DeviceUuidFactory id = new DeviceUuidFactory(c);
+        uuid = id.getDeviceUuid().toString();
     }
 
 }

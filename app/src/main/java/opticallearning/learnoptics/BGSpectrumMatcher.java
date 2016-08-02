@@ -21,7 +21,7 @@ public class BGSpectrumMatcher extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);         //calls super constructor
-        setContentView(R.layout.background); //Sets the view
+        setContentView(R.layout.background);        //Sets the view
         setTitle("Background: Spectrum Matcher");   //Assigns a title
 
         //Continue Button
