@@ -61,6 +61,7 @@ public class Distances extends Activity {
     private Button btnLaser;      //Reference to the button to activate the laser
     private SeekBar bar;          //References the seekBar
     private ImageView[] photoDects;    //References of the photodectectors
+    private boolean userChange = false; //Indicates if changes have been made to the user object
 
     /**
      *
@@ -237,6 +238,19 @@ public class Distances extends Activity {
                 }
             }
         });
+    }
+
+    /**
+     * This method saves the user data if any changes have been made
+     * to the user object
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(userChange)
+            user.saveUser("default.dat", getApplicationContext());
+
+        userChange = false;
     }
 
     /**
@@ -743,7 +757,7 @@ public class Distances extends Activity {
                 user.incIncorrect(User.DISTANCE_QUESTION);
             }
 
-            user.saveUser("default.dat", getApplicationContext());
+            userChange = true;
         }
     }
 

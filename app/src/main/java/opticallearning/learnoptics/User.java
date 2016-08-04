@@ -1,16 +1,26 @@
 package opticallearning.learnoptics;
 
 import android.content.Context;
+import android.os.AsyncTask;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Joel on 7/6/2016.
@@ -26,6 +36,8 @@ public class User implements Serializable{
     private String school;  //String corresponding to user's school
     private int standing;   //Indicates the student's standing (freshman: 0,sophomore: 1,junior: 3, senior: 4)
                                 //-1 for this value means unknown or not applicable
+
+    private final String url = "http://connection.com/";
 
     private String uuid;    //Unique identifier for the installed device
     private boolean HS;     //Indicates whether the listed school is a high school
@@ -254,6 +266,9 @@ public class User implements Serializable{
                 if (original.exists()){
                     //Rename the temp json to overwrite original file
                     json.renameTo(original);
+
+                    //Uploads the JSON to the server
+                    //upload(obj.toString());
                 }
             }
         }
@@ -266,6 +281,91 @@ public class User implements Serializable{
 
         //Return result of the save attempt
         return success;
+    }
+
+    /**
+     * Starts the JSON upload in an Async task
+     *
+     * @param upload
+     */
+    private void upload(String upload){
+
+        AsyncTask asyncUpload = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                String json = (String) params[0];
+                return sendData(json);
+            }
+        };
+
+        Object[] obj = {upload};
+
+        asyncUpload.execute(obj);
+    }
+
+    /**
+     * This subroutine sends the JSON to the server via a POST request over html
+     *
+     * It must be called in an Async task otherwise the UI will be rendered unresponsive
+     *
+     * @param json the json string to be sent
+     * @return the result of the send attempt
+     */
+    private String sendData(String json){
+
+        //Url connection variable
+        HttpURLConnection urlConnection = null;
+
+        try {
+
+            //Form url from String constant
+            URL Url = new URL(url);
+
+            //Open a connection using the URL
+            urlConnection = (HttpURLConnection) Url.openConnection();
+
+            urlConnection.setDoOutput(true);        //Add content body to POST request
+            urlConnection.setRequestMethod("POST"); //Flag request as a Html POST
+            urlConnection.setUseCaches(false);      //Assign cache flag as false
+            urlConnection.setConnectTimeout(10000); //Set Connect timeout to 10 secs
+            urlConnection.setReadTimeout(10000);    //Set read timeout to 10 secs
+
+            //Populate informative Properties to the request
+            urlConnection.setRequestProperty("Content-Type","application/user_analytics");
+            urlConnection.setRequestProperty("Host", "android.learnoptics");
+            urlConnection.connect(); //Establish Connection
+
+            //Form output stream from URL Connection
+            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+
+            //Write the JSON to the POST request
+            out.write(json.toString().getBytes());
+
+            //Print the Server result if the connection fails
+            int HttpResult = urlConnection.getResponseCode();
+
+            if(HttpResult != HttpURLConnection.HTTP_OK){
+                System.out.println(urlConnection.getResponseMessage());
+            }
+
+            //End Connection
+            urlConnection.disconnect();
+
+            //Return Positive response
+            return "File Uploaded";
+
+        } catch (MalformedURLException e) {
+            System.out.println("Bad URL: " + e.toString());
+        } catch (IOException e) {
+            System.out.println("Connection Failure: " + e.toString());
+        } finally {
+            //Terminate Established connection
+            if(urlConnection != null)
+            urlConnection.disconnect();
+        }
+
+        //Return negative response
+        return "Failed to Upload File";
     }
 
     /**
