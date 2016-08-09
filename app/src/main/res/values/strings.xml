@@ -19,14 +19,8 @@
     <string name="materialThree">Material Three</string>
     <string name="materialFour">Material Four</string>
     <string name="directions">Fastest to Slowest</string>
-    <string name="ruler">Ruler</string>
     <string name="laser">Laser Source</string>
     <string name="detector">Photodetector</string>
-    <string name="desMoney">Total Savings</string>
-    <string name="desLightSource">Light Source</string>
-    <string name="lightSource">Light Source Picture</string>
-    <string name="incWatt">Increase Wattage</string>
-    <string name="decWatt">Decrease Wattage</string>
     <string name="credits_title">Acknowledgements</string>
     <string name="credits_main">\tThis project was made possible by the National Science Foundation grant \"REU Site: Optics and photonics: Technologies, Systems, and Devices.\"\nGrant ID: 1560131.\n\n\tThis application was developed by Joel Stauffer under the direction of Professors Dr. Abdallah Khreishah and Dr. John Carpinelli.\n\n\tThe application icon was created by Freepik located at www.flaticon.com</string>
     <string name="njit">NJIT Logo</string>
@@ -64,6 +58,8 @@
     <string name="incorrect">Sorry, that is not correct. Would you like to try again?</string>
     <string name="lensDialogue">Lens Center-point</string>
     <string-array name="user_values">
+        <item>Set Hints</item>
+        <item>Set Background</item>
         <item>Name:</item>
         <item>School:</item>
         <item>Score:</item>
