@@ -17,8 +17,8 @@ import java.util.Random;
  *
  * This is a branching activity of Lens Crafter menu (LensCraftMenu.java)
  *
- * The user should select how to 'shew' the lens up, down, or in the middle to refract the laser
- * towards the photodetectors
+ * The user has to select the correct height to move the lens up, down,
+ * to direct the lasers toward the photodetectors.
  *
  */
 public class Skew extends Activity {
@@ -82,7 +82,7 @@ public class Skew extends Activity {
                 lensCenterPoint = lensCenterPoint();
 
                 AlertDialog alertDialog = new AlertDialog.Builder(Skew.this).create();
-                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setTitle(getResources().getString(R.string.lensDialogue));
                 alertDialog.setMessage("(" +
                         Math.round(lensCenterPoint.x)
                         +","+
@@ -232,7 +232,7 @@ public class Skew extends Activity {
     protected void onPause() {
         super.onPause();
         if(userChange)
-            user.saveUser("default.dat", getApplicationContext());
+            user.saveUser(MainActivity.user_filename, getApplicationContext());
 
         userChange = false;
     }
@@ -323,7 +323,7 @@ public class Skew extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(Skew.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct height to shift the lens to focus the light on the photodetectors.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.skwDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -342,7 +342,7 @@ public class Skew extends Activity {
                 //Start Alert Dialogue
                 new AlertDialog.Builder(Skew.this)
                         .setTitle("Start?") //Sets the title of the dialogue
-                        .setMessage("Press OK to start.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.genericDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -549,6 +549,7 @@ public class Skew extends Activity {
             animation.setFillAfter(true);
             photoDects[i].startAnimation(animation);
         }
+        System.out.println("ANSWER: " + answerIndex);
     }
 
     /**
@@ -663,7 +664,7 @@ public class Skew extends Activity {
         }
         else{
             for(ImageView i: photoDects){
-                i.setImageResource(R.drawable.detector);
+                i.setImageResource(R.drawable.photo_test);
             }
         }
     }
@@ -681,8 +682,7 @@ public class Skew extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(Skew.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
-                    .setMessage("You chose the correct height. Would you like to " +
-                            "try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.correct)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -703,8 +703,7 @@ public class Skew extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(Skew.this)
                     .setTitle("Nope") //Sets the title of the dialogue
-                    .setMessage("Sorry, that is not the right height. Would you like " +
-                            "to try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.incorrect)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

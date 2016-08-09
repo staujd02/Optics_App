@@ -3,10 +3,6 @@ package opticallearning.learnoptics;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.DragEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
 
 /**
  * Created by Joel on 6/27/2016.
@@ -22,6 +18,8 @@ public class Medium extends Activity {
         super.onCreate(savedInstanceState); //calls super constructor
         setContentView(R.layout.medium);    //sets the view
         setTitle("Rank the Medium");    //assigns descriptive title
+
+        /*
 
         //Creates array of image tiles
         ImageView[] tiles = new ImageView[4];
@@ -77,7 +75,7 @@ public class Medium extends Activity {
 
 
         }
-
+    */
     }
 
     @Override

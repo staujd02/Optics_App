@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Joel on 7/1/2016.
  *
@@ -18,18 +20,48 @@ import android.widget.ListView;
  */
 public class SpectrumMenu extends ListActivity{
 
-    //ToDo generate pages[] dynamically based on user data
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lenscraft_extended);
         setTitle("Explore");
 
-        //This array needs to be generated dynamically based on user data
-        String[] pages = {"Background","Reflectance","Compound Reflectance","Absorbance","Compound Absorbance","Opacity"};
+        //User's access level
+        int access;
 
-        //sets the listAdapter to read the array pages[] into the listView
+        if(MainActivity.user != null){
+            access = MainActivity.user.getSpecLVL();
+        }
+        else{
+            access = 1;
+        }
+
+        //Initialize the pages array
+        ArrayList<String> pages = new ArrayList<>();
+
+        //Add background to the beginning of the list (constant not dependant on access lvl)
+        pages.add("Background");
+
+        //Array generated dynamically based on user's access level
+        //Each item is added at the first index to ensure
+        //the list is ordered correctly
+        switch (access){
+            //Highest Level
+            //DO NOT ADD BREAK STATEMENT!
+            case 5:
+                pages.add(1,"Opacity");
+            case 4:
+                pages.add(1,"Compound Absorbance");
+            case 3:
+                pages.add(1,"Absorbance");
+            case 2:
+                pages.add(1,"Compound Reflectance");
+            case 1:
+                pages.add(1,"Reflectance");
+                //Lowest Level
+        }
+
+        //Sets the list adapter to display the array pages[]
         setListAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 ,pages));
     }
 
@@ -44,7 +76,7 @@ public class SpectrumMenu extends ListActivity{
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        //todo references dummy classes at the moment
+        //References dummy classes at the moment
         switch (position){
             case 0:
                 startActivity(new Intent(SpectrumMenu.this, BGSpectrumMatcher.class));

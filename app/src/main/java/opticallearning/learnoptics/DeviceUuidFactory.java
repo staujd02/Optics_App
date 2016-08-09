@@ -83,7 +83,7 @@ public class DeviceUuidFactory{
      * Works around a bug in Android 2.2 for many devices when using ANDROID_ID
      * directly.
      *
-     * @see http://code.google.com/p/android/issues/detail?id=10603
+     * @see "http://code.google.com/p/android/issues/detail?id=10603"
      *
      * @return a UUID that may be used to uniquely identify your device for most
      *         purposes.

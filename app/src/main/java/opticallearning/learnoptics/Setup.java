@@ -104,7 +104,7 @@ public class Setup extends Activity {
                     //Flips flag indicating the user has completed user setup
                     user.setSetupComplete(true);
                     //Saves user to file
-                    user.saveUser("default.dat", getApplicationContext());
+                    user.saveUser(MainActivity.user_filename, getApplicationContext());
                     //Takes user to main menu
                     startActivity(new Intent(Setup.this, MainActivity.class));
                 }
@@ -129,7 +129,7 @@ public class Setup extends Activity {
                                     user.setSetupComplete(true);
 
                                     //Saves user
-                                    user.saveUser("default.dat",getApplicationContext());
+                                    user.saveUser(MainActivity.user_filename,getApplicationContext());
 
                                     //Goes to main menu
                                     startActivity(new Intent(Setup.this, MainActivity.class));

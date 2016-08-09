@@ -11,8 +11,8 @@ import android.widget.ListView;
 /**
  * Created by Joel on 6/27/2016.
  *
- * This class loads a listView intended for sending the user to other
- * locations for more reading
+ * This class loads a listView intended for sending the user to outside locations on
+ * the internet for more extending reading related to optics and photonics.
  *
  * Links are arranged in a ListView for the user to select from
  */

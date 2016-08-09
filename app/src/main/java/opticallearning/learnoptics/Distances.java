@@ -23,12 +23,17 @@ import java.util.Random;
  *
  * This is a branching activity of Lens Crafter menu (LensCraftMenu.java)
  *
- * Asks users to select the correct distance from the lens to the laser
+ * This modules requires the user to use a slider to position a specific lens a distance away from
+ * the laser. All constants related to the slider bar and its values are listed at the top of the
+ * class. The lens is fixed with certain values for each of the len's different properties.
+ *
+ * In the future, consider making the lens properties random to increase the difficulty of this
+ * activity.
  *
  */
 public class Distances extends Activity {
 
-    final int LENS = 10;    //Constant lens index
+    final int LENS = 11;    //Constant lens index
     int adjustment;         //Variable adjustment for lens distance
 
     final float ENVIRONMENT_WIDTH = 100;
@@ -93,7 +98,7 @@ public class Distances extends Activity {
                 lensCenterPoint = lensCenterPoint();
 
                 AlertDialog alertDialog = new AlertDialog.Builder(Distances.this).create();
-                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setTitle(getResources().getString(R.string.lensDialogue));
                 alertDialog.setMessage("(" +
                         Math.round(lensCenterPoint.x)
                         +","+
@@ -248,7 +253,7 @@ public class Distances extends Activity {
     protected void onPause() {
         super.onPause();
         if(userChange)
-            user.saveUser("default.dat", getApplicationContext());
+            user.saveUser(MainActivity.user_filename, getApplicationContext());
 
         userChange = false;
     }
@@ -335,7 +340,7 @@ public class Distances extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(Distances.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct distance to place the lens from the laser to focus the light on the photodetectors.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.dstDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -352,7 +357,7 @@ public class Distances extends Activity {
                 //Start Alert Dialogue
                 new AlertDialog.Builder(Distances.this)
                         .setTitle("Start?") //Sets the title of the dialogue
-                        .setMessage("Press OK to start.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.genericDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -561,6 +566,8 @@ public class Distances extends Activity {
             animation.setFillAfter(true);
             photoDects[i].startAnimation(animation);
         }
+
+        System.out.println("ANSWER: " + answerIndex);
     }
 
     /**
@@ -675,7 +682,7 @@ public class Distances extends Activity {
         }
         else{
             for(ImageView i: photoDects){
-                i.setImageResource(R.drawable.detector);
+                i.setImageResource(R.drawable.photo_test);
             }
         }
     }
@@ -693,8 +700,7 @@ public class Distances extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(Distances.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
-                    .setMessage("You chose the correct distance. Would you like to " +
-                            "try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.correct)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -715,8 +721,7 @@ public class Distances extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(Distances.this)
                     .setTitle("Nope") //Sets the title of the dialogue
-                    .setMessage("Sorry, that is not the right distance. Would you like " +
-                            "to try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.incorrect)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

@@ -6,11 +6,19 @@ import android.graphics.Rect;
 /**
  * Created by Joel on 6/29/2016.
  *
- * Lens object responsible for holding data necessary for calculations and drawing
- * the lens bitmaps
+ * The lens object holds all the information that could be required for calculation, data display,
+ * and rendering of the specific lens.
  *
+ * The graphic_Reference is a rectangle referencing a subset of a larger bitmap containing all of the
+ * lenses to be drawn.
  *
- * This is intended for use in the custom views implemented in Lens Crafter (LensCraftMenu.java)
+ *  If you wish to render a lens not contained within the original database and bitmap:
+ *      1)Carefully add the lens picture to the original lens bitmap file
+ *          NOTE: Do not move the other lenses or enlarge/shrink the image. Otherwise you will be
+ *                  forced to update the entire JSON lens file with the new binding rectangles for each lens.
+ *      2)Add the lens data to the end of the lens JSON file. (Binding rectangle is the pixel coordinates of the lens on the bitmap)
+ *      3)Reference the new lens using the index value of the lens data related to the JSON file
+ *
  */
 public class Lens {
 

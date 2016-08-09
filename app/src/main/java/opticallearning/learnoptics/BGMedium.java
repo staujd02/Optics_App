@@ -13,7 +13,7 @@ import android.widget.TextView;
  * This class loads the Background xml for "Rank the Medium" module
  *
  * The xml will have a text block that explains the basic concepts behind N index and
- * and how it affects light to the user.
+ * and how it affects light to the user. The string description is stored in strings.xml.
  */
 
 public class BGMedium extends Activity {

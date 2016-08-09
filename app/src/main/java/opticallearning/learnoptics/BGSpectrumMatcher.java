@@ -13,7 +13,8 @@ import android.widget.TextView;
  * This loads the xml activity background for spectrum matcher.
  *
  * This xml provides the basic background of concepts to the user. This xml explains
- * what the spectrum is and how to interpret absorbance and reflectance graphs.
+ * what the spectrum is and how to interpret absorbency and reflectance graphs. The descriptive string
+ * is stored in string.xml.
  *
  */
 public class BGSpectrumMatcher extends Activity {

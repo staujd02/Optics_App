@@ -23,7 +23,7 @@ import java.util.Random;
  *
  * This is a branching activity of Lens Crafter menu (LensCraftMenu.java)
  *
- * This module asks the user to select the correct material for the lens
+ * This module asks the user to choose the correct N-Index for the lens.
  *
  */
 public class NIndex extends Activity {
@@ -35,10 +35,10 @@ public class NIndex extends Activity {
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
 
-    final int ProgressMax = 9;
+    final int ProgressMax = 5;
     final int ProgressDefault = 0;
 
-    final float MULTIPLIER = .15f; //Unit multiplier used to translate slider value to unit value
+    final float MULTIPLIER = .2f; //Unit multiplier used to translate slider value to unit value
     final float OFF_SET = 1.2f;     //The slider value's offset from 0
 
     //These three constant are used to determine where the
@@ -85,7 +85,7 @@ public class NIndex extends Activity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 AlertDialog alertDialog = new AlertDialog.Builder(NIndex.this).create();
-                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setTitle(getResources().getString(R.string.lensDialogue));
                 alertDialog.setMessage("(" +
                         Math.round(lensCenterPoint.x)
                         +","+
@@ -213,7 +213,7 @@ public class NIndex extends Activity {
     protected void onPause() {
         super.onPause();
         if(userChange)
-            user.saveUser("default.dat", getApplicationContext());
+            user.saveUser(MainActivity.user_filename, getApplicationContext());
 
         userChange = false;
     }
@@ -297,7 +297,7 @@ public class NIndex extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(NIndex.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct N index to focus the light on the photodetectors.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.indexDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -316,7 +316,7 @@ public class NIndex extends Activity {
                 //Start Alert Dialogue
                 new AlertDialog.Builder(NIndex.this)
                         .setTitle("Start?") //Sets the title of the dialogue
-                        .setMessage("Press OK to start.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.genericDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -529,6 +529,8 @@ public class NIndex extends Activity {
             animation.setFillAfter(true);
             photoDects[i].startAnimation(animation);
         }
+
+        System.out.println("ANSWER: " + answerIndex);
     }
 
     /**
@@ -645,7 +647,7 @@ public class NIndex extends Activity {
         }
         else{
             for(ImageView i: photoDects){
-                i.setImageResource(R.drawable.detector);
+                i.setImageResource(R.drawable.photo_test);
             }
         }
     }
@@ -663,8 +665,7 @@ public class NIndex extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(NIndex.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
-                    .setMessage("You chose the correct lens. Would you like to " +
-                            "try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.correct)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -685,8 +686,7 @@ public class NIndex extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(NIndex.this)
                     .setTitle("Nope") //Sets the title of the dialogue
-                    .setMessage("Sorry, that is not the right lens. Would you like " +
-                            "to try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.incorrect)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
