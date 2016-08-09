@@ -1,4 +1,4 @@
-package andriodbootcamp.learnoptics;
+package opticallearning.learnoptics;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

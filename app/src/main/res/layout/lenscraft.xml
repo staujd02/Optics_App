@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgLaser"
+        android:src="@drawable/laser_front"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/laser"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/orginalLens" />
+
+    <opticallearning.learnoptics.DrawingView
+        android:layout_width="30sp"
+        android:layout_height="100sp"
+        android:id="@+id/orginalLens"
+        android:background="@drawable/lens_edging"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectOne"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectTwo"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectThree"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:id="@+id/dectFour"
+        android:src="@drawable/detector"
+        android:contentDescription="@string/detector"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="15dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/divider" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indShape"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/indNindex"
+        android:layout_toStartOf="@+id/indNindex"
+        android:layout_marginRight="5dp"
+        android:text="@string/indPreShape" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indNindex"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/divider"
+        android:layout_toStartOf="@+id/divider"
+        android:layout_marginRight="2dp"
+        android:text="@string/indPreIndex" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indRadius"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/divider"
+        android:layout_marginLeft="2dp"
+        android:text="@string/indPreRadius"
+        android:layout_toEndOf="@+id/divider" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/indFocalLength"
+        android:background="@drawable/border"
+        android:padding="5sp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/indRadius"
+        android:layout_toEndOf="@+id/indRadius"
+        android:layout_marginLeft="5dp"
+        android:text="@string/indPreFocal" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekShape"
+        android:layout_below="@+id/indShape"
+        android:layout_alignLeft="@+id/indShape"
+        android:layout_alignStart="@+id/indShape"
+        android:layout_alignRight="@+id/indShape"
+        android:layout_alignEnd="@+id/indShape"
+        android:max="1"
+        android:progress="0"
+        android:visibility="invisible" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekMaterial"
+        android:max="1"
+        android:progress="0"
+        android:layout_below="@+id/indShape"
+        android:layout_alignBottom="@+id/seekShape"
+        android:layout_alignLeft="@+id/indNindex"
+        android:layout_alignStart="@+id/indNindex"
+        android:layout_alignRight="@+id/indNindex"
+        android:layout_alignEnd="@+id/indNindex"
+        android:visibility="invisible" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekRadius"
+        android:max="1"
+        android:progress="0"
+        android:layout_below="@+id/indRadius"
+        android:layout_alignRight="@+id/indRadius"
+        android:layout_alignEnd="@+id/indRadius"
+        android:layout_alignLeft="@+id/indRadius"
+        android:layout_alignStart="@+id/indRadius"
+        android:visibility="invisible" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekLength"
+        android:max="1"
+        android:progress="0"
+        android:layout_below="@+id/indFocalLength"
+        android:layout_alignLeft="@+id/indFocalLength"
+        android:layout_alignStart="@+id/indFocalLength"
+        android:layout_alignRight="@+id/indFocalLength"
+        android:layout_alignEnd="@+id/indFocalLength"
+        android:visibility="invisible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activate"
+        android:id="@+id/btnLaserActivate"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekMove"
+        android:layout_below="@+id/orginalLens"
+        android:layout_alignRight="@+id/seekRadius"
+        android:layout_alignEnd="@+id/seekRadius"
+        android:layout_alignLeft="@+id/seekMaterial"
+        android:layout_alignStart="@+id/seekMaterial"
+        android:visibility="invisible" />
+
+</RelativeLayout>

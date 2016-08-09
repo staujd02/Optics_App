@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="andriodbootcamp.learnoptics">
-
+    package="opticallearning.learnoptics">
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_prism"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault.Light">
-        <activity android:name=".MainActivity">
+        <activity android:name="opticallearning.learnoptics.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".UserMenu"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Medium"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SpectrumMatcher"/>
+        <activity android:name=".Credits"/>
+        <activity android:name=".Portal"/>
+        <activity android:name=".BGLensCraft"/>
+        <activity android:name=".BGMedium"/>
+        <activity android:name=".BGSpectrumMatcher"/>
+        <activity android:name=".Skew"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ConcaveConvex"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".Distances"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".NIndex"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".LensWidth"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".LensCraftMenu"/>
+        <activity android:name=".SpectrumMenu"/>
+        <activity android:name=".Setup"
+            android:screenOrientation="portrait"/>
     </application>
-
 </manifest>

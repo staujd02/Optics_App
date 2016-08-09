@@ -7,29 +7,121 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="andriodbootcamp.learnoptics.MainActivity">
+    tools:context="opticallearning.learnoptics.MainActivity">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="3"
+        android:layout_centerInParent="true">
 
-        <GridLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:rowCount="6"
-            android:columnCount="2"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_height="0dip"
+            android:weightSum="2"
+            android:gravity="center_vertical|center_horizontal"
+            android:measureWithLargestChild="false"
+            android:layout_weight="1">
 
-        </GridLayout>
-    </ScrollView>
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/user_ico"
+                android:id="@+id/btnUserMenu"
+                android:contentDescription="@string/btnUserMenu"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:padding="15sp"
+                android:background="@drawable/border"
+                android:layout_margin="1sp" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/btnLensCraft"
+                android:src="@drawable/lc_ico"
+                android:contentDescription="@string/btnLens"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:padding="15sp"
+                android:background="@drawable/border"
+                android:layout_margin="1sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:weightSum="2"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/btnSpectrum"
+                android:contentDescription="@string/btnSpec"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sm_ico"
+                android:layout_weight="1"
+                android:padding="15sp"
+                android:background="@drawable/border"
+                android:layout_margin="1sp" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/btnMedium"
+                android:src="@drawable/m_ico"
+                android:contentDescription="@string/btnMedium"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:padding="15sp"
+                android:background="@drawable/border"
+                android:layout_margin="1sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:weightSum="2"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/btnCredits"
+                android:src="@drawable/credits"
+                android:clickable="true"
+                android:contentDescription="@string/btnCredits"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:padding="15sp"
+                android:background="@drawable/border"
+                android:layout_margin="1sp" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/btnPortal"
+                android:src="@drawable/portal"
+                android:contentDescription="@string/btnExtend"
+                android:clickable="true"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:padding="15sp"
+                android:background="@drawable/border"
+                android:layout_margin="1sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

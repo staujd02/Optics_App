@@ -1,3 +1,68 @@
 <resources>
     <string name="app_name">Learn Optics</string>
+    <string name="btnUserMenu">User Settings</string>
+    <string name="btnLens">LensCraft</string>
+    <string name="btnSpec">Spectrum Matcher</string>
+    <string name="btnMedium">Pick the Medium</string>
+    <string name="btnCredits">Credits</string>
+    <string name="btnExtend">External Links</string>
+    <string name="specSubject">Spectrophotometer Specimen</string>
+    <string name="spectrum">Spectrum</string>
+    <string name="specDescip">Specimen</string>
+    <string name="chrtOne">Chart 1</string>
+    <string name="chrtTwo">Chart 2</string>
+    <string name="chrtThree">Chart 3</string>
+    <string name="chrtFour">Chart 4</string>
+    <string name="btnCheck">Check Answer</string>
+    <string name="materialOne">Material One</string>
+    <string name="materialTwo">Material Two</string>
+    <string name="materialThree">Material Three</string>
+    <string name="materialFour">Material Four</string>
+    <string name="directions">Fastest to Slowest</string>
+    <string name="ruler">Ruler</string>
+    <string name="laser">Laser Source</string>
+    <string name="detector">Photodetector</string>
+    <string name="desMoney">Total Savings</string>
+    <string name="desLightSource">Light Source</string>
+    <string name="lightSource">Light Source Picture</string>
+    <string name="incWatt">Increase Wattage</string>
+    <string name="decWatt">Decrease Wattage</string>
+    <string name="credits_title">Acknowledgements</string>
+    <string name="credits_main">\tThis project was made possible by the National Science Foundation grant \"REU Site: Optics and photonics: Technologies, Systems, and Devices.\"\nGrant ID: 1560131.\n\n\tThis application was developed by Joel Stauffer under the direction of Professors Dr. Abdallah Khreishah and Dr. John Carpinelli.\n\n\tThe application icon was created by Freepik located at www.flaticon.com</string>
+    <string name="njit">NJIT Logo</string>
+    <string name="nsf">NSF Logo</string>
+    <string name="bg_lens">This is the Lens Crafter Module \n\n\tIn the following sub categories, you will be quizzed on your ability to interpret lenses and their effect on a laser beam\'s path. You will have to utilize the given information to properly calculate the laser\'s trajectory.\n\n\tEach sub category will test you on different variables associated with lenses such as width, distance from source, n index, and so forth. \n\nTouch the lens holder to see its center position, or the laser box to see the laser origin points.\n\nTouch anywhere on the graph to retrieve a points position.</string>
+    <string name="bg_medium">Coming Soon!</string>
+    <string name="bg_spec">Coming Soon!</string>
+    <string name="btContinue">Continue</string>
+    <string name="lens">Lens</string>
+    <string name="spinSkewText">Pick Lens Height</string>
+    <string name="spinDistanceText">Pick Distance</string>
+    <string name="spinWidthText">Pick Lens Width</string>
+    <string name="spinMaterialText">Pick Lens Material</string>
+    <string name="spinCCText">Pick Lens</string>
+    <string name="spinLensNum">Pick the number of Lenses</string>
+    <string name="schoolHint">School Name (Optional)</string>
+    <string name="userIconHint">User Setup</string>
+    <string name="userNameHint">Username</string>
+    <string name="ageGroup">Age Group</string>
+    <string name="setupName">Name</string>
+    <string name="fileName">default.dat</string>
+    <string name="indPreIndex">N Index: </string>
+    <string name="indPreRadius">Radius: </string>
+    <string name="indPreFocal">Length: </string>
+    <string name="indPreShape">Shape: </string>
+    <string name="activate">Activate Laser</string>
+    <string name="chkHS">High School</string>
+    <string-array name="standings">
+        <item>Freshman</item>
+        <item>Sophomore</item>
+        <item>Junior</item>
+        <item>Senior</item>
+    </string-array>
+    <string-array name="lens_Nums">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>
