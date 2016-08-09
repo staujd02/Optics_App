@@ -19,14 +19,8 @@
     <string name="materialThree">Material Three</string>
     <string name="materialFour">Material Four</string>
     <string name="directions">Fastest to Slowest</string>
-    <string name="ruler">Ruler</string>
     <string name="laser">Laser Source</string>
     <string name="detector">Photodetector</string>
-    <string name="desMoney">Total Savings</string>
-    <string name="desLightSource">Light Source</string>
-    <string name="lightSource">Light Source Picture</string>
-    <string name="incWatt">Increase Wattage</string>
-    <string name="decWatt">Decrease Wattage</string>
     <string name="credits_title">Acknowledgements</string>
     <string name="credits_main">\tThis project was made possible by the National Science Foundation grant \"REU Site: Optics and photonics: Technologies, Systems, and Devices.\"\nGrant ID: 1560131.\n\n\tThis application was developed by Joel Stauffer under the direction of Professors Dr. Abdallah Khreishah and Dr. John Carpinelli.\n\n\tThe application icon was created by Freepik located at www.flaticon.com</string>
     <string name="njit">NJIT Logo</string>
@@ -54,6 +48,28 @@
     <string name="indPreShape">Shape: </string>
     <string name="activate">Activate Laser</string>
     <string name="chkHS">High School</string>
+    <string name="genericDirections">Press OK to start.</string>
+    <string name="ccDirections">Choose the correct focal length that will redirect the lasers onto the photodetectors.</string>
+    <string name="dstDirections">Choose the correct distance to place the lens from the laser\'s source to direct the beam onto the photodetectors.</string>
+    <string name="wdthDirections">Choose the correct lens radius to direct the laser beams on the photodetectors.</string>
+    <string name="indexDirections">Select the correct N index to direct the laser beams onto the photodetectors.</string>
+    <string name="skwDirections">Select the correct height to shift the lens to direct the beams onto the photodetectors.</string>
+    <string name="correct">You chose correctly. Would you like to try again?</string>
+    <string name="incorrect">Sorry, that is not correct. Would you like to try again?</string>
+    <string name="lensDialogue">Lens Center-point</string>
+    <string-array name="user_values">
+        <item>Set Hints</item>
+        <item>Set Background</item>
+        <item>Name:</item>
+        <item>School:</item>
+        <item>Score:</item>
+        <item>Attempts:</item>
+        <item>Correct:</item>
+        <item>Incorrect:</item>
+        <item>Lens Crafter Lvls:</item>
+        <item>Spectrum Lvls:</item>
+        <item>Medium Lvls:</item>
+    </string-array>
     <string-array name="standings">
         <item>Freshman</item>
         <item>Sophomore</item>

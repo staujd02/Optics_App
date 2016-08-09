@@ -14,7 +14,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,7 +24,8 @@ import java.util.Random;
  * This is a branching activity of Lens Crafter menu (LensCraftMenu.java)
  *
  * Asks the user to adjust the focal length to the correct value for the laser
- * to fall upon the photodetectors.
+ * to fall upon the photodetectors. The lens type could be concave or convex based on a random
+ * integer value.
  *
  */
 public class ConcaveConvex extends Activity {
@@ -38,7 +38,7 @@ public class ConcaveConvex extends Activity {
     final float ENVIRONMENT_WIDTH = 100;
     final float ENVIRONMENT_HEIGHT = 100;
 
-    final int ProgressMax = 6;      //The progress bar constant for max value; setup onCreate()
+    final int ProgressMax = 5;      //The progress bar constant for max value; setup onCreate()
     final int ProgressDefault = 0;  //The default or starting progress for the seekbar; setup onCreate()
 
     final float MULTIPLIER = 7; //Unit multiplier used to translate slider value to unit value
@@ -65,6 +65,8 @@ public class ConcaveConvex extends Activity {
     private SeekBar bar;          //References the seekBar
     private ImageView[] photoDects;    //References of the photodectectors
 
+    private boolean userChange = false;   //Changed has to be written to the user file
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     //calls super constructor
@@ -89,7 +91,7 @@ public class ConcaveConvex extends Activity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 AlertDialog alertDialog = new AlertDialog.Builder(ConcaveConvex.this).create();
-                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setTitle(getResources().getString(R.string.lensDialogue));
                 alertDialog.setMessage("(" +
                         Math.round(lensCenterPoint.x)
                         +","+
@@ -210,6 +212,19 @@ public class ConcaveConvex extends Activity {
     }
 
     /**
+     * This method saves the user data if any changes have been made
+     * to the user object
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(userChange)
+        user.saveUser(MainActivity.user_filename, getApplicationContext());
+
+        userChange = false;
+    }
+
+    /**
      * This is a main function of the android life cycle
      *
      * Trackers whether the user has answered before navigating away
@@ -306,8 +321,7 @@ public class ConcaveConvex extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(ConcaveConvex.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Use the lens's focal length to calculate which lens will refract the laser on" +
-                                "to the photodetectors.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.ccDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -326,7 +340,7 @@ public class ConcaveConvex extends Activity {
                 //Start Alert Dialogue
                 new AlertDialog.Builder(ConcaveConvex.this)
                         .setTitle("Start?") //Sets the title of the dialogue
-                        .setMessage("Press OK to start.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.genericDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -555,6 +569,8 @@ public class ConcaveConvex extends Activity {
             animation.setFillAfter(true);   //Tell the view to remain after translation
             photoDects[i].startAnimation(animation); //Run animation
         }
+
+        System.out.println("ANSWER: " + answerIndex);
     }
 
     /**
@@ -679,7 +695,7 @@ public class ConcaveConvex extends Activity {
         }
         else{
             for(ImageView i: photoDects){
-                i.setImageResource(R.drawable.detector);
+                i.setImageResource(R.drawable.photo_test);
             }
         }
     }
@@ -697,8 +713,7 @@ public class ConcaveConvex extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(ConcaveConvex.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
-                    .setMessage("You chose the correct lens. Would you like to " +
-                            "try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.correct)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -719,8 +734,7 @@ public class ConcaveConvex extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(ConcaveConvex.this)
                     .setTitle("Nope") //Sets the title of the dialogue
-                    .setMessage("Sorry, that is not the right lens. Would you like " +
-                            "to try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.incorrect)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -763,9 +777,10 @@ public class ConcaveConvex extends Activity {
                 //Increment user's incorrect count
                 user.incIncorrect(User.SHAPE_QUESTION);
             }
-
-            user.saveUser("default.dat", getApplicationContext());
         }
+
+        //Indicates that a change to the user object was made, and the user needs to be saved
+        userChange = true;
     }
 
     /**
@@ -808,4 +823,5 @@ public class ConcaveConvex extends Activity {
 
         return p;
     }
+
 }

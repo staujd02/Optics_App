@@ -11,16 +11,19 @@ import java.util.ArrayList;
  * Laser object that handles the tracking of the laser's direction
  * and sub components
  *
- * Used by the custom view implemented in the sub modules of Lens Crafter
+ * This class is purely a calculation class intended to take inputs of where the laser starts,
+ * where the lens is located, and the environment's dimensions. The calculated product of this class
+ * is a group of line segments recording the laser's position.
+ *
+ * After calling the constructor, the setLens() routine must be called before running the calculate
+ * function. Otherwise a null reference exception will occur.
+ *
  */
 public class Laser {
 
     private static final int TRACE_DEFINITION = 1;
 
-    private Point MAX_POINT; //The maximum point of the enviroment
-                                    //used to determine room size
-    //private Color laserColor; //Laser's color
-
+    private Point MAX_POINT; //The maximum point of the environment (Bottom-Right corner)
     private PointF start;    //This must be defined in constructor;
     private PointF End;     //Laser end destination, this must be calculated by the laser class
 
@@ -126,9 +129,8 @@ public class Laser {
                 newLaserLine(start,impact);
                 start = new PointF(impact.x,impact.y); //Copy impact to a start for continuity
 
-                //THIS FORMULA CURRENTLY ASSUMES THE ANGLE OF INCIDENCE IS 90 DEGREES
+                //THIS FORMULA CURRENTLY ASSUMES THE ANGLE OF INCIDENCE IS 0 DEGREES
                 //calculate exit angle / line
-                //TODO Modify this formula for multiple angles of incidence
 
                 //FIND THE FOCAL POINT
                 //Find y of focal point -> average of lowest y + highest y (vertical midpoint)

@@ -11,7 +11,9 @@ import android.os.Bundle;
  * The credits.xml page informs the user of
  * the creators, sponsors, and endorsers of this app.
  *
- * Should follow specific format outlined by sponsors.
+ * Should follow specific format outlined by sponsors. Especially the NSF portion.
+ *
+ * Add any additional information directly to the credits.xml layout found in the res/layout folder.
  *
  */
 public class Credits extends Activity {

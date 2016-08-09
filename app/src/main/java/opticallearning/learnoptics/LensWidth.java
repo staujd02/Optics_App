@@ -23,8 +23,8 @@ import java.util.Random;
  *
  * This is a branching activity of Lens Crafter menu (LensCraftMenu.java)
  *
- * In this module, the user attempts to select the lens with the correct width
- * to focus/diffuse the laser.
+ * In this module, the user attempts to choose the correct lens width.
+ *
  */
 public class LensWidth extends Activity {
 
@@ -34,10 +34,10 @@ public class LensWidth extends Activity {
     final float ENVIRONMENT_WIDTH = 100;    //Simulated environment constants
     final float ENVIRONMENT_HEIGHT = 100;
 
-    final int ProgressMax = 9;
+    final int ProgressMax = 5;
     final int ProgressDefault = 0;
 
-    final float MULTIPLIER = 4; //Unit multiplier used to translate slider value to unit value
+    final float MULTIPLIER = 8; //Unit multiplier used to translate slider value to unit value
     final int OFF_SET = 5;     //The slider value's offset from 0
 
     //These three constant are used to determine where the
@@ -84,7 +84,7 @@ public class LensWidth extends Activity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 AlertDialog alertDialog = new AlertDialog.Builder(LensWidth.this).create();
-                alertDialog.setTitle("Lens Center-point");
+                alertDialog.setTitle(getResources().getString(R.string.lensDialogue));
                 alertDialog.setMessage("(" +
                         Math.round(lensCenterPoint.x)
                         +","+
@@ -213,7 +213,7 @@ public class LensWidth extends Activity {
     protected void onPause() {
         super.onPause();
         if(userChange)
-            user.saveUser("default.dat", getApplicationContext());
+            user.saveUser(MainActivity.user_filename, getApplicationContext());
 
         userChange = false;
     }
@@ -299,7 +299,7 @@ public class LensWidth extends Activity {
                 //Directions Alert Dialogue
                 new AlertDialog.Builder(LensWidth.this)
                         .setTitle("Directions") //Sets the title of the dialogue
-                        .setMessage("Select the correct lens thickness and type to focus the light on the photodetectors.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.wdthDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -318,7 +318,7 @@ public class LensWidth extends Activity {
                 //Start Alert Dialogue
                 new AlertDialog.Builder(LensWidth.this)
                         .setTitle("Start?") //Sets the title of the dialogue
-                        .setMessage("Press OK to start.") //Sets the Message
+                        .setMessage(getResources().getString(R.string.genericDirections)) //Sets the Message
                         //Creates OK button for user interaction (Dismisses Dialogue)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -532,6 +532,7 @@ public class LensWidth extends Activity {
             animation.setFillAfter(true);
             photoDects[i].startAnimation(animation);
         }
+        System.out.println("ANSWER: " + answerIndex);
     }
 
     /**
@@ -647,7 +648,7 @@ public class LensWidth extends Activity {
         }
         else{
             for(ImageView i: photoDects){
-                i.setImageResource(R.drawable.detector);
+                i.setImageResource(R.drawable.photo_test);
             }
         }
     }
@@ -665,8 +666,7 @@ public class LensWidth extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(LensWidth.this)
                     .setTitle("Correct!") //Sets the title of the dialogue
-                    .setMessage("You chose the correct lens. Would you like to " +
-                            "try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.correct)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -687,8 +687,7 @@ public class LensWidth extends Activity {
             //Ask if the user would like to try again
             new AlertDialog.Builder(LensWidth.this)
                     .setTitle("Nope") //Sets the title of the dialogue
-                    .setMessage("Sorry, that is not the right lens. Would you like " +
-                            "to try again?") //Sets the Message
+                    .setMessage(getResources().getString(R.string.incorrect)) //Sets the Message
                     //Creates OK button for user interaction (Dismisses Dialogue)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

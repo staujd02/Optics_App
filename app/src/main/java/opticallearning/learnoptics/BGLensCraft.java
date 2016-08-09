@@ -12,8 +12,8 @@ import android.widget.TextView;
  *
  * This is the background activity for Lens Crafter Module
  *
- *  It provides the user a basic overview of the concepts
- *   involved with this module and its sub-modules. The description is stored in strings.xml
+ * This activity provides the user a basic overview of the concepts
+ * involved with this module and its sub-modules. The description string is stored in strings.xml
  */
 public class BGLensCraft extends Activity {
 

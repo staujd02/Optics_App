@@ -22,6 +22,10 @@ import java.util.ArrayList;
  * The LensCraftMenu is designed as a portal for the user
  * to engage with the other sub modules of LensCraft
  *
+ * This class is capable of restricting the user to certain sub modules until they successfully
+ * complete the previous sub module. At this time, the feature is disable. RE-Enable this feature
+ * by commenting out line 66: { access = 5;}
+ *
  * These sub modules are:
  *
  * ConcaveConvex.java,      Distances.java,
@@ -56,12 +60,15 @@ public class LensCraftMenu extends ListActivity{
         }
 
         //USED FOR TESTING
+        //Comment this line to make the levels unlock in progress
+        //otherwise keep this value override in place to ensure all
+        //levels are accessible
         access = 5;
 
         //Initialize the pages array
         ArrayList<String> pages = new ArrayList<>();
 
-        //Add background to the begining of the list (constant not dependant on access lvl)
+        //Add background to the beginning of the list (constant not dependant on access lvl)
         pages.add("Background");
 
         //Array generated dynamically based on user's access level
@@ -111,7 +118,11 @@ public class LensCraftMenu extends ListActivity{
             byte[] buffer = new byte[size];
 
             //Read bytes
-            is.read(buffer);
+            int resp = is.read(buffer);
+
+            if(resp == -1){
+                System.out.println("End of Stream");
+            }
 
             //Close InputStream
             is.close();

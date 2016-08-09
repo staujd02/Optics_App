@@ -2,18 +2,14 @@ package opticallearning.learnoptics;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -37,7 +33,7 @@ public class User implements Serializable{
     private int standing;   //Indicates the student's standing (freshman: 0,sophomore: 1,junior: 3, senior: 4)
                                 //-1 for this value means unknown or not applicable
 
-    private final String url = "http://connection.com/";
+   private static final String url = "http://njit.edu/";
 
     private String uuid;    //Unique identifier for the installed device
     private boolean HS;     //Indicates whether the listed school is a high school
@@ -265,9 +261,14 @@ public class User implements Serializable{
             if(json.exists()) {
                 if (original.exists()){
                     //Rename the temp json to overwrite original file
-                    json.renameTo(original);
+                    boolean good = json.renameTo(original);
+
+                    if(!good){
+                        System.out.println("Renamed Failed...");
+                    }
 
                     //Uploads the JSON to the server
+                    //Uncomment the line below to send a POST request to the static final url
                     //upload(obj.toString());
                 }
             }
@@ -286,7 +287,7 @@ public class User implements Serializable{
     /**
      * Starts the JSON upload in an Async task
      *
-     * @param upload
+     * @param upload the string to be uploaded in the Async task
      */
     private void upload(String upload){
 
@@ -339,7 +340,7 @@ public class User implements Serializable{
             OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
 
             //Write the JSON to the POST request
-            out.write(json.toString().getBytes());
+            out.write(json.getBytes());
 
             //Print the Server result if the connection fails
             int HttpResult = urlConnection.getResponseCode();
@@ -479,14 +480,10 @@ public class User implements Serializable{
         this.school = school;
     }
 
-    //Standing: get and set
-    public int getStanding() {return standing;}
-
+    //Standing: set
     public void setStanding(int standing) {this.standing = standing;}
 
-    //High School: get and set
-    public boolean isHS() {return HS;}
-
+    //High School: set
     public void setHS(boolean HS) {this.HS = HS;}
 
     //Setup Indicator: Get and set
